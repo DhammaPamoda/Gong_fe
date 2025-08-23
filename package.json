@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0 --proxy-config proxy.conf.json",
-    "start-https-server": "ng serve --host 0.0.0.0 --proxy-config proxy-https.conf.json",
+    "start": "ng serve --host localhost --proxy-config proxy.conf.json",
+    "start-https-server": "ng serve --host 3103 --proxy-config proxy-https.conf.json",
     "build-to-prod": "ng build --prod --outputPath='../gong_server/dist'",
     "build-to-dev-be": "ng build --prod --outputPath='../Gong-be/dist'",
     "lint": "ng lint",
