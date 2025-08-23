@@ -47,12 +47,15 @@ export class BaseComponent implements OnInit, OnDestroy {
 
     this.listenForUpdates();
     this.translateNeededText().then(() => this.hookOnInit());
-  }
 
+  }
+  
   ngOnDestroy() {
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
   }
+
+
 
   protected listenForUpdates() {
   }
