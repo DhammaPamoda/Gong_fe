@@ -36,6 +36,19 @@ export class MainPageComponent extends BaseComponent {
     super();
   }
 
+
+
+  // Event handler for window focus
+  private handleWindowFocus = () => {
+    // this.getBasicData();
+    console.log('focus log');
+    if (!this.firstTime) {
+      this.storeService.getBasicData();
+    } else {
+      this.firstTime = false;
+    }
+  };
+
   protected hookOnInit() {
     if (!this.authService.loggedIn) {
       this.router.navigate(['loginPage']);
@@ -43,8 +56,11 @@ export class MainPageComponent extends BaseComponent {
       this.loggedInRole = this.authService.getRole();
       this.storeService.readToStore();
     }
+    // 🔹 Add focus listener to refresh server time on tab/window focus
+    window.addEventListener('focus', this.handleWindowFocus);
   }
 
+  private firstTime: boolean = true;
   protected listenForUpdates() {
     this.authService.hasPermission('view_manual')
       .pipe(takeUntil(this.onDestroy$))

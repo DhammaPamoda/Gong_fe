@@ -99,7 +99,12 @@ export class HeaderComponent extends BaseComponent {
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((basicServerData: BasicServerData) => {
         if (basicServerData) {
+          if (this.timerSubscription) {
+            this.timerSubscription.unsubscribe();
+          }
+
           this.now = moment(basicServerData.currentServerTime);
+          console.log('updated', this.now)
           const lastSavedTime = this.now.clone();
           const timeToNextMin = this.now.clone().endOf('minute').diff(this.now) + 1;
           this.timerSubscription = timer(timeToNextMin, 60 * 1000).subscribe((tik) => {
@@ -113,10 +118,25 @@ export class HeaderComponent extends BaseComponent {
             }
           });
           this.isManual = basicServerData.isManual;
+
+          // If not nextScheduledJobTime - reset next gong and subscription. 
+          if (!basicServerData.nextScheduledJobTime) {
+            this.nextGongTime = null;
+             if (this.nextGongSubscription) {
+              this.nextGongSubscription.unsubscribe();
+            }
+            return;
+          }
+
           const nextGongTime = moment(basicServerData.nextScheduledJobTime);
           if (!nextGongTime.isSame(this.nextGongTime)) {
             this.nextGongTime = nextGongTime;
             const timeToNextScheduledJob = this.nextGongTime.clone().startOf('minute').add(1, 'm');
+
+            if (this.nextGongSubscription) {
+              this.nextGongSubscription.unsubscribe();
+            }
+
             this.nextGongSubscription = timer(timeToNextScheduledJob.toDate()).subscribe(() => {
               this.getBasicData();
             });
