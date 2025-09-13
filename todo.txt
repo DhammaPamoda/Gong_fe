@@ -1,0 +1,6 @@
+TODO
+
+1. After remove course, clean next gong from the UI.
+2. When adding a course, update next gong.
+3. Schedule a course. make the box larger.
+4. Update next gong after removing manual scheduled job.
