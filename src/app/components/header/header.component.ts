@@ -1,29 +1,29 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
-import {MatDialog} from '@angular/material';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
 
-import {fromEvent, Subscription, timer} from 'rxjs';
-import {filter, first, takeUntil, tap} from 'rxjs/operators';
-import {TranslateService} from '@ngx-translate/core';
-import {NgRedux} from '@angular-redux/store';
+import { fromEvent, Subscription, timer } from 'rxjs';
+import { filter, first, takeUntil, tap } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+import { NgRedux } from '@angular-redux/store';
 
 import moment from 'moment';
 
-import Swal, {SweetAlertResult} from 'sweetalert2';
+import Swal, { SweetAlertResult } from 'sweetalert2';
 
-import {BaseComponent} from '../../shared/baseComponent';
-import {DateFormat} from '../../model/dateFormat';
-import {BasicServerData} from '../../model/basicServerData';
-import {StoreDataTypeEnum} from '../../store/storeDataTypeEnum';
-import {StoreService} from '../../services/store.service';
-import {AuthService} from '../../services/auth.service';
-import {EAction, SelectTopicsDialogComponent} from '../../dialogs/select-topics-dialog/select-topics-dialog.component';
-import {ETopic, ITopicData} from '../../model/topics-model';
-import {EnumUtils} from '../../utils/enumUtils';
-import {MessagesService} from '../../services/messages.service';
-import {JsonEditorComponent} from '../../json-editor/components/json-editor/json-editor.component';
-import {LanguageProperties} from '../../json-editor/shared/dataModels/lang.model';
-import {IObjectMap} from '../../model/store-model';
+import { BaseComponent } from '../../shared/baseComponent';
+import { DateFormat } from '../../model/dateFormat';
+import { BasicServerData } from '../../model/basicServerData';
+import { StoreDataTypeEnum } from '../../store/storeDataTypeEnum';
+import { StoreService } from '../../services/store.service';
+import { AuthService } from '../../services/auth.service';
+import { EAction, SelectTopicsDialogComponent } from '../../dialogs/select-topics-dialog/select-topics-dialog.component';
+import { ETopic, ITopicData } from '../../model/topics-model';
+import { EnumUtils } from '../../utils/enumUtils';
+import { MessagesService } from '../../services/messages.service';
+import { JsonEditorComponent } from '../../json-editor/components/json-editor/json-editor.component';
+import { LanguageProperties } from '../../json-editor/shared/dataModels/lang.model';
+import { IObjectMap } from '../../model/store-model';
 
 enum ETranslation {
   DELETE_CONFIRM_TITLE = 'main.header.confirm.delete.title',
@@ -40,8 +40,8 @@ enum ETranslation {
 })
 export class HeaderComponent extends BaseComponent {
 
-  @ViewChild('courseFile', {static: false}) courseFile: ElementRef;
-  @ViewChild('gongFile', {static: false}) gongFile: ElementRef;
+  @ViewChild('courseFile', { static: false }) courseFile: ElementRef;
+  @ViewChild('gongFile', { static: false }) gongFile: ElementRef;
 
   knownLangsObjectMap: IObjectMap<LanguageProperties> = {};
   supportedLanguagesArray: string[];
@@ -66,12 +66,12 @@ export class HeaderComponent extends BaseComponent {
   private gongId4Update: string;
 
   constructor(ngRedux: NgRedux<any>,
-              private storeService: StoreService,
-              authService: AuthService,
-              private router: Router,
-              private dialog: MatDialog,
-              translate: TranslateService,
-              private messagesService: MessagesService) {
+    private storeService: StoreService,
+    authService: AuthService,
+    private router: Router,
+    private dialog: MatDialog,
+    translate: TranslateService,
+    private messagesService: MessagesService) {
     super(translate, ngRedux, authService);
 
     this.deleteConfirmTranslationObjectKey[ETopic.GONG] = ETranslation.DELETE_GONG_CONFIRM_TEXT;
@@ -240,8 +240,8 @@ export class HeaderComponent extends BaseComponent {
     const dialogRef = this.dialog.open(SelectTopicsDialogComponent, {
       height: '600px',
       width: '800px',
-      position: {top: '15vh'},
-      data: {topic: aTopic, availableTopics, forAction: aAction, many: isMany}
+      position: { top: '15vh' },
+      data: { topic: aTopic, availableTopics, forAction: aAction, many: isMany }
     });
 
     dialogRef.afterClosed()
