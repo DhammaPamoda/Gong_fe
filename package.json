@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host localhost --proxy-config proxy.conf.json",
-    "start-https-server": "ng serve --host 3103 --proxy-config proxy-https.conf.json",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider NODE_NO_WARNINGS=1 ng serve --host localhost --proxy-config proxy.conf.json",
+    "start-https-server": "NODE_OPTIONS=--openssl-legacy-provider NODE_NO_WARNINGS=1 ng serve --host 3103 --proxy-config proxy-https.conf.json",
     "build-to-prod": "ng build --prod --outputPath='../gong_server/dist'",
     "build-to-dev-be": "ng build --prod --outputPath='../Gong-be/dist'",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "browserslist --update-db || true"
   },
   "private": true,
   "dependencies": {
@@ -19,7 +20,6 @@
     "@angular/compiler": "^8.2.13",
     "@angular/core": "^8.2.13",
     "@angular/forms": "^8.2.13",
-    "@angular/http": "^7.2.15",
     "@angular/material": "^8.2.3",
     "@angular/platform-browser": "^8.2.13",
     "@angular/platform-browser-dynamic": "^8.2.13",
@@ -33,6 +33,7 @@
     "angular-json-class-converter": "^3.0.1",
     "angular-md2": "^6.2.0",
     "axios": "^0.19.0",
+    "caniuse-lite": "^1.0.30001749",
     "core-js": "^3.4.0",
     "hammerjs": "^2.0.8",
     "idb": "^4.0.4",
@@ -57,7 +58,6 @@
     "@types/jasminewd2": "^2.0.8",
     "@types/lodash": "^4.14.146",
     "@types/node": "~12.12.7",
-    "babel-preset-env": "^1.7.0",
     "codelyzer": "~5.2.0",
     "protractor": "^5.4.2",
     "redux-devtools-extension": "^2.13.8",
