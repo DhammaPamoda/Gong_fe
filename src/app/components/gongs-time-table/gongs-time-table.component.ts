@@ -307,7 +307,8 @@ export class GongsTimeTableComponent implements OnInit, OnChanges, OnDestroy, Af
       return;
     }
     this.nextGongIndex = aNextGongIndex;
-    const timeOfNextGong = this._scheduledGongsArray[aNextGongIndex].exactMoment.clone().add(1, 'm');
+    // 🔹 Update UI 5 seconds after gong time instead of 1 minute to remove pink highlight quickly
+    const timeOfNextGong = this._scheduledGongsArray[aNextGongIndex].exactMoment.clone().add(5, 's');
     this.nextGongSubscription = timer(timeOfNextGong.toDate()).subscribe(() => {
       this.scheduledGongEndedEvent.emit(false);
       this._scheduledGongsArray[aNextGongIndex].isTheNextGong = false;

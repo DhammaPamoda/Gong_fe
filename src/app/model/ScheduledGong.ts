@@ -49,9 +49,9 @@ export class ScheduledGong {
     const clonedObject = this.clone();
 
     if (!clonedObject.date) { // Setting the exact date - used mostly for courses
-      clonedObject.exactMoment = moment(courseStartDate).add(clonedObject.dayNumber - aOffsetDaysToReduce, 'd');
-      clonedObject.date = clonedObject.exactMoment.toDate();
-      clonedObject.exactMoment.add(clonedObject.time, 'ms');
+      // Time already includes the day offset from conversion, so just add it to course start
+      clonedObject.exactMoment = moment(courseStartDate).add(clonedObject.time, 'ms');
+      clonedObject.date = clonedObject.exactMoment.startOf('day').toDate();
     } else if (!clonedObject.time) {  // If there is a date and no time -
       // probably a manual gong that needs time of the day calculation
       clonedObject.exactMoment = moment(clonedObject.date);

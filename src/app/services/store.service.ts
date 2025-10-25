@@ -1,4 +1,5 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {NgRedux} from '@angular-redux/store';
 
 import {filter, first} from 'rxjs/operators';
@@ -44,7 +45,8 @@ export class StoreService implements OnInit, OnDestroy {
   isCourseScheduleArrayEnhanced: boolean;
 
   constructor(private ngRedux: NgRedux<any>,
-              private translateService: TranslateService) {
+              private translateService: TranslateService,
+              private http: HttpClient) {
     this.populateAreasMap();
     this.populateGongTypesMap();
     this.populateGongTypeCoursesMap();
@@ -212,6 +214,16 @@ export class StoreService implements OnInit, OnDestroy {
 
   playGong(aGongToPlay: Gong) {
     this.ngRedux.dispatch(ActionGenerator.playGong(aGongToPlay));
+  }
+
+  cancelGong(): Observable<any> {
+    const url = 'api/relay/cancelGong';
+    return this.http.post(url, {});
+  }
+
+  isGongPlaying(): Observable<any> {
+    const url = 'api/relay/isGongPlaying';
+    return this.http.get(url);
   }
 
   ngOnDestroy(): void {

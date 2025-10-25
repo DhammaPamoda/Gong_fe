@@ -8,8 +8,8 @@
       },
       {
         "propertyName": "nextScheduledJobTime",
-        "propertyNameInJson": "nextScheduledJob.time",
-        "conversionFunctionName": "timeToDateConversion"
+        "propertyNameInJson": "nextScheduledJob",
+        "conversionFunctionName": "nextScheduledJobTimeConversion"
       },
       {
         "propertyName": "staticDataLastUpdateTime",
@@ -18,7 +18,8 @@
       },
       {
         "propertyName": "isManual",
-        "propertyNameInJson": "nextScheduledJob.isManual"
+        "propertyNameInJson": "nextScheduledJob",
+        "conversionFunctionName": "isManualConversion"
       }
     ]
   },

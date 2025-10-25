@@ -32,8 +32,13 @@ const agendaConversion = (coursesAgendaArray: Array<any>): ScheduledGong[] => {
     (agendaRecord.days as Array<any>).forEach(day => {
       const gongRecord = agendaRecord.gongs;
       (gongRecord.times as Array<any>).forEach(gongTime => {
-        const computedGongTime = (gongTime.indexOf(':') > 0) ? gongTime : `0${gongTime}`;
-        addNewGongToArray(day, timeConversion(computedGongTime), gongRecord, returnedScheduledGongArray);
+        // For test courses, times are in format ":XX" (minutes)
+        // For regular courses, times are in format "HH:MM"
+        const computedGongTime = (gongTime.indexOf(':') === 0) ? `0${gongTime}` : gongTime;
+        // Time should be in format "day.HH:MM" to represent time from course start
+        const timeFromCourseStart = `${day}.${computedGongTime}`;
+        const timeInMillis = moment.duration(timeFromCourseStart).asMilliseconds();
+        addNewGongToArray(day, timeInMillis, gongRecord, returnedScheduledGongArray);
       });
     });
   });
@@ -62,6 +67,24 @@ const timeToStrConversionForJson = (aTime: number): string => {
   // const timeStr = `${duration.hours()}:${duration.minutes()}`;
   const timeStr = moment.utc(aTime).format('HH:mm');
   return timeStr;
+};
+
+const nextScheduledJobTimeConversion = (nextScheduledJob: any): Date | null => {
+  console.log('🔍 nextScheduledJobTimeConversion called with:', nextScheduledJob);
+  if (!nextScheduledJob || !nextScheduledJob.time) {
+    console.log('🔍 nextScheduledJob is null or has no time, returning null');
+    return null;
+  }
+  const converted = timeToDateConversion(nextScheduledJob.time);
+  console.log('🔍 Converted time:', converted);
+  return converted;
+};
+
+const isManualConversion = (nextScheduledJob: any): boolean => {
+  if (!nextScheduledJob) {
+    return false; // Default to false when no scheduled job
+  }
+  return nextScheduledJob.isManual || false;
 };
 
 const dateConversion = (dateAsStr: string): Date => {
@@ -93,7 +116,9 @@ export default {
     {methodName: 'timeToDateConversion', method: timeToDateConversion},
     {methodName: 'dateToTimeConversionForJson', method: dateToTimeConversionForJson},
     {methodName: 'dateToStrDateConversionForJson', method: dateToStrDateConversionForJson},
-    {methodName: 'timeToStrConversionForJson', method: timeToStrConversionForJson}
+    {methodName: 'timeToStrConversionForJson', method: timeToStrConversionForJson},
+    {methodName: 'nextScheduledJobTimeConversion', method: nextScheduledJobTimeConversion},
+    {methodName: 'isManualConversion', method: isManualConversion}
   ] as MethodMapEntry[],
   classesMapArray: [
     {className: 'BasicServerData', clazz: BasicServerData},

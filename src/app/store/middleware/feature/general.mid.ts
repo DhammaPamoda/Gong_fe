@@ -152,6 +152,7 @@ export class GeneralMiddlewareService {
         );
         break;
       case ActionTypesEnum.GET_BASIC_DATA:
+        console.log('🔍 GET_BASIC_DATA action triggered, source:', action.data);
         next(
           apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE, action.data)
         );
@@ -169,8 +170,10 @@ export class GeneralMiddlewareService {
         }
         break;
       case `${ActionFeaturesEnum.BASIC_DATA_FEATURE} ${API_SUCCESS}`:
+        console.log('🔍 Basic data received:', action.payload.data);
         const basicServerData = this.jsonConverterService.convertOneObject<BasicServerData>(
           action.payload.data, 'BasicServerData');
+        console.log('🔍 Converted basicServerData:', basicServerData);
         next(
           ActionGenerator.setBasicServerData(basicServerData)
         );
@@ -272,6 +275,10 @@ export class GeneralMiddlewareService {
         next(
           ActionGenerator.updateCourseSchedule(addedCourseSchedule)
         );
+        // Refresh basic data to update next gong after course scheduling
+        next(
+          apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
+            , {bypassRefreshDateFormat: true}));
         break;
       case `${ActionFeaturesEnum.SCHEDULE_COURSE_FEATURE} ${API_ERROR}`:
         const newCourseSchedule = (action.data as CourseSchedule).clone();
@@ -281,12 +288,23 @@ export class GeneralMiddlewareService {
         );
         break;
       case ActionTypesEnum.SCHEDULED_COURSE_REMOVE:
+        console.log('🔍 SCHEDULED_COURSE_REMOVE action triggered');
         const courseScheduleForRemoval = this.jsonConverterService.convertToJson(action.payload);
         const stringedifiedCourseScheduleForRemovalJson = JSON.stringify(courseScheduleForRemoval);
         next(
           apiRequest(stringedifiedCourseScheduleForRemovalJson, 'DELETE', REMOVE_COURSE_SCHEDULE_URL,
             ActionFeaturesEnum.SCHEDULED_COURSE_REMOVE_FEATURE, action.payload)
         );
+        break;
+      case `${ActionFeaturesEnum.SCHEDULED_COURSE_REMOVE_FEATURE} ${API_SUCCESS}`:
+        console.log('🔍 Course schedule removal successful, refreshing basic data...');
+        // Refresh basic data after a short delay to ensure backend has processed the removal
+        setTimeout(() => {
+          dispatch(
+            apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
+              , {bypassRefreshDateFormat: true})
+          );
+        }, 500);
         break;
       case ActionTypesEnum.TOGGLE_SCHEDULED_GONG:
         const scheduledCourseGongJson = this.jsonConverterService.convertToJson(action.payload);
@@ -398,12 +416,14 @@ export class GeneralMiddlewareService {
         );
         break;
       case ActionTypesEnum.DELETE_COURSE:
+        console.log('🔍 DELETE_COURSE action triggered with payload:', action.payload);
         next(
           apiRequest(JSON.stringify({courseName: action.payload}),
             'POST', DELETE_COURSE_URL, ActionFeaturesEnum.DELETE_COURSE_FEATURE, null)
         );
         break;
       case `${ActionFeaturesEnum.DELETE_COURSE_FEATURE} ${API_SUCCESS}`:
+        console.log('🔍 Course deletion successful, refreshing basic data...');
         this.messagesService.courseDeletedSuccessfully();
         next(
           apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
