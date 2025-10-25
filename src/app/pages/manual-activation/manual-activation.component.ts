@@ -158,10 +158,9 @@ export class ManualActivationComponent extends BaseComponent {
 
   playGong() {
     console.log('▶️ Play button clicked');
-    console.trace('Play gong called from:');
     const createdGong = Gong.createOutOfScheduledGong(this.gongToPlay);
     this.storeService.playGong(createdGong);
-    
+
     // Start polling to monitor gong status
     this.startPollingGongStatus();
   }
