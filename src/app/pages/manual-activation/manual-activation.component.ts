@@ -82,7 +82,6 @@ export class ManualActivationComponent extends BaseComponent {
     this.setOnScheduledGongsArrayChange();
     this.setOnAreasSelectionChange();
     this.setOnPlayGongEnabledChange();
-    this.startGongPlayingCheck();
 
     // Permissions
     this.authService.hasPermission('play_manual')
@@ -162,6 +161,9 @@ export class ManualActivationComponent extends BaseComponent {
     console.trace('Play gong called from:');
     const createdGong = Gong.createOutOfScheduledGong(this.gongToPlay);
     this.storeService.playGong(createdGong);
+    
+    // Start polling to monitor gong status
+    this.startPollingGongStatus();
   }
 
   scheduleGong() {
@@ -230,7 +232,12 @@ export class ManualActivationComponent extends BaseComponent {
     this.storeService.removeScheduledGong(aRemovedScheduledGong);
   }
 
-  private startGongPlayingCheck() {
+
+  private startPollingGongStatus() {
+    // Stop any existing polling first
+    this.stopPollingGongStatus();
+    
+    console.log('Starting gong status polling');
     // Poll every 1 second to check if a gong is playing
     this.gongPlayingCheckSubscription = timer(0, 1000)
       .pipe(takeUntil(this.onDestroy$))
@@ -241,6 +248,12 @@ export class ManualActivationComponent extends BaseComponent {
             this.isGongCurrentlyPlaying = result.data && result.data.isPlaying;
             if (wasPlaying !== this.isGongCurrentlyPlaying) {
               console.log('Gong playing status changed:', this.isGongCurrentlyPlaying);
+              
+              // Stop polling when gong finishes playing
+              if (!this.isGongCurrentlyPlaying) {
+                console.log('Gong finished - stopping polling');
+                this.stopPollingGongStatus();
+              }
             }
           },
           (error) => {
@@ -251,8 +264,20 @@ export class ManualActivationComponent extends BaseComponent {
       });
   }
 
+  private stopPollingGongStatus() {
+    if (this.gongPlayingCheckSubscription) {
+      console.log('Stopping gong status polling');
+      this.gongPlayingCheckSubscription.unsubscribe();
+      this.gongPlayingCheckSubscription = null;
+    }
+  }
+
   cancelGong() {
     console.log('🛑 Cancel button clicked');
+    
+    // Stop polling immediately when cancel is clicked
+    this.stopPollingGongStatus();
+    
     this.storeService.cancelGong().subscribe(
       (result: any) => {
         console.log('Cancel gong result:', result);
@@ -278,9 +303,7 @@ export class ManualActivationComponent extends BaseComponent {
   }
 
   ngOnDestroy() {
-    if (this.gongPlayingCheckSubscription) {
-      this.gongPlayingCheckSubscription.unsubscribe();
-    }
+    this.stopPollingGongStatus();
     super.ngOnDestroy();
   }
 }
