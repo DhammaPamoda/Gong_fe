@@ -40,3 +40,4 @@ Thumbs.db
 
 # private
 src/assets/p-env/*
+.angular/cache/
