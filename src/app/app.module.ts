@@ -135,16 +135,6 @@ const jsonConverterConfig: IJsonConverterConfigFactory = {getConfig};
     }),
     JsonEditorModule,
   ],
-  entryComponents: [
-    ScheduleCourseDialogComponent,
-    SelectTopicsDialogComponent,
-    EditUserDialogComponent,
-    DeviceSetupComponent,
-    I18nEditingComponent,
-    LanguagesComponent,
-    PermissionsComponent,
-    UsersComponent,
-  ],
   providers: [ApiMiddlewareService, GeneralMiddlewareService],
   bootstrap: [AppComponent]
 })
