@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "NODE_OPTIONS=--openssl-legacy-provider ng serve --host 0.0.0.0 --proxy-config proxy.conf.json",
     "start-https-server": "NODE_OPTIONS=--openssl-legacy-provider ng serve --host 0.0.0.0 --proxy-config proxy-https.conf.json",
-    "build-to-prod": "NODE_OPTIONS=--openssl-legacy-provider ng build --prod --outputPath='../gong_server/dist'",
+    "build-to-prod": "node --openssl-legacy-provider node_modules/@angular/cli/bin/ng build --prod --outputPath='../gong_server/dist'",
     "build-to-dev-be": "NODE_OPTIONS=--openssl-legacy-provider ng build --prod --outputPath='../Gong-be/dist'",
     "lint": "ng lint",
     "e2e": "ng e2e"
