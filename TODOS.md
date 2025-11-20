@@ -8,3 +8,7 @@
   - previously was:     "build-to-prod": "NODE_OPTIONS=--openssl-legacy-provider ng build --prod --outputPath='../gong_server/dist'",
 it better stay how it was.
 
+
+in docker file, the user is hardcoded, not good for other centers.
+
+
