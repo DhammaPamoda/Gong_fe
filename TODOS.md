@@ -13,3 +13,8 @@ in docker file, the user is hardcoded, not good for other centers.
 
 2511/21.13:50:18:093 relayAndSoundManager[warn] : RelaysModule::constructor ft245rl module is not available. Relay functionality will be disabled. Please install FTDI drivers and rebuild the module if needed. .
 
+
+If the port is not occupied but the browser still returns a page even after hard cache, you need to stop and unregister the service worker.
+on devtools/application/service worker
+
+
