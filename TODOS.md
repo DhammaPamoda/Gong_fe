@@ -17,4 +17,4 @@ in docker file, the user is hardcoded, not good for other centers.
 If the port is not occupied but the browser still returns a page even after hard cache, you need to stop and unregister the service worker.
 on devtools/application/service worker
 
-
+Add system requirments for the version: node, npm, relay, OS, PM2, Docker.
