@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatRadioChange} from '@angular/material';
+import {MatRadioChange} from '@angular/material/radio';
 
 import {NgRedux} from '@angular-redux/store';
 
@@ -116,7 +116,7 @@ export class I18nEditingComponent extends BaseLangComponent {
         title: title,
         html: message,
         imageUrl: '/assets/icons/alerts/icons8-error-48.png',
-        customClass: 'confirmClass',
+        customClass: { popup: 'confirmClass' },
         confirmButtonText: confirm,
         showCancelButton: true,
         cancelButtonText: cancel,

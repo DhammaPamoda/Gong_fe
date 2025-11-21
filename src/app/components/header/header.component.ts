@@ -1,6 +1,6 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
 
 import { fromEvent, Subscription, timer } from 'rxjs';
 import { filter, first, takeUntil, tap } from 'rxjs/operators';
@@ -344,7 +344,7 @@ export class HeaderComponent extends BaseComponent {
       title: this.translationMap.get(ETranslation.DELETE_CONFIRM_TITLE),
       text: `${mainText} : ${aTopicData.name}?`,
       imageUrl: '/assets/icons/alerts/icons8-error-48.png',
-      customClass: 'confirmClass',
+      customClass: { popup: 'confirmClass' },
       confirmButtonText: this.translationMap.get(ETranslation.CONFIRM_DELETE_SUBMIT),
       showCancelButton: true,
       cancelButtonText: this.translationMap.get(ETranslation.CONFIRM_DELETE_CANCEL),

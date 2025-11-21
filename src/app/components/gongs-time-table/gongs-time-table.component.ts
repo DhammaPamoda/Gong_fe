@@ -217,7 +217,7 @@ export class GongsTimeTableComponent implements OnInit, OnChanges, OnDestroy, Af
       title,
       text: this.translationMap.get(Translation_Enum.CONFIRM_DEGONG_TEXT),
       imageUrl: '/assets/icons/alerts/icons8-error-48.png',
-      customClass: 'confirmClass',
+      customClass: { popup: 'confirmClass' },
       confirmButtonText: confirm,
       showCancelButton: true,
       cancelButtonText: this.translationMap.get(Translation_Enum.CONFIRM_DEGONG_CANCEL),
