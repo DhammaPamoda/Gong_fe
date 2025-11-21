@@ -11,4 +11,5 @@ it better stay how it was.
 
 in docker file, the user is hardcoded, not good for other centers.
 
+2511/21.13:50:18:093 relayAndSoundManager[warn] : RelaysModule::constructor ft245rl module is not available. Relay functionality will be disabled. Please install FTDI drivers and rebuild the module if needed. .
 
