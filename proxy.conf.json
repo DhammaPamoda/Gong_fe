@@ -3,7 +3,7 @@
     "target": {
       "host": "localhost",
       "protocol": "http:",
-      "port": 3002
+      "port": 3001
     },
     "secure": false,
     "pathRewrite": {
