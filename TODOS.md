@@ -18,3 +18,7 @@ If the port is not occupied but the browser still returns a page even after hard
 on devtools/application/service worker
 
 Add system requirments for the version: node, npm, relay, OS, PM2, Docker.
+ - Copy files to /home/{user} before installation:
+ deploy_gong.sh
+ deploy_gong_actions.sh
+ docker_init.sh
