@@ -22,3 +22,5 @@ Add system requirments for the version: node, npm, relay, OS, PM2, Docker.
  deploy_gong.sh
  deploy_gong_actions.sh
  docker_init.sh
+
+ During development, run npm prestart- or pack it in one script with npm start
