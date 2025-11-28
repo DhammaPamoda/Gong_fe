@@ -42,8 +42,10 @@ export class ManualActivationComponent extends BaseComponent {
   scheduledGongsArray: ScheduledGong[];
 
   timerSubscription: Subscription;
+  gongPlayingCheckSubscription: Subscription;
 
   playGongEnabled: boolean;
+  isGongCurrentlyPlaying: boolean = false;
 
   private isGongTypesArrayReady: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -155,8 +157,12 @@ export class ManualActivationComponent extends BaseComponent {
   }
 
   playGong() {
+    console.log('▶️ Play button clicked');
     const createdGong = Gong.createOutOfScheduledGong(this.gongToPlay);
     this.storeService.playGong(createdGong);
+
+    // Start polling to monitor gong status
+    this.startPollingGongStatus();
   }
 
   scheduleGong() {
@@ -223,5 +229,80 @@ export class ManualActivationComponent extends BaseComponent {
 
   onGongRemove(aRemovedScheduledGong: ScheduledGong) {
     this.storeService.removeScheduledGong(aRemovedScheduledGong);
+  }
+
+
+  private startPollingGongStatus() {
+    // Stop any existing polling first
+    this.stopPollingGongStatus();
+    
+    console.log('Starting gong status polling');
+    // Poll every 1 second to check if a gong is playing
+    this.gongPlayingCheckSubscription = timer(0, 1000)
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(() => {
+        this.storeService.isGongPlaying().subscribe(
+          (result: any) => {
+            const wasPlaying = this.isGongCurrentlyPlaying;
+            this.isGongCurrentlyPlaying = result.data && result.data.isPlaying;
+            if (wasPlaying !== this.isGongCurrentlyPlaying) {
+              console.log('Gong playing status changed:', this.isGongCurrentlyPlaying);
+              
+              // Stop polling when gong finishes playing
+              if (!this.isGongCurrentlyPlaying) {
+                console.log('Gong finished - stopping polling');
+                this.stopPollingGongStatus();
+              }
+            }
+          },
+          (error) => {
+            console.error('Error checking gong playing status:', error);
+            // Don't change status on error to avoid flickering
+          }
+        );
+      });
+  }
+
+  private stopPollingGongStatus() {
+    if (this.gongPlayingCheckSubscription) {
+      console.log('Stopping gong status polling');
+      this.gongPlayingCheckSubscription.unsubscribe();
+      this.gongPlayingCheckSubscription = null;
+    }
+  }
+
+  cancelGong() {
+    console.log('🛑 Cancel button clicked');
+    
+    // Stop polling immediately when cancel is clicked
+    this.stopPollingGongStatus();
+    
+    this.storeService.cancelGong().subscribe(
+      (result: any) => {
+        console.log('Cancel gong result:', result);
+        const data = result.data || result;
+        const message = data.gongCanceled ? 'Gong canceled successfully' : 'No gong was playing';
+        this.snackBar.open(message, null, {
+          duration: 3000,
+          panelClass: 'snackBarClass',
+        });
+        // Add a small delay before showing the play button again to prevent accidental double-clicks
+        setTimeout(() => {
+          this.isGongCurrentlyPlaying = false;
+        }, 500);
+      },
+      (error) => {
+        console.error('Cancel gong error:', error);
+        this.snackBar.open('Failed to cancel gong', null, {
+          duration: 3000,
+          panelClass: 'snackBarClass',
+        });
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.stopPollingGongStatus();
+    super.ngOnDestroy();
   }
 }

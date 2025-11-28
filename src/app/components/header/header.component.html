@@ -168,14 +168,14 @@
 
   <section class="nextGongTimeContainer" [ngClass]="{langRtl: currentLanguage === 'he'}" *ngIf="getIsLoggedIn()">
     {{'main.labels.nextGong' | translate}} :
-    <div *ngIf="nextGongTime">
+    <div *ngIf="nextGongTime" (click)="getBasicData()" style="cursor: pointer;" matTooltip="Click to refresh next gong">
       {{ nextGongTime | amDateFormat: currentDateFormat.delimited + ' HH:mm'}}
       <span matTooltip="{{ 'main.tooltips.manual.' + !!isManual | translate}}"
             matTooltipClass="manualTooltipClass" class="isManualSymbol mat-elevation-z8">
         {{isManual ? 'M' : 'A'}}
       </span>
     </div>
-    <div *ngIf="!nextGongTime">
+    <div *ngIf="!nextGongTime" (click)="getBasicData()" style="cursor: pointer;" matTooltip="Click to refresh next gong">
       {{'main.labels.nextGongNotAvailable' | translate}}
     </div>
   </section>

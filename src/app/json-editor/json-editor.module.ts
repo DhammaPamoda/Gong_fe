@@ -27,7 +27,6 @@ import {HeaderComponent} from './components/header/header.component';
     MaterialModule,
     DragDropModule,
   ],
-  entryComponents: [NameEditDialogComponent, MessagesComponent, NewNodeDialogComponent],
   exports: [JsonEditorComponent]
 })
 export class JsonEditorModule {

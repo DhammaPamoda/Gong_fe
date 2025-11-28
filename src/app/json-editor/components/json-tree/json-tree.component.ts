@@ -1,7 +1,9 @@
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 
-import {MatBottomSheet, MatDialog, MatTree, MatTreeNestedDataSource} from '@angular/material';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {MatDialog} from '@angular/material/dialog';
+import {MatTree, MatTreeNestedDataSource} from '@angular/material/tree';
 import * as _ from 'lodash';
 
 import {LanguageProperties, NotificationTypesEnum} from '../../shared/dataModels/lang.model';

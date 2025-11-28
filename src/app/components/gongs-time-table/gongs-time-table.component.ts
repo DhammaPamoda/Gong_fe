@@ -217,7 +217,7 @@ export class GongsTimeTableComponent implements OnInit, OnChanges, OnDestroy, Af
       title,
       text: this.translationMap.get(Translation_Enum.CONFIRM_DEGONG_TEXT),
       imageUrl: '/assets/icons/alerts/icons8-error-48.png',
-      customClass: 'confirmClass',
+      customClass: { popup: 'confirmClass' },
       confirmButtonText: confirm,
       showCancelButton: true,
       cancelButtonText: this.translationMap.get(Translation_Enum.CONFIRM_DEGONG_CANCEL),
@@ -307,7 +307,8 @@ export class GongsTimeTableComponent implements OnInit, OnChanges, OnDestroy, Af
       return;
     }
     this.nextGongIndex = aNextGongIndex;
-    const timeOfNextGong = this._scheduledGongsArray[aNextGongIndex].exactMoment.clone().add(1, 'm');
+    // 🔹 Update UI 5 seconds after gong time instead of 1 minute to remove pink highlight quickly
+    const timeOfNextGong = this._scheduledGongsArray[aNextGongIndex].exactMoment.clone().add(5, 's');
     this.nextGongSubscription = timer(timeOfNextGong.toDate()).subscribe(() => {
       this.scheduledGongEndedEvent.emit(false);
       this._scheduledGongsArray[aNextGongIndex].isTheNextGong = false;

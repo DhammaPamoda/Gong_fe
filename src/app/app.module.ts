@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {MatIconRegistry} from '@angular/material/icon';
 
@@ -63,6 +63,7 @@ import { LanguagesComponent } from './pages/configuration/languages/languages.co
 import { PermissionsComponent } from './pages/configuration/permissions/permissions.component';
 import { UsersComponent } from './pages/configuration/users/users.component';
 import { EditUserDialogComponent } from './dialogs/edit-user-dialog/edit-user-dialog.component';
+import { JwtInterceptor } from './auth/jwt.interceptor';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -134,16 +135,6 @@ const jsonConverterConfig: IJsonConverterConfigFactory = {getConfig};
       }
     }),
     JsonEditorModule,
-  ],
-  entryComponents: [
-    ScheduleCourseDialogComponent,
-    SelectTopicsDialogComponent,
-    EditUserDialogComponent,
-    DeviceSetupComponent,
-    I18nEditingComponent,
-    LanguagesComponent,
-    PermissionsComponent,
-    UsersComponent,
   ],
   providers: [ApiMiddlewareService, GeneralMiddlewareService],
   bootstrap: [AppComponent]

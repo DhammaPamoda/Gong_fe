@@ -4,7 +4,10 @@ import {fromEvent, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map, takeUntil} from 'rxjs/operators';
 import * as _ from 'lodash';
 
-import {MatBottomSheet, MatCheckbox, MatDialog, MatMenuTrigger} from '@angular/material';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {MatCheckbox} from '@angular/material/checkbox';
+import {MatDialog} from '@angular/material/dialog';
+import {MatMenuTrigger} from '@angular/material/menu';
 
 import {JsonNode, ProblemType, SearchByEnum} from '../../shared/dataModels/tree.model';
 import {JsonTreeComponent, Node4Change} from '../json-tree/json-tree.component';

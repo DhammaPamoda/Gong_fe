@@ -18,9 +18,15 @@
       </div>
 
       <button mat-fab color="accent" (click)="playGong()" class="manual-button"
+              *ngIf="!isGongCurrentlyPlaying"
               [disabled]="!playGongPermissions || !playGongEnabled || !gongToPlay.areas || gongToPlay.areas.length <= 0"
               matTooltip="{{ 'manualActivation.buttons.play' | translate }}">
         <mat-icon svgIcon="play"></mat-icon>
+      </button>
+      <button mat-fab color="warn" (click)="cancelGong()" class="manual-button"
+              *ngIf="isGongCurrentlyPlaying"
+              matTooltip="Cancel currently playing gong">
+        <mat-icon>stop</mat-icon>
       </button>
       <button mat-raised-button color="primary" (click)="scheduleGong()" class="manual-button schedule-button"
               [disabled]="!scheduleGongPermissions || !gongToPlay.areas || gongToPlay.areas.length <= 0"

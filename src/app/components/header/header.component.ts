@@ -1,29 +1,29 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {MatDialog} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
 
-import {fromEvent, Subscription, timer} from 'rxjs';
-import {filter, first, takeUntil, tap} from 'rxjs/operators';
-import {TranslateService} from '@ngx-translate/core';
-import {NgRedux} from '@angular-redux/store';
+import { fromEvent, Subscription, timer } from 'rxjs';
+import { filter, first, takeUntil, tap } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+import { NgRedux } from '@angular-redux/store';
 
 import moment from 'moment';
 
-import Swal, {SweetAlertResult} from 'sweetalert2';
+import Swal, { SweetAlertResult } from 'sweetalert2';
 
-import {BaseComponent} from '../../shared/baseComponent';
-import {DateFormat} from '../../model/dateFormat';
-import {BasicServerData} from '../../model/basicServerData';
-import {StoreDataTypeEnum} from '../../store/storeDataTypeEnum';
-import {StoreService} from '../../services/store.service';
-import {AuthService} from '../../services/auth.service';
-import {EAction, SelectTopicsDialogComponent} from '../../dialogs/select-topics-dialog/select-topics-dialog.component';
-import {ETopic, ITopicData} from '../../model/topics-model';
-import {EnumUtils} from '../../utils/enumUtils';
-import {MessagesService} from '../../services/messages.service';
-import {JsonEditorComponent} from '../../json-editor/components/json-editor/json-editor.component';
-import {LanguageProperties} from '../../json-editor/shared/dataModels/lang.model';
-import {IObjectMap} from '../../model/store-model';
+import { BaseComponent } from '../../shared/baseComponent';
+import { DateFormat } from '../../model/dateFormat';
+import { BasicServerData } from '../../model/basicServerData';
+import { StoreDataTypeEnum } from '../../store/storeDataTypeEnum';
+import { StoreService } from '../../services/store.service';
+import { AuthService } from '../../services/auth.service';
+import { EAction, SelectTopicsDialogComponent } from '../../dialogs/select-topics-dialog/select-topics-dialog.component';
+import { ETopic, ITopicData } from '../../model/topics-model';
+import { EnumUtils } from '../../utils/enumUtils';
+import { MessagesService } from '../../services/messages.service';
+import { JsonEditorComponent } from '../../json-editor/components/json-editor/json-editor.component';
+import { LanguageProperties } from '../../json-editor/shared/dataModels/lang.model';
+import { IObjectMap } from '../../model/store-model';
 
 enum ETranslation {
   DELETE_CONFIRM_TITLE = 'main.header.confirm.delete.title',
@@ -40,8 +40,8 @@ enum ETranslation {
 })
 export class HeaderComponent extends BaseComponent {
 
-  @ViewChild('courseFile', {static: false}) courseFile: ElementRef;
-  @ViewChild('gongFile', {static: false}) gongFile: ElementRef;
+  @ViewChild('courseFile', { static: false }) courseFile: ElementRef;
+  @ViewChild('gongFile', { static: false }) gongFile: ElementRef;
 
   knownLangsObjectMap: IObjectMap<LanguageProperties> = {};
   supportedLanguagesArray: string[];
@@ -57,6 +57,7 @@ export class HeaderComponent extends BaseComponent {
 
   timerSubscription: Subscription;
   nextGongSubscription: Subscription;
+  syncCheckSubscription: Subscription;
 
   topic = ETopic;
   topicAction = EAction;
@@ -66,12 +67,12 @@ export class HeaderComponent extends BaseComponent {
   private gongId4Update: string;
 
   constructor(ngRedux: NgRedux<any>,
-              private storeService: StoreService,
-              authService: AuthService,
-              private router: Router,
-              private dialog: MatDialog,
-              translate: TranslateService,
-              private messagesService: MessagesService) {
+    private storeService: StoreService,
+    authService: AuthService,
+    private router: Router,
+    private dialog: MatDialog,
+    translate: TranslateService,
+    private messagesService: MessagesService) {
     super(translate, ngRedux, authService);
 
     this.deleteConfirmTranslationObjectKey[ETopic.GONG] = ETranslation.DELETE_GONG_CONFIRM_TEXT;
@@ -98,25 +99,80 @@ export class HeaderComponent extends BaseComponent {
     this.ngReduxObj.select<BasicServerData>([StoreDataTypeEnum.DYNAMIC_DATA, 'basicServerData'])
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((basicServerData: BasicServerData) => {
+        console.log('🔍 Header received basicServerData:', basicServerData);
         if (basicServerData) {
-          this.now = moment(basicServerData.currentServerTime);
-          const lastSavedTime = this.now.clone();
+          if (this.timerSubscription) {
+            this.timerSubscription.unsubscribe();
+          }
+
+          // 🔹 Use local PC clock time instead of server time
+          this.now = moment();
+          console.log('Updated time from PC clock:', this.now.format('YYYY-MM-DD HH:mm:ss'))
+          
+          // 🔹 Track expected time vs actual time to detect clock changes
+          let expectedTime = this.now.clone();
+          
           const timeToNextMin = this.now.clone().endOf('minute').diff(this.now) + 1;
           this.timerSubscription = timer(timeToNextMin, 60 * 1000).subscribe((tik) => {
+            const actualTime = moment(); // Get current PC time
+            
             if (tik === 0) {
-              this.now = this.now.clone().add(timeToNextMin, 'ms');
+              expectedTime.add(timeToNextMin, 'ms');
             } else {
-              this.now = this.now.clone().add(1, 'm');
+              expectedTime.add(1, 'm');
             }
-            if (this.now.diff(lastSavedTime) / (1000 * 60) > 21) {
-              location.reload();  // If not logged-in the application will display the login page
+            
+            this.now = actualTime; // Always use actual PC time
+            
+            // 🔹 Detect if PC clock was manually changed (drift > 5 minutes)
+            const timeDrift = Math.abs(actualTime.diff(expectedTime, 'seconds'));
+            if (timeDrift > 300) {
+              console.log(`Clock change detected! Drift: ${timeDrift} seconds. Refreshing schedule...`);
+              expectedTime = actualTime.clone(); // Reset expected time
+              this.getBasicData(); // Refresh next gong from server
             }
           });
+          
+          // 🔹 Periodic sync check: every 60 seconds, check if next gong is stuck in the past
+          if (this.syncCheckSubscription) {
+            this.syncCheckSubscription.unsubscribe();
+          }
+          this.syncCheckSubscription = timer(60000, 60000).subscribe(() => {
+            if (this.nextGongTime && this.nextGongTime.isBefore(moment().subtract(3, 'minutes'))) {
+              console.log('🔄 Sync check: Next gong is stuck in the past. Refreshing...');
+              this.getBasicData();
+            }
+          });
+          
           this.isManual = basicServerData.isManual;
+
+          // If not nextScheduledJobTime - reset next gong and subscription. 
+          console.log('🔍 basicServerData.nextScheduledJobTime:', basicServerData.nextScheduledJobTime);
+          if (!basicServerData.nextScheduledJobTime) {
+            console.log('🔍 No next scheduled job time, clearing next gong display');
+            this.nextGongTime = null;
+             if (this.nextGongSubscription) {
+              this.nextGongSubscription.unsubscribe();
+            }
+            return;
+          }
+
           const nextGongTime = moment(basicServerData.nextScheduledJobTime);
+          
+          // 🔹 Check if next gong is in the past (stuck gong) - refresh immediately
+          if (nextGongTime && nextGongTime.isBefore(moment().subtract(3, 'minutes'))) {
+            console.log('⚠️ Next gong is in the past! Refreshing schedule...', nextGongTime.format('HH:mm'));
+            setTimeout(() => this.getBasicData(), 2000); // Refresh after 2 seconds
+          }
+          
           if (!nextGongTime.isSame(this.nextGongTime)) {
             this.nextGongTime = nextGongTime;
             const timeToNextScheduledJob = this.nextGongTime.clone().startOf('minute').add(1, 'm');
+
+            if (this.nextGongSubscription) {
+              this.nextGongSubscription.unsubscribe();
+            }
+
             this.nextGongSubscription = timer(timeToNextScheduledJob.toDate()).subscribe(() => {
               this.getBasicData();
             });
@@ -240,8 +296,8 @@ export class HeaderComponent extends BaseComponent {
     const dialogRef = this.dialog.open(SelectTopicsDialogComponent, {
       height: '600px',
       width: '800px',
-      position: {top: '15vh'},
-      data: {topic: aTopic, availableTopics, forAction: aAction, many: isMany}
+      position: { top: '15vh' },
+      data: { topic: aTopic, availableTopics, forAction: aAction, many: isMany }
     });
 
     dialogRef.afterClosed()
@@ -288,7 +344,7 @@ export class HeaderComponent extends BaseComponent {
       title: this.translationMap.get(ETranslation.DELETE_CONFIRM_TITLE),
       text: `${mainText} : ${aTopicData.name}?`,
       imageUrl: '/assets/icons/alerts/icons8-error-48.png',
-      customClass: 'confirmClass',
+      customClass: { popup: 'confirmClass' },
       confirmButtonText: this.translationMap.get(ETranslation.CONFIRM_DELETE_SUBMIT),
       showCancelButton: true,
       cancelButtonText: this.translationMap.get(ETranslation.CONFIRM_DELETE_CANCEL),
@@ -296,5 +352,20 @@ export class HeaderComponent extends BaseComponent {
 
 
     return (result.value === true) ? Promise.resolve() : Promise.reject();
+  }
+
+  ngOnDestroy() {
+    // Clean up all subscriptions
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
+    if (this.nextGongSubscription) {
+      this.nextGongSubscription.unsubscribe();
+    }
+    if (this.syncCheckSubscription) {
+      this.syncCheckSubscription.unsubscribe();
+    }
+    // Call parent's ngOnDestroy
+    super.ngOnDestroy();
   }
 }
