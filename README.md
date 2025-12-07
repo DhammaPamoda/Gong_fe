@@ -16,3 +16,20 @@ this didn't work since the process is being created all the time
 
 #### Apply changes:
     sudo sysctl --system
+
+### Relay USB Not Responding
+
+If the relay is not responding or not detected:
+
+1. **Reconnect the relay USB cable**
+   - Unplug the USB cable from the relay
+   - Wait a few seconds
+   - Plug it back in
+   - Check if the device is detected: `lsusb | grep -i ftdi`
+
+2. **Restart the machine**
+   - If reconnecting the USB doesn't help, restart the machine:
+     ```
+     sudo reboot
+     ```
+   - After reboot, verify the relay is detected and the application is running
