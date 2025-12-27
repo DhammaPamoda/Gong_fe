@@ -371,10 +371,11 @@ export class JsonEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   jsonTreeMessageReceived(aNotificationEnum: NotificationTypesEnum) {
     switch (aNotificationEnum) {
       case NotificationTypesEnum.TREE_INITIALIZATION_SUCCESS:
-        this.wasLangLoadedOk = true;
+        // Defer to next tick to avoid ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => this.wasLangLoadedOk = true);
         break;
       case NotificationTypesEnum.TREE_INITIALIZATION_FAILED:
-        this.wasLangLoadedOk = false;
+        setTimeout(() => this.wasLangLoadedOk = false);
         break;
     }
     this.outputMessages.emit(aNotificationEnum);
