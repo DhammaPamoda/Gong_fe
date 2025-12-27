@@ -362,6 +362,11 @@ export class GeneralMiddlewareService {
         next(ActionGenerator.setPlayGongEnabled(true));
         this.messagesService.gongPlayedResult(action.payload.data.gongSuccessPlay);
         break;
+      case `${ActionFeaturesEnum.PLAY_GONG_FEATURE} ${API_ERROR}`:
+        // Re-enable the play button on error so user can try again
+        next(ActionGenerator.setPlayGongEnabled(true));
+        console.error('Play gong API error:', action.payload);
+        break;
       case ActionTypesEnum.SET_DATE_FORMAT:
         localStorage.setItem('date_format', JSON.stringify(action.payload));
         break;
