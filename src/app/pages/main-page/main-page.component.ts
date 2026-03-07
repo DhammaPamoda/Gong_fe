@@ -1,13 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
-import {StoreService} from '../../services/store.service';
+import { StoreService } from '../../services/store.service';
 
-import {AuthService} from '../../services/auth.service';
-import {NotificationTypesEnum} from '../../json-editor/shared/dataModels/lang.model';
-import {BaseComponent} from '../../shared/baseComponent';
-import {takeUntil} from 'rxjs/operators';
+import { AuthService } from '../../services/auth.service';
+import { SystemSettingsService } from '../../services/system-settings.service';
+import { NotificationTypesEnum } from '../../json-editor/shared/dataModels/lang.model';
+import { BaseComponent } from '../../shared/baseComponent';
+import { takeUntil } from 'rxjs/operators';
 
 interface TransResponseInt {
   data: { translations: Array<{ translatedText: string }> };
@@ -29,10 +30,13 @@ export class MainPageComponent extends BaseComponent {
   viewAutomaticPermissions: boolean;
   viewConfigPermissions: boolean;
 
+  isSecurityCheckRunning: boolean = false;
+
   constructor(private authService: AuthService,
-              private http: HttpClient,
-              private router: Router,
-              private storeService: StoreService) {
+    private http: HttpClient,
+    private router: Router,
+    private storeService: StoreService,
+    private systemSettingsService: SystemSettingsService) {
     super();
   }
 
@@ -55,9 +59,16 @@ export class MainPageComponent extends BaseComponent {
     } else {
       this.loggedInRole = this.authService.getRole();
       this.storeService.readToStore();
+      this.checkSystemSettings();
     }
     // 🔹 Add focus listener to refresh server time on tab/window focus
     window.addEventListener('focus', this.handleWindowFocus);
+  }
+
+  checkSystemSettings() {
+    this.systemSettingsService.getSettings().subscribe(settings => {
+      this.isSecurityCheckRunning = settings && settings.runSecurityCheck;
+    });
   }
 
   private firstTime: boolean = true;

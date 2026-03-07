@@ -1,0 +1,51 @@
+<div class="system-settings-container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>System Settings</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div *ngIf="isLoading" class="loading-spinner">
+                <mat-spinner diameter="40"></mat-spinner>
+            </div>
+            <form *ngIf="!isLoading" [formGroup]="settingsForm" (ngSubmit)="saveSettings()">
+
+                <div class="form-row">
+                    <mat-checkbox formControlName="runSecurityCheck" color="primary">
+                        Run Security Check (Oref)
+                    </mat-checkbox>
+                </div>
+
+                <div class="form-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Alert Location</mat-label>
+                        <input matInput formControlName="alertLocation" placeholder="e.g. דגניה">
+                        <mat-error *ngIf="settingsForm.get('alertLocation').hasError('required')">
+                            Location is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Polling Interval (seconds)</mat-label>
+                        <input matInput type="number" formControlName="pollingInterval">
+                        <mat-error *ngIf="settingsForm.get('pollingInterval').hasError('required')">
+                            Interval is required
+                        </mat-error>
+                        <mat-error *ngIf="settingsForm.get('pollingInterval').hasError('min')">
+                            Interval must be at least 1
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-actions">
+                    <button mat-raised-button color="primary" type="submit"
+                        [disabled]="!settingsForm.valid || isLoading">
+                        Save Settings
+                    </button>
+                </div>
+
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

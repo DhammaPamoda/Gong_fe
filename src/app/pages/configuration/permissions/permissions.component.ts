@@ -1,15 +1,14 @@
-import {Component} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
+import { Component } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 
-import {takeUntil} from 'rxjs/operators';
-import {NgRedux} from '@angular-redux/store';
+import { takeUntil } from 'rxjs/operators';
+import { NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
 
-import {Permission} from '../../../model/permission';
-import {BaseComponent} from '../../../shared/baseComponent';
-import {User} from '../../../model/user';
-import {StoreDataTypeEnum} from '../../../store/storeDataTypeEnum';
-import {StoreService} from '../../../services/store.service';
+import { Permission } from '../../../model/permission';
+import { BaseComponent } from '../../../shared/baseComponent';
+import { StoreDataTypeEnum } from '../../../store/storeDataTypeEnum';
+import { StoreService } from '../../../services/store.service';
 
 @Component({
   selector: 'app-permissions',
@@ -25,7 +24,7 @@ export class PermissionsComponent extends BaseComponent {
   wasChanged: boolean;
 
   constructor(private ngRedux: NgRedux<any>,
-              private storeService: StoreService) {
+    private storeService: StoreService) {
     super();
   }
 

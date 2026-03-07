@@ -1,0 +1,25 @@
+.system-settings-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.form-row {
+    margin-bottom: 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
