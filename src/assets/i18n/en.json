@@ -80,11 +80,20 @@
         "subMenu": {
           "export": {
             "main": "Export",
-            "course" : "Course Template"
+            "course": "Course Template"
           },
           "import": {
             "main": "Import",
-            "course" : "Course Template"
+            "course": "Course Template"
+          },
+          "update": {
+            "main": "Update",
+            "gong": "Gong"
+          },
+          "delete": {
+            "main": "Delete",
+            "course": "Course",
+            "lastGong": "Last Gong"
           }
         }
       },
@@ -227,12 +236,17 @@
           }
         }
       }
+    },
+    "confirm": {
+      "delete": {
+        "title": "Delete Confirmation"
+      }
     }
   },
-  "config":{
-    "deviceSetup" : "Device Setup",
-    "AreasI18n" : "Areas names",
-    "GongsI18n" : "Gongs names",
-    "CoursesI18n" : "Courses names"
+  "config": {
+    "deviceSetup": "Device Setup",
+    "AreasI18n": "Areas names",
+    "GongsI18n": "Gongs names",
+    "CoursesI18n": "Courses names"
   }
 }

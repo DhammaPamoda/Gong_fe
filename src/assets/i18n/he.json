@@ -82,11 +82,20 @@
         "subMenu": {
           "export": {
             "main": "ייצא",
-            "course" : "תבנית קורס"
+            "course": "תבנית קורס"
           },
           "import": {
             "main": "יבא",
-            "course" : "תבנית קורס"
+            "course": "תבנית קורס"
+          },
+          "update": {
+            "main": "עדכן",
+            "gong": "צליל"
+          },
+          "delete": {
+            "main": "מחק",
+            "course": "קורס",
+            "lastGong": "צליל אחרון"
           }
         }
       },
@@ -222,12 +231,17 @@
           }
         }
       }
+    },
+    "confirm": {
+      "delete": {
+        "title": "אישור מחיקה"
+      }
     }
   },
-  "config":{
-    "deviceSetup" : "בקר",
-    "AreasI18n" : "שמות איזורים",
-    "GongsI18n" : "שמות צלילים",
-    "CoursesI18n" : "שמות קורסים"
+  "config": {
+    "deviceSetup": "בקר",
+    "AreasI18n": "שמות איזורים",
+    "GongsI18n": "שמות צלילים",
+    "CoursesI18n": "שמות קורסים"
   }
 }
