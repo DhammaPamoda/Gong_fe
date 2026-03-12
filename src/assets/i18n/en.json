@@ -98,6 +98,13 @@
         }
       },
       "logout": "Logout"
+    },
+    "header": {
+      "confirm": {
+        "delete": {
+          "title": "Delete Confirmation"
+        }
+      }
     }
   },
   "manualActivation": {
