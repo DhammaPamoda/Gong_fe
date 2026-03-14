@@ -8,7 +8,10 @@
           "short": "short",
           "single": "Single",
           "chanting": "Chanting",
-          "bells": "Bells"
+          "bells": "Bells",
+          "siren": "Siren",
+          "prepare": "Security Alert",
+          "end": "Event End"
         }
       },
       "areas": {
@@ -134,7 +137,9 @@
       }
     },
     "labels": {
-      "volume": "Volume"
+      "volume": "Volume",
+      "advancedOptions": "Advanced Options",
+      "advancedWarning": "Caution: These options should be used with care!"
     },
     "buttons": {
       "play": "Play",
