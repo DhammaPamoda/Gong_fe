@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface SystemSettings {
     runSecurityCheck: boolean;
+    testing?: boolean;
     alertLocation: string;
     pollingInterval: number;
 }

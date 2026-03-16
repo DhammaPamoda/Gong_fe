@@ -19,6 +19,7 @@ export class SystemSettingsComponent implements OnInit {
     ) {
         this.settingsForm = this.fb.group({
             runSecurityCheck: [false],
+            testing: [false],
             alertLocation: ['', Validators.required],
             pollingInterval: [10, [Validators.required, Validators.min(1)]]
         });
@@ -35,6 +36,7 @@ export class SystemSettingsComponent implements OnInit {
                 if (settings) {
                     this.settingsForm.patchValue({
                         runSecurityCheck: settings.runSecurityCheck || false,
+                        testing: settings.testing || false,
                         alertLocation: settings.alertLocation || 'דגניה',
                         pollingInterval: settings.pollingInterval || 10
                     });
