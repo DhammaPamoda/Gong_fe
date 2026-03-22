@@ -65,6 +65,8 @@ import { UsersComponent } from './pages/configuration/users/users.component';
 import { SystemSettingsComponent } from './pages/configuration/system-settings/system-settings.component';
 import { EditUserDialogComponent } from './dialogs/edit-user-dialog/edit-user-dialog.component';
 import { JwtInterceptor } from './auth/jwt.interceptor';
+import { Hk4ConfigComponent } from './pages/configuration/hk4-config/hk4-config.component';
+import { Hk4SequenceDialogComponent } from './pages/configuration/hk4-config/hk4-sequence-dialog/hk4-sequence-dialog.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -116,6 +118,8 @@ const jsonConverterConfig: IJsonConverterConfigFactory = { getConfig };
     UsersComponent,
     SystemSettingsComponent,
     EditUserDialogComponent,
+    Hk4ConfigComponent,
+    Hk4SequenceDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -146,6 +150,8 @@ const jsonConverterConfig: IJsonConverterConfigFactory = { getConfig };
     PermissionsComponent,
     UsersComponent,
     SystemSettingsComponent,
+    Hk4ConfigComponent,
+    Hk4SequenceDialogComponent,
   ],
   bootstrap: [AppComponent]
 })

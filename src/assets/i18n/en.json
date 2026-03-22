@@ -259,6 +259,9 @@
     "deviceSetup": "Device Setup",
     "AreasI18n": "Areas names",
     "GongsI18n": "Gongs names",
-    "CoursesI18n": "Courses names"
+    "CoursesI18n": "Courses names",
+    "hk4": {
+      "label": "Numbers Keypad"
+    }
   }
 }

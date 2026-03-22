@@ -1,0 +1,21 @@
+.recording-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.record-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mt-3 {
+  margin-top: 15px;
+}

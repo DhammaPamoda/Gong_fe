@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>Configuration Sequence</h2>
+<mat-dialog-content>
+    <form [formGroup]="form">
+        <div class="recording-section">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Sequence Key</mat-label>
+                <input matInput formControlName="sequenceKey" readonly>
+                <mat-hint *ngIf="isListening">Listening for HK4 input (or type 1-4 / a-d)...</mat-hint>
+            </mat-form-field>
+
+            <div class="record-buttons">
+                <button mat-stroked-button color="accent" type="button" (click)="toggleListening()">
+                    {{ isListening ? 'Stop Recording' : 'Record Sequence' }}
+                </button>
+                <button mat-stroked-button color="warn" type="button" (click)="clearSequence()"
+                    [disabled]="!form.get('sequenceKey')?.value">
+                    Clear
+                </button>
+            </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width mt-3">
+            <mat-label>Gong Type (ID)</mat-label>
+            <input matInput type="number" formControlName="gongType">
+            <mat-error>Required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Areas (comma separated, e.g., 0,1,2)</mat-label>
+            <input matInput formControlName="areas">
+            <mat-error>Required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Volume (0 - 100)</mat-label>
+            <input matInput type="number" formControlName="volume">
+            <mat-error>Invalid volume</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Repeat</mat-label>
+            <input matInput type="number" formControlName="repeat">
+            <mat-error>Required</mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="save()">Save</button>
+</mat-dialog-actions>

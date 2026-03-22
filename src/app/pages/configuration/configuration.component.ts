@@ -11,6 +11,7 @@ import { LanguagesComponent } from './languages/languages.component';
 import { PermissionsComponent } from './permissions/permissions.component';
 import { UsersComponent } from './users/users.component';
 import { SystemSettingsComponent } from './system-settings/system-settings.component';
+import { Hk4ConfigComponent } from './hk4-config/hk4-config.component';
 
 interface IComponentRecord {
   name: string;
@@ -51,6 +52,7 @@ export class ConfigurationComponent extends BaseComponent {
       this.componentsArray.push({ name: 'deviceSetup', component: DeviceSetupComponent });
     }
     this.componentsArray.push({ name: 'systemSettings', component: SystemSettingsComponent });
+    this.componentsArray.push({ name: 'hk4', component: Hk4ConfigComponent });
     this.selectedComponent = this.componentsArray[0];
   }
 
