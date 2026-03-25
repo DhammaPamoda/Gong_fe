@@ -6,7 +6,7 @@ import { StoreService } from '../../services/store.service';
 
 import { AuthService } from '../../services/auth.service';
 import { SystemSettingsService } from '../../services/system-settings.service';
-import { NotificationTypesEnum } from '../../json-editor/shared/dataModels/lang.model';
+
 import { BaseComponent } from '../../shared/baseComponent';
 import { takeUntil } from 'rxjs/operators';
 
@@ -107,14 +107,6 @@ export class MainPageComponent extends BaseComponent {
     return new Promise((resolve, reject) => {
       setTimeout(() => resolve(retValue), 50);
     });
-  }
-
-  languagesMapUpdateReceived(aReceivedLangMap: Map<string, any>) {
-    console.log('languagesMapUpdateReceived ', aReceivedLangMap);
-  }
-
-  jsonEditorMessageReceived(aMessagesEnum: NotificationTypesEnum) {
-    // console.log(`jsonEditorMessageReceived was activated with value ${aMessagesEnum}`);
   }
 
   isAdmin(): boolean {

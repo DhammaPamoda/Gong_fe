@@ -1,10 +1,11 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import * as _ from 'lodash';
 
-import {User} from '../../model/user';
-import {IObjectMap} from '../../model/store-model';
+import { User } from '../../model/user';
+import { IObjectMap } from '../../model/store-model';
+import { Titles } from '../../shared/titles';
 
 export enum EditUserActionEnum {
   NEW = 'new',
@@ -24,6 +25,7 @@ enum ErrorMessagesEnum {
   styleUrls: ['./edit-user-dialog.component.scss']
 })
 export class EditUserDialogComponent implements OnInit {
+  public titles = Titles;
   isFormValid: boolean;
 
   errorMessages: IObjectMap<string> = {};
@@ -32,12 +34,12 @@ export class EditUserDialogComponent implements OnInit {
   originalUser: User;
 
   constructor(public dialogRef: MatDialogRef<any>,
-              @Inject(MAT_DIALOG_DATA) public data: {
-                user: User,
-                action: EditUserActionEnum,
-                rolesArray: string[],
-                existingUsersIds: string[]
-              }) {
+    @Inject(MAT_DIALOG_DATA) public data: {
+      user: User,
+      action: EditUserActionEnum,
+      rolesArray: string[],
+      existingUsersIds: string[]
+    }) {
     this.originalUser = _.cloneDeep(this.data.user);
   }
 

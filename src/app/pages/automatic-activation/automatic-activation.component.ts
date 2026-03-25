@@ -1,25 +1,25 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {MatTableDataSource} from '@angular/material/table';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 
-import {Subscription} from 'rxjs';
-import {first, takeUntil} from 'rxjs/operators';
-import {NgRedux} from '@angular-redux/store';
-import {TranslateService} from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { first, takeUntil } from 'rxjs/operators';
+import { NgRedux } from '@angular-redux/store';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 
-import {BaseComponent} from '../../shared/baseComponent';
-import {CourseSchedule} from '../../model/courseSchedule';
-import {Course} from '../../model/course';
-import {ScheduledGong} from '../../model/ScheduledGong';
-import {StoreDataTypeEnum} from '../../store/storeDataTypeEnum';
-import {StoreService} from '../../services/store.service';
-import {ScheduleCourseDialogComponent} from '../../dialogs/schedule-course-dialog/schedule-course-dialog.component';
-import {ScheduledCourseGong} from '../../model/ScheduledCourseGong';
-import {DateFormat} from '../../model/dateFormat';
-import {AuthService} from '../../services/auth.service';
-import {GongsTimeTableComponent} from '../../components/gongs-time-table/gongs-time-table.component';
+import { BaseComponent } from '../../shared/baseComponent';
+import { Titles } from '../../shared/titles';
+import { CourseSchedule } from '../../model/courseSchedule';
+import { Course } from '../../model/course';
+import { ScheduledGong } from '../../model/ScheduledGong';
+import { StoreDataTypeEnum } from '../../store/storeDataTypeEnum';
+import { StoreService } from '../../services/store.service';
+import { ScheduleCourseDialogComponent } from '../../dialogs/schedule-course-dialog/schedule-course-dialog.component';
+import { ScheduledCourseGong } from '../../model/ScheduledCourseGong';
+import { DateFormat } from '../../model/dateFormat';
+import { AuthService } from '../../services/auth.service';
+import { GongsTimeTableComponent } from '../../components/gongs-time-table/gongs-time-table.component';
 
 @Component({
   selector: 'app-automatic-activation',
@@ -28,7 +28,8 @@ import {GongsTimeTableComponent} from '../../components/gongs-time-table/gongs-t
 })
 export class AutomaticActivationComponent extends BaseComponent {
 
-  @ViewChild('timeTable', {static: false}) timeTable: GongsTimeTableComponent;
+  public titles = Titles;
+  @ViewChild('timeTable', { static: false }) timeTable: GongsTimeTableComponent;
 
   coursesDisplayedColumns = ['course_name', 'daysCount', 'date'];
   coursesDataSource: MatTableDataSource<CourseSchedule>;
@@ -52,10 +53,9 @@ export class AutomaticActivationComponent extends BaseComponent {
 
 
   constructor(private ngRedux: NgRedux<any>,
-              private authService: AuthService,
-              private dialog: MatDialog,
-              private translate: TranslateService,
-              private storeService: StoreService) {
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private storeService: StoreService) {
     super();
   }
 
@@ -167,8 +167,8 @@ export class AutomaticActivationComponent extends BaseComponent {
       height: '50vh',
       width: '70vw',
       panelClass: 'schedule-course-dialog',
-      position: {top: '15vh'},
-      data: {role: this.loggedInRole}
+      position: { top: '15vh' },
+      data: { role: this.loggedInRole }
     });
 
     dialogRef.afterClosed().pipe(first()).subscribe((aCourseSchedule: CourseSchedule) => {
@@ -181,30 +181,21 @@ export class AutomaticActivationComponent extends BaseComponent {
   }
 
   removeScheduledCourse() {
-    const translationKeyBase = 'automaticActivation.alerts.confirmRemoveSchedule.';
-    const translationKeyTitle = translationKeyBase + 'title';
-    const translationKeyText = translationKeyBase + 'text';
-    const translationKeyCancel = translationKeyBase + 'buttons.cancel';
-    const translationKeyConfirm = translationKeyBase + 'buttons.confirm';
-
-    this.translate.get([translationKeyTitle, translationKeyText,
-      translationKeyCancel, translationKeyConfirm]).subscribe(transResult => {
-      Swal.fire({
-        title: transResult[translationKeyTitle],
-        text: transResult[translationKeyText],
-        icon: 'warning',
-        confirmButtonText: transResult[translationKeyConfirm],
-        showCancelButton: true,
-        cancelButtonText: transResult[translationKeyCancel],
-      })
-        .then(result => {
-          if (result.value && this.selectedCourseScheduled) {
-            this.storeService.removeScheduledCourse(this.selectedCourseScheduled);
-            this.selectedCourseRoutineArray = [];
-            this.selectedCourseScheduled = undefined;
-          }
-        });
-    });
+    Swal.fire({
+      title: this.titles.automaticActivation.alerts.confirmRemoveSchedule.title,
+      text: this.titles.automaticActivation.alerts.confirmRemoveSchedule.text,
+      icon: 'warning',
+      confirmButtonText: this.titles.automaticActivation.alerts.confirmRemoveSchedule.buttons.confirm,
+      showCancelButton: true,
+      cancelButtonText: this.titles.automaticActivation.alerts.confirmRemoveSchedule.buttons.cancel,
+    })
+      .then(result => {
+        if (result.value && this.selectedCourseScheduled) {
+          this.storeService.removeScheduledCourse(this.selectedCourseScheduled);
+          this.selectedCourseRoutineArray = [];
+          this.selectedCourseScheduled = undefined;
+        }
+      });
   }
 
   onGongActiveToggle(aToggledScheduledGong: ScheduledGong) {
@@ -247,7 +238,7 @@ export class AutomaticActivationComponent extends BaseComponent {
     } else {
       const el = document.getElementById('FIRST_GONG');
       if (el) {
-        el.parentElement.scrollIntoView({behavior: 'auto', block: 'center', inline: 'start'});
+        el.parentElement.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'start' });
       }
     }
   }

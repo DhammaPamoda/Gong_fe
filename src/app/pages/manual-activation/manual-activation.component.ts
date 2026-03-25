@@ -1,24 +1,23 @@
-import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {MatListOption, MatSelectionList, MatSelectionListChange} from '@angular/material/list';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-import {BehaviorSubject, Subscription, timer} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {NgRedux} from '@angular-redux/store';
-import {TranslateService} from '@ngx-translate/core';
+import { BehaviorSubject, Subscription, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { NgRedux } from '@angular-redux/store';
 import moment from 'moment';
 
-import {GongType} from '../../model/gongType';
-import {Area} from '../../model/area';
-import {StoreService} from '../../services/store.service';
-import {ScheduledGong} from '../../model/ScheduledGong';
-import {UpdateStatusEnum} from '../../model/updateStatusEnum';
-import {StoreDataTypeEnum} from '../../store/storeDataTypeEnum';
-import {MessagesService} from '../../services/messages.service';
-import {Gong} from '../../model/gong';
-import {IObjectMap} from '../../model/store-model';
-import {AuthService} from '../../services/auth.service';
-import {BaseComponent} from '../../shared/baseComponent';
+import { GongType } from '../../model/gongType';
+import { Area } from '../../model/area';
+import { StoreService } from '../../services/store.service';
+import { ScheduledGong } from '../../model/ScheduledGong';
+import { UpdateStatusEnum } from '../../model/updateStatusEnum';
+import { StoreDataTypeEnum } from '../../store/storeDataTypeEnum';
+import { MessagesService } from '../../services/messages.service';
+import { Gong } from '../../model/gong';
+import { IObjectMap } from '../../model/store-model';
+import { AuthService } from '../../services/auth.service';
+import { BaseComponent } from '../../shared/baseComponent';
 
 @Component({
   selector: 'app-manual-activation',
@@ -27,8 +26,8 @@ import {BaseComponent} from '../../shared/baseComponent';
 })
 export class ManualActivationComponent extends BaseComponent {
 
-  @ViewChild('allAreasSelectionCtrl', {static: false}) allSelectedOptionCtrl: MatListOption;
-  @ViewChild('areasSelectionCtrl', {static: true}) areasSelectionCtrl: MatSelectionList;
+  @ViewChild('allAreasSelectionCtrl', { static: false }) allSelectedOptionCtrl: MatListOption;
+  @ViewChild('areasSelectionCtrl', { static: true }) areasSelectionCtrl: MatSelectionList;
 
   gongToPlay: ScheduledGong = new ScheduledGong();
   gongTypes: GongType[];
@@ -54,13 +53,12 @@ export class ManualActivationComponent extends BaseComponent {
   deleteGongPermissions: boolean;
 
   constructor(private ngRedux: NgRedux<any>,
-              private changeDetectorRef: ChangeDetectorRef,
-              private authService: AuthService,
-              private storeService: StoreService,
-              private snackBar: MatSnackBar,
-              private messagesService: MessagesService,
-              translateService: TranslateService) {
-    super(translateService);
+    private changeDetectorRef: ChangeDetectorRef,
+    private authService: AuthService,
+    private storeService: StoreService,
+    private snackBar: MatSnackBar,
+    private messagesService: MessagesService) {
+    super();
   }
 
   protected hookOnInit() {
@@ -74,9 +72,6 @@ export class ManualActivationComponent extends BaseComponent {
     this.constructAreasArray();
   }
 
-  protected getKeysArray4Translations(): string[] {
-    return ['manualActivation.messages.areaIsEmpty'];
-  }
 
   protected listenForUpdates() {
     this.setOnScheduledGongsArrayChange();
@@ -102,22 +97,22 @@ export class ManualActivationComponent extends BaseComponent {
     this.areasSelectionCtrl.selectionChange
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((s: MatSelectionListChange) => {
-          if (s.option.value === 0) {
-            if (this.gongToPlay.areas.includes(0)) {
-              this.areasSelectionCtrl.selectAll();
-            } else {
-              this.areasSelectionCtrl.deselectAll();
-            }
+        if (s.option.value === 0) {
+          if (this.gongToPlay.areas.includes(0)) {
+            this.areasSelectionCtrl.selectAll();
           } else {
-            if (this.gongToPlay.areas.includes(s.option.value)) {
-              if (this.gongToPlay.areas.filter(value => value > 0).length >= this.areas.length) {
-                this.areasSelectionCtrl.selectAll();
-              }
-            } else if (this.gongToPlay.areas.includes(0)) {
-              this.allSelectedOptionCtrl.toggle();
+            this.areasSelectionCtrl.deselectAll();
+          }
+        } else {
+          if (this.gongToPlay.areas.includes(s.option.value)) {
+            if (this.gongToPlay.areas.filter(value => value > 0).length >= this.areas.length) {
+              this.areasSelectionCtrl.selectAll();
             }
+          } else if (this.gongToPlay.areas.includes(0)) {
+            this.allSelectedOptionCtrl.toggle();
           }
         }
+      }
       );
   }
 
@@ -167,7 +162,7 @@ export class ManualActivationComponent extends BaseComponent {
 
   scheduleGong() {
     if (this.gongToPlay.areas.length <= 0) {
-      const messageTrans = this.getTranslation('manualActivation.messages.areaIsEmpty');
+      const messageTrans = this.titles.manualActivation.messages.areaIsEmpty;
       this.snackBar.open(messageTrans, null, {
         duration: 5000,
         panelClass: 'snackBarClass',
@@ -235,7 +230,7 @@ export class ManualActivationComponent extends BaseComponent {
   private startPollingGongStatus() {
     // Stop any existing polling first
     this.stopPollingGongStatus();
-    
+
     console.log('Starting gong status polling');
     // Poll every 1 second to check if a gong is playing
     this.gongPlayingCheckSubscription = timer(0, 1000)
@@ -247,7 +242,7 @@ export class ManualActivationComponent extends BaseComponent {
             this.isGongCurrentlyPlaying = result.data && result.data.isPlaying;
             if (wasPlaying !== this.isGongCurrentlyPlaying) {
               console.log('Gong playing status changed:', this.isGongCurrentlyPlaying);
-              
+
               // Stop polling when gong finishes playing
               if (!this.isGongCurrentlyPlaying) {
                 console.log('Gong finished - stopping polling');
@@ -273,10 +268,10 @@ export class ManualActivationComponent extends BaseComponent {
 
   cancelGong() {
     console.log('🛑 Cancel button clicked');
-    
+
     // Stop polling immediately when cancel is clicked
     this.stopPollingGongStatus();
-    
+
     this.storeService.cancelGong().subscribe(
       (result: any) => {
         console.log('Cancel gong result:', result);

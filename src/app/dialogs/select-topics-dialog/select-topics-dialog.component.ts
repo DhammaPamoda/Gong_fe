@@ -1,10 +1,9 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-import {TranslateService} from '@ngx-translate/core';
 
-import {ETopic, ITopicData} from '../../model/topics-model';
-import {BaseComponent} from '../../shared/baseComponent';
+import { ETopic, ITopicData } from '../../model/topics-model';
+import { BaseComponent } from '../../shared/baseComponent';
 
 
 export enum EAction {
@@ -22,28 +21,20 @@ export class SelectTopicsDialogComponent extends BaseComponent {
 
   selectedTopics: ITopicData[] = [];
 
-  keysArray: string[] = [];
+
   topic: string = '';
   disabledTopicToolTip: string = '';
 
   constructor(public dialogRef: MatDialogRef<any>,
-              @Inject(MAT_DIALOG_DATA) public data: { topic: ETopic, availableTopics: ITopicData[], forAction: EAction, many: boolean },
-              translateService: TranslateService) {
-    super(translateService);
-  }
-
-  protected getKeysArray4Translations(): string[] {
-    this.keysArray.push(`dialogs.selectTopics.topics.${this.data.topic}`);
-    this.keysArray.push('dialogs.selectTopics.topics.many');
-    this.keysArray.push(`dialogs.selectTopics.tooltips.inUse.${this.data.topic}`);
-    return this.keysArray;
+    @Inject(MAT_DIALOG_DATA) public data: { topic: ETopic, availableTopics: ITopicData[], forAction: EAction, many: boolean }) {
+    super();
   }
 
   protected hookOnInit() {
-    const topic = this.translationMap.get(this.keysArray[0]);
-    const many = this.data.many ? this.translationMap.get(this.keysArray[1]) : '';
+    const topic = this.titles.dialogs.selectTopics.topics[this.data.topic];
+    const many = this.data.many ? this.titles.dialogs.selectTopics.topics.many : '';
     this.topic = `${topic}${many}`;
-    this.disabledTopicToolTip = this.translationMap.get(this.keysArray[2]);
+    this.disabledTopicToolTip = this.titles.dialogs.selectTopics.tooltips.inUse[this.data.topic];
   }
 
   closeDialog(aSelectedTopics: ITopicData[] = null): void {
@@ -63,5 +54,10 @@ export class SelectTopicsDialogComponent extends BaseComponent {
     } else {
       this.selectedTopics.push(aClickedTopic);
     }
+  }
+
+  getTopicReplacedHeader(): string {
+    const rawHeader = this.titles.dialogs.selectTopics.header[this.data.forAction];
+    return rawHeader ? rawHeader.replace('{{topic}}', this.topic) : '';
   }
 }

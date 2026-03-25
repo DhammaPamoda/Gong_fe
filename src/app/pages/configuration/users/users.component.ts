@@ -1,20 +1,19 @@
-import {Component} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {MatDialog} from '@angular/material/dialog';
+import { Component } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 
-import {first, takeUntil} from 'rxjs/operators';
-import {NgRedux} from '@angular-redux/store';
+import { first, takeUntil } from 'rxjs/operators';
+import { NgRedux } from '@angular-redux/store';
 import Swal from 'sweetalert2';
 
-import {User} from '../../../model/user';
-import {StoreService} from '../../../services/store.service';
-import {DateFormat} from '../../../model/dateFormat';
-import {BaseComponent} from '../../../shared/baseComponent';
-import {StoreDataTypeEnum} from '../../../store/storeDataTypeEnum';
-import {EditUserActionEnum, EditUserDialogComponent} from '../../../dialogs/edit-user-dialog/edit-user-dialog.component';
-import {AuthService} from '../../../services/auth.service';
-import {IObjectMap} from '../../../model/store-model';
-import {TranslateService} from '@ngx-translate/core';
+import { User } from '../../../model/user';
+import { StoreService } from '../../../services/store.service';
+import { DateFormat } from '../../../model/dateFormat';
+import { BaseComponent } from '../../../shared/baseComponent';
+import { StoreDataTypeEnum } from '../../../store/storeDataTypeEnum';
+import { EditUserActionEnum, EditUserDialogComponent } from '../../../dialogs/edit-user-dialog/edit-user-dialog.component';
+import { AuthService } from '../../../services/auth.service';
+import { IObjectMap } from '../../../model/store-model';
 
 @Component({
   selector: 'app-users',
@@ -32,14 +31,12 @@ export class UsersComponent extends BaseComponent {
   currentUser: string;
   currentRole: string;
 
-  confirmDeleteUserTransMap: IObjectMap<string> = {};
 
   constructor(private ngRedux: NgRedux<any>,
-              private translate: TranslateService,
-              private authService: AuthService,
-              private dialog: MatDialog,
-              private storeService: StoreService) {
-    super(translate);
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private storeService: StoreService) {
+    super();
     this.currentUser = this.authService.getUser();
     this.currentRole = this.authService.getRole();
   }
@@ -60,14 +57,7 @@ export class UsersComponent extends BaseComponent {
 
   }
 
-  protected getKeysArray4Translations(): string[] {
-    const translationKeyBase = 'config.users.alerts.confirmRemoveUser.';
-    this.confirmDeleteUserTransMap['title'] = `${translationKeyBase}title`;
-    this.confirmDeleteUserTransMap['text'] = `${translationKeyBase}text`;
-    this.confirmDeleteUserTransMap['cancel'] = `${translationKeyBase}buttons.cancel`;
-    this.confirmDeleteUserTransMap['confirm'] = `${translationKeyBase}buttons.confirm`;
-    return Array.from(Object.values(this.confirmDeleteUserTransMap));
-  }
+
 
   addUser() {
     const rolesArray = this.storeService.getRolesArray();
@@ -76,8 +66,8 @@ export class UsersComponent extends BaseComponent {
       height: '60vh',
       width: '70vw',
       panelClass: 'user-edit-dialog',
-      position: {top: '15vh'},
-      data: {user: new User(), action: EditUserActionEnum.NEW, rolesArray, existingUsersIds}
+      position: { top: '15vh' },
+      data: { user: new User(), action: EditUserActionEnum.NEW, rolesArray, existingUsersIds }
     });
 
     dialogRef.afterClosed().pipe(first())
@@ -95,8 +85,8 @@ export class UsersComponent extends BaseComponent {
       height: '60vh',
       width: '70vw',
       panelClass: 'user-edit-dialog',
-      position: {top: '15vh'},
-      data: {user: this.selectedUser, action: aAction, rolesArray}
+      position: { top: '15vh' },
+      data: { user: this.selectedUser, action: aAction, rolesArray }
     });
 
     dialogRef.afterClosed().pipe(first())
@@ -111,12 +101,12 @@ export class UsersComponent extends BaseComponent {
 
   deleteUser() {
     Swal.fire({
-      title: this.getTranslation(this.confirmDeleteUserTransMap['title']),
-      html: `${this.getTranslation(this.confirmDeleteUserTransMap['text'])} <BR> ${this.selectedUser.id}`,
+      title: this.titles.config.users.alerts.confirmRemoveUser.title,
+      html: `${this.titles.config.users.alerts.confirmRemoveUser.text} <BR> ${this.selectedUser.id}`,
       icon: 'warning',
-      confirmButtonText: this.getTranslation(this.confirmDeleteUserTransMap['confirm']),
+      confirmButtonText: this.titles.config.users.alerts.confirmRemoveUser.buttons.confirm,
       showCancelButton: true,
-      cancelButtonText: this.getTranslation(this.confirmDeleteUserTransMap['cancel']),
+      cancelButtonText: this.titles.config.users.alerts.confirmRemoveUser.buttons.cancel,
     })
       .then(result => {
         if (result.value) {

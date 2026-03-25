@@ -9,12 +9,10 @@ import { DevToolsExtension, NgRedux, NgReduxModule } from '@angular-redux/store'
 import { applyMiddleware, combineReducers, createStore, Store } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { JwtModule } from '@auth0/angular-jwt';
-import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MomentModule } from 'ngx-moment';
 
 import { MaterialModule } from './material/material.module';
 
-import { JsonEditorModule } from './json-editor/json-editor.module';
 
 import {
   AngularJsonClassConverterModule,
@@ -25,8 +23,6 @@ import {
 import { RoutingModule } from './routing/routing.module';
 
 import { environment } from '../environments/environment';
-import { ServerCachedLoaderFactory } from './translation/server-cached.translate.loader';
-import { CustomMissingTranslationHandlerFactory } from './translation/missing-translation.handler';
 import { IndexedDbService } from './shared/indexed-db.service';
 
 import { GeneralMiddlewareService } from './store/middleware/feature/general.mid';
@@ -50,7 +46,6 @@ import { AutomaticActivationComponent } from './pages/automatic-activation/autom
 import { LoginComponent } from './pages/login/login.component';
 import { ConfigurationComponent } from './pages/configuration/configuration.component';
 import { DeviceSetupComponent } from './pages/configuration/device-setup/device-setup.component';
-import { I18nEditingComponent } from './pages/configuration/i18n-editing/i18n-editing.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 
 import { HeaderComponent } from './components/header/header.component';
@@ -59,7 +54,6 @@ import { GongsTimeTableComponent } from './components/gongs-time-table/gongs-tim
 
 import { ScheduleCourseDialogComponent } from './dialogs/schedule-course-dialog/schedule-course-dialog.component';
 import { SelectTopicsDialogComponent } from './dialogs/select-topics-dialog/select-topics-dialog.component';
-import { LanguagesComponent } from './pages/configuration/languages/languages.component';
 import { PermissionsComponent } from './pages/configuration/permissions/permissions.component';
 import { UsersComponent } from './pages/configuration/users/users.component';
 import { SystemSettingsComponent } from './pages/configuration/system-settings/system-settings.component';
@@ -71,19 +65,6 @@ import { Hk4SequenceDialogComponent } from './pages/configuration/hk4-config/hk4
 export function tokenGetter() {
   return localStorage.getItem('access_token');
 }
-
-export const translationRoot = {
-  loader: {
-    provide: TranslateLoader,
-    useFactory: ServerCachedLoaderFactory,
-    deps: [IndexedDbService]
-  },
-  missingTranslationHandler: {
-    provide: MissingTranslationHandler,
-    useFactory: CustomMissingTranslationHandlerFactory,
-    deps: [NgRedux]
-  },
-};
 
 export function getConfig(): JsonConverterConfigurationInterface {
   return {
@@ -111,9 +92,7 @@ const jsonConverterConfig: IJsonConverterConfigFactory = { getConfig };
     SelectTopicsDialogComponent,
     ConfigurationComponent,
     DeviceSetupComponent,
-    I18nEditingComponent,
     ConfigPageHostDirective,
-    LanguagesComponent,
     PermissionsComponent,
     UsersComponent,
     SystemSettingsComponent,
@@ -129,7 +108,6 @@ const jsonConverterConfig: IJsonConverterConfigFactory = { getConfig };
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     NgReduxModule,
     HttpClientModule,
-    TranslateModule.forRoot(translationRoot),
     RoutingModule,
     MomentModule,
     AngularJsonClassConverterModule.forRoot(jsonConverterConfig),
@@ -140,13 +118,10 @@ const jsonConverterConfig: IJsonConverterConfigFactory = { getConfig };
         blacklistedRoutes: ['api/login', 'api/nextgong']
       }
     }),
-    JsonEditorModule,
   ],
   providers: [ApiMiddlewareService, GeneralMiddlewareService],
   entryComponents: [
     DeviceSetupComponent,
-    I18nEditingComponent,
-    LanguagesComponent,
     PermissionsComponent,
     UsersComponent,
     SystemSettingsComponent,
@@ -194,7 +169,7 @@ export class AppModule {
     const store: Store = createStore(
       rootReducer,
       composeWithDevTools(
-        applyMiddleware(...featureMiddleware, ...coreMiddleware)
+        applyMiddleware(generalMiddlewareService.generalMiddleware, apiMiddlewareService.apiMiddleware)
       )
     );
 

@@ -1,10 +1,9 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { fromEvent, Subscription, timer } from 'rxjs';
 import { filter, first, takeUntil, tap } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
 import { NgRedux } from '@angular-redux/store';
 
 import moment from 'moment';
@@ -21,17 +20,10 @@ import { EAction, SelectTopicsDialogComponent } from '../../dialogs/select-topic
 import { ETopic, ITopicData } from '../../model/topics-model';
 import { EnumUtils } from '../../utils/enumUtils';
 import { MessagesService } from '../../services/messages.service';
-import { JsonEditorComponent } from '../../json-editor/components/json-editor/json-editor.component';
-import { LanguageProperties } from '../../json-editor/shared/dataModels/lang.model';
+
 import { IObjectMap } from '../../model/store-model';
 
-enum ETranslation {
-  DELETE_CONFIRM_TITLE = 'main.header.confirm.delete.title',
-  DELETE_GONG_CONFIRM_TEXT = 'main.header.confirm.delete.text.gong',
-  DELETE_COURSE_CONFIRM_TEXT = 'main.header.confirm.delete.text.course',
-  CONFIRM_DELETE_SUBMIT = 'main.header.confirm.delete.buttons.confirm',
-  CONFIRM_DELETE_CANCEL = 'main.header.confirm.delete.buttons.cancel',
-}
+
 
 @Component({
   selector: 'app-header',
@@ -43,9 +35,6 @@ export class HeaderComponent extends BaseComponent {
   @ViewChild('courseFile', { static: false }) courseFile: ElementRef;
   @ViewChild('gongFile', { static: false }) gongFile: ElementRef;
 
-  knownLangsObjectMap: IObjectMap<LanguageProperties> = {};
-  supportedLanguagesArray: string[];
-  currentLanguage: string = 'en';
 
   dateFormatOptions: DateFormat[];
   currentDateFormat: DateFormat;
@@ -61,7 +50,6 @@ export class HeaderComponent extends BaseComponent {
 
   topic = ETopic;
   topicAction = EAction;
-  deleteConfirmTranslationObjectKey: { [key: string]: ETranslation } = {};
 
   viewExportImportPermissions: boolean;
   private gongId4Update: string;
@@ -71,24 +59,16 @@ export class HeaderComponent extends BaseComponent {
     authService: AuthService,
     private router: Router,
     private dialog: MatDialog,
-    translate: TranslateService,
     private messagesService: MessagesService) {
-    super(translate, ngRedux, authService);
-
-    this.deleteConfirmTranslationObjectKey[ETopic.GONG] = ETranslation.DELETE_GONG_CONFIRM_TEXT;
-    this.deleteConfirmTranslationObjectKey[ETopic.COURSE] = ETranslation.DELETE_COURSE_CONFIRM_TEXT;
+    super(ngRedux, authService);
   }
 
   protected hookOnInit() {
     this.getBasicData();
-    this.getLanguageData();
-    this.getSupportedLanguages();
     this.initDateFormatOptions();
   }
 
-  protected getKeysArray4Translations(): string[] {
-    return EnumUtils.getEnumValues(ETranslation);
-  }
+
 
   protected listenForUpdates() {
     // Permissions
@@ -108,22 +88,22 @@ export class HeaderComponent extends BaseComponent {
           // 🔹 Use local PC clock time instead of server time
           this.now = moment();
           console.log('Updated time from PC clock:', this.now.format('YYYY-MM-DD HH:mm:ss'))
-          
+
           // 🔹 Track expected time vs actual time to detect clock changes
           let expectedTime = this.now.clone();
-          
+
           const timeToNextMin = this.now.clone().endOf('minute').diff(this.now) + 1;
           this.timerSubscription = timer(timeToNextMin, 60 * 1000).subscribe((tik) => {
             const actualTime = moment(); // Get current PC time
-            
+
             if (tik === 0) {
               expectedTime.add(timeToNextMin, 'ms');
             } else {
               expectedTime.add(1, 'm');
             }
-            
+
             this.now = actualTime; // Always use actual PC time
-            
+
             // 🔹 Detect if PC clock was manually changed (drift > 5 minutes)
             const timeDrift = Math.abs(actualTime.diff(expectedTime, 'seconds'));
             if (timeDrift > 300) {
@@ -132,7 +112,7 @@ export class HeaderComponent extends BaseComponent {
               this.getBasicData(); // Refresh next gong from server
             }
           });
-          
+
           // 🔹 Periodic sync check: every 60 seconds, check if next gong is stuck in the past
           if (this.syncCheckSubscription) {
             this.syncCheckSubscription.unsubscribe();
@@ -143,7 +123,7 @@ export class HeaderComponent extends BaseComponent {
               this.getBasicData();
             }
           });
-          
+
           this.isManual = basicServerData.isManual;
 
           // If not nextScheduledJobTime - reset next gong and subscription. 
@@ -151,20 +131,20 @@ export class HeaderComponent extends BaseComponent {
           if (!basicServerData.nextScheduledJobTime) {
             console.log('🔍 No next scheduled job time, clearing next gong display');
             this.nextGongTime = null;
-             if (this.nextGongSubscription) {
+            if (this.nextGongSubscription) {
               this.nextGongSubscription.unsubscribe();
             }
             return;
           }
 
           const nextGongTime = moment(basicServerData.nextScheduledJobTime);
-          
+
           // 🔹 Check if next gong is in the past (stuck gong) - refresh immediately
           if (nextGongTime && nextGongTime.isBefore(moment().subtract(3, 'minutes'))) {
             console.log('⚠️ Next gong is in the past! Refreshing schedule...', nextGongTime.format('HH:mm'));
             setTimeout(() => this.getBasicData(), 2000); // Refresh after 2 seconds
           }
-          
+
           if (!nextGongTime.isSame(this.nextGongTime)) {
             this.nextGongTime = nextGongTime;
             const timeToNextScheduledJob = this.nextGongTime.clone().startOf('minute').add(1, 'm');
@@ -203,13 +183,6 @@ export class HeaderComponent extends BaseComponent {
         }
       });
 
-    this.translateService.onLangChange.pipe(
-      filter(res => !!res && (res.lang.trim() !== '')),
-      takeUntil(this.onDestroy$))
-      .subscribe((newSetLang) => {
-        this.getSupportedLanguages();
-      });
-
   }
 
   initDateFormatOptions(): void {
@@ -226,9 +199,6 @@ export class HeaderComponent extends BaseComponent {
 
   }
 
-  private getSupportedLanguages() {
-    this.supportedLanguagesArray = this.translateService.getLangs().filter(lang => lang.trim() !== '');
-  }
 
   logout() {
     this.authServiceObj.logout();
@@ -239,15 +209,7 @@ export class HeaderComponent extends BaseComponent {
     this.storeService.getBasicData();
   }
 
-  getLanguageData(): void {
-    JsonEditorComponent.getKnownLangsArray().forEach(
-      (languageProperties) => this.knownLangsObjectMap[languageProperties.lang] = languageProperties);
-  }
 
-  setLanguage(lang: string) {
-    this.currentLanguage = lang;
-    this.translateService.use(lang);
-  }
 
   setDateFormat(aDateFormat: DateFormat) {
     this.currentDateFormat = aDateFormat;
@@ -339,15 +301,15 @@ export class HeaderComponent extends BaseComponent {
 
 
   private async displayDeleteConfirmAlert(aTopic: ETopic, aTopicData: ITopicData): Promise<void> {
-    const mainText = this.translationMap.get(this.deleteConfirmTranslationObjectKey[aTopic]);
+    const mainText = aTopic === ETopic.GONG ? this.titles.main.header.confirm.delete.text.gong : this.titles.main.header.confirm.delete.text.course;
     const result: SweetAlertResult = await Swal.fire({
-      title: this.translationMap.get(ETranslation.DELETE_CONFIRM_TITLE),
+      title: this.titles.main.header.confirm.delete.title,
       text: `${mainText} : ${aTopicData.name}?`,
       imageUrl: '/assets/icons/alerts/icons8-error-48.png',
       customClass: { popup: 'confirmClass' },
-      confirmButtonText: this.translationMap.get(ETranslation.CONFIRM_DELETE_SUBMIT),
+      confirmButtonText: this.titles.main.header.confirm.delete.buttons.confirm,
       showCancelButton: true,
-      cancelButtonText: this.translationMap.get(ETranslation.CONFIRM_DELETE_CANCEL),
+      cancelButtonText: this.titles.main.header.confirm.delete.buttons.cancel,
     });
 
 

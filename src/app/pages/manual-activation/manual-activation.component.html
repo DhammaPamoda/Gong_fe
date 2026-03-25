@@ -5,42 +5,35 @@
     <div class="btnGroup">
       <div class="datePickerContainer">
 
-        <md2-datepicker [(ngModel)]="chosenTime"
-                        [isOpen]="isScheduledDatePickerOpen"
-                        (onClose)="scheduledDateOnClose()"
-                        touchUi="true"
-                        type="datetime"
-                        [min]="scheduleGongStartDate"
-                        [startAt]="scheduleGongStartDate"
-                        style="top: 80px; height: 9vh; margin-top: 2vh;">
+        <md2-datepicker [(ngModel)]="chosenTime" [isOpen]="isScheduledDatePickerOpen" (onClose)="scheduledDateOnClose()"
+          touchUi="true" type="datetime" [min]="scheduleGongStartDate" [startAt]="scheduleGongStartDate"
+          style="top: 80px; height: 9vh; margin-top: 2vh;">
 
         </md2-datepicker>
       </div>
 
-      <button mat-fab color="accent" (click)="playGong()" class="manual-button"
-              *ngIf="!isGongCurrentlyPlaying"
-              [disabled]="!playGongPermissions || !playGongEnabled || !gongToPlay.areas || gongToPlay.areas.length <= 0"
-              matTooltip="{{ 'manualActivation.buttons.play' | translate }}">
+      <button mat-fab color="accent" (click)="playGong()" class="manual-button" *ngIf="!isGongCurrentlyPlaying"
+        [disabled]="!playGongPermissions || !playGongEnabled || !gongToPlay.areas || gongToPlay.areas.length <= 0"
+        [matTooltip]="titles.manualActivation.buttons.play">
         <mat-icon svgIcon="play"></mat-icon>
       </button>
-      <button mat-fab color="warn" (click)="cancelGong()" class="manual-button"
-              *ngIf="isGongCurrentlyPlaying"
-              matTooltip="Cancel currently playing gong">
+      <button mat-fab color="warn" (click)="cancelGong()" class="manual-button" *ngIf="isGongCurrentlyPlaying"
+        matTooltip="Cancel currently playing gong">
         <mat-icon>stop</mat-icon>
       </button>
       <button mat-raised-button color="primary" (click)="scheduleGong()" class="manual-button schedule-button"
-              [disabled]="!scheduleGongPermissions || !gongToPlay.areas || gongToPlay.areas.length <= 0"
-              matTooltip="{{ 'manualActivation.buttons.schedulePlay' | translate }}">
+        [disabled]="!scheduleGongPermissions || !gongToPlay.areas || gongToPlay.areas.length <= 0"
+        [matTooltip]="titles.manualActivation.buttons.schedulePlay">
         <mat-icon svgIcon="timetable"></mat-icon>
       </button>
-      <div class="repeat-div" matTooltip="{{ 'manualActivation.buttons.repeat' | translate }}">
+      <div class="repeat-div" [matTooltip]="titles.manualActivation.buttons.repeat">
         <div class="r-side">
           R
         </div>
         <div class="l-side">
           <div class="spinner-button-container">
             <button mat-raised-button color="primary" (click)="repeatIncrement()" class="spinner-button"
-                    [disabled]="!gongToPlay.areas || gongToPlay.areas.length <= 0 || gongToPlay.repeat >= 20">
+              [disabled]="!gongToPlay.areas || gongToPlay.areas.length <= 0 || gongToPlay.repeat >= 20">
               <mat-icon svgIcon="menu-up"></mat-icon>
             </button>
           </div>
@@ -48,9 +41,8 @@
             {{gongToPlay.repeat}}
           </div>
           <div class="spinner-button-container">
-            <button mat-raised-button color="primary"
-                    (click)="repeatIncrement(-1)" class="spinner-button"
-                    [disabled]="!gongToPlay.areas  || gongToPlay.areas.length <= 0 || gongToPlay.repeat <= 1">
+            <button mat-raised-button color="primary" (click)="repeatIncrement(-1)" class="spinner-button"
+              [disabled]="!gongToPlay.areas  || gongToPlay.areas.length <= 0 || gongToPlay.repeat <= 1">
               <mat-icon svgIcon="menu-down"></mat-icon>
             </button>
           </div>
@@ -62,16 +54,16 @@
 
       <div class="gong-type-selection-container mat-elevation-z8">
         <div class="containerHeader">
-          {{ 'manualActivation.dropdowns.gongType.label' | translate }}
+          {{ titles.manualActivation.dropdowns.gongType.label }}
         </div>
 
         <div class="ctrl-content-container">
           <mat-list>
             <mat-list-item *ngFor="let gongType of gongTypes" class="listItemClass center"
-                           [ngClass]="{selectedGongTypeClass: gongType.id === gongToPlay?.gongTypeId}"
-                           (click)="gongToPlay.gongTypeId = gongType.id" style="cursor: pointer">
+              [ngClass]="{selectedGongTypeClass: gongType.id === gongToPlay?.gongTypeId}"
+              (click)="gongToPlay.gongTypeId = gongType.id" style="cursor: pointer">
               <span style="text-align: center">
-                {{'general.typesValues.gongType.' + gongType?.name | translate }}
+                {{titles.general.typesValues.gongType[gongType?.name] }}
               </span>
             </mat-list-item>
           </mat-list>
@@ -80,21 +72,21 @@
 
       <div class="area-selection-container mat-elevation-z8">
         <div class="containerHeader">
-          {{ 'manualActivation.dropdowns.areas.label' | translate }}
+          {{ titles.manualActivation.dropdowns.areas.label }}
         </div>
 
         <div class="ctrl-content-container">
           <mat-selection-list #areasSelectionCtrl [(ngModel)]="gongToPlay.areas">
             <div class="first-area-option-all">
               <mat-list-option [value]="0" #allAreasSelectionCtrl class="listItemClass">
-                {{'general.typesValues.areas.all' | translate }}
+                {{titles.general.typesValues.areas.all }}
               </mat-list-option>
               <mat-divider></mat-divider>
 
             </div>
             <div class="others-area-options">
               <mat-list-option *ngFor="let area of areas" [value]="area.id" class="listItemClass">
-                {{'general.typesValues.areas.' + area.name | translate }}
+                {{titles.general.typesValues.areas[area.name] }}
               </mat-list-option>
             </div>
           </mat-selection-list>
@@ -103,12 +95,11 @@
 
       <div class="volume-selection-container mat-elevation-z8">
         <div class="volume-container-header">
-          {{ 'manualActivation.labels.volume' | translate }}
+          {{ titles.manualActivation.labels.volume }}
         </div>
 
         <div class=" ctrl-content-container volume-slider-container">
-          <mat-slider thumbLabel min="1" tickInterval="1"
-                      [(value)]="gongToPlay.volume" class="sliderClass">
+          <mat-slider thumbLabel min="1" tickInterval="1" [(value)]="gongToPlay.volume" class="sliderClass">
 
           </mat-slider>
         </div>
@@ -119,10 +110,8 @@
   </div><!--End of manualControlsContainer-->
 
   <div class="manualScheduledTableContainer mat-elevation-z8">
-    <app-gongs-time-table [scheduledGongs]="scheduledGongsArray"
-                          (gongActiveToggleEvent)="onGongRemove($event)" [displayDay]="false"
-                          [isDisableToggle]="!deleteGongPermissions"
-                          [isDeleteButton]="true">
+    <app-gongs-time-table [scheduledGongs]="scheduledGongsArray" (gongActiveToggleEvent)="onGongRemove($event)"
+      [displayDay]="false" [isDisableToggle]="!deleteGongPermissions" [isDeleteButton]="true">
     </app-gongs-time-table>
   </div><!--End of manualScheduledTableContainer-->
 

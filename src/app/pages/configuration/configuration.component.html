@@ -3,8 +3,8 @@
     <div class="config-side-control-container">
 
       <button mat-button (click)="displayComponent(comp)" *ngFor="let comp of componentsArray"
-              [class.selected]="comp === selectedComponent" [disabled]="comp === selectedComponent">
-        {{'config.' + comp.name  + '.label' | translate }}
+        [class.selected]="comp === selectedComponent" [disabled]="comp === selectedComponent">
+        {{ titles.config[comp.name].label }}
       </button>
     </div>
   </mat-sidenav>

@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {ScheduledGong} from '../model/ScheduledGong';
-import {EnumUtils} from '../utils/enumUtils';
-import {sprintf} from 'sprintf-js';
+import { Injectable } from '@angular/core';
+import { Titles } from '../shared/titles';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ScheduledGong } from '../model/ScheduledGong';
+import { EnumUtils } from '../utils/enumUtils';
+import { sprintf } from 'sprintf-js';
 
 // var old_sprintf = require('sprintf-js');
 enum MessagesTranslationEnum {
@@ -27,37 +27,13 @@ enum MessagesTranslationEnum {
 })
 export class MessagesService {
 
-  private translationMap = new Map<(string | number), string>();
-
   constructor(
-    private snackBar: MatSnackBar,
-    private translate: TranslateService) {
-
-    this.translate.onLangChange.subscribe(() => this.translateNeededText());
-
+    private snackBar: MatSnackBar) {
   }
 
-  private translateNeededText() {
-    this.translationMap.clear();
-    const transKeysConfirmDeGongMap = new Map<string, string>();
-
-    const transKeyBase = 'general.messages.';
-
-    const transEnumsArray = EnumUtils.getEnumKeys(MessagesTranslationEnum);
-    transEnumsArray.forEach((enumKey) => {
-      transKeysConfirmDeGongMap.set(enumKey, transKeyBase + MessagesTranslationEnum[enumKey]);
-    });
-
-    this.translate.get(Array.from(transKeysConfirmDeGongMap.values())).subscribe(transResult => {
-      transKeysConfirmDeGongMap.forEach((value, key) => {
-        this.translationMap.set(MessagesTranslationEnum[key], transResult[value]);
-      });
-    });
-  }
-
-  private getTranlation(aTransKey: (string | number)) {
-    const retTrans = this.translationMap.get(aTransKey);
-    return retTrans;
+  private getTranlation(aTransKey: MessagesTranslationEnum) {
+    const enumVal = aTransKey as string;
+    return Titles.general.messages[enumVal] || enumVal;
   }
 
   cannotDeleteRecord(aScheduledGong: ScheduledGong) {

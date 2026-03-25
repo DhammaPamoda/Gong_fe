@@ -1,11 +1,12 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import moment from 'moment';
-import {Course} from '../../model/course';
-import {StoreService} from '../../services/store.service';
-import {CourseSchedule} from '../../model/courseSchedule';
-import {UpdateStatusEnum} from '../../model/updateStatusEnum';
-import {v4 as uuid} from 'uuid';
+import { Course } from '../../model/course';
+import { StoreService } from '../../services/store.service';
+import { CourseSchedule } from '../../model/courseSchedule';
+import { UpdateStatusEnum } from '../../model/updateStatusEnum';
+import { v4 as uuid } from 'uuid';
+import { Titles } from '../../shared/titles';
 
 const dateFormat = 'YY-MM-DD HH:mm:ss';
 
@@ -40,6 +41,7 @@ class MomentRange {
   styleUrls: ['./schedule-course-dialog.component.scss']
 })
 export class ScheduleCourseDialogComponent implements OnInit {
+  public titles = Titles;
   isNew: boolean = true;
 
   coursesMap: Map<string, Course>;
@@ -61,8 +63,8 @@ export class ScheduleCourseDialogComponent implements OnInit {
   testHoursRangeEnd: number;
 
   constructor(public dialogRef: MatDialogRef<any>,
-              @Inject(MAT_DIALOG_DATA) public data: { role: string },
-              private storeService: StoreService) {
+    @Inject(MAT_DIALOG_DATA) public data: { role: string },
+    private storeService: StoreService) {
   }
 
   async ngOnInit() {
@@ -116,7 +118,7 @@ export class ScheduleCourseDialogComponent implements OnInit {
       courseSchedule.startFromDay = this.selectedStartFromDay;
       courseSchedule.updateStatus = UpdateStatusEnum.PENDING;
       if (this.selectedCourse.isTest) {
-        courseSchedule.testHoursRange = {start: this.testHoursRangeStart, end: this.testHoursRangeEnd};
+        courseSchedule.testHoursRange = { start: this.testHoursRangeStart, end: this.testHoursRangeEnd };
       }
       this.closeDialog(courseSchedule);
     }

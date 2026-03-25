@@ -1,19 +1,16 @@
 <div class="users-container">
   <div class="btn-group top-controls-container">
     <button mat-raised-button color="primary" (click)="addUser()">
-      {{ 'config.users.buttons.addUser' | translate }}
+      {{ titles.config.users.buttons.addUser }}
     </button>
-    <button mat-raised-button color="basic" (click)="updateUser()"
-            [disabled]="!areEditButtonsEnabled">
-      {{ 'config.users.buttons.updateUser' | translate }}
+    <button mat-raised-button color="basic" (click)="updateUser()" [disabled]="!areEditButtonsEnabled">
+      {{ titles.config.users.buttons.updateUser }}
     </button>
-    <button mat-raised-button color="accent" (click)="deleteUser()"
-            [disabled]="!areEditButtonsEnabled">
-      {{ 'config.users.buttons.deleteUser' | translate }}
+    <button mat-raised-button color="accent" (click)="deleteUser()" [disabled]="!areEditButtonsEnabled">
+      {{ titles.config.users.buttons.deleteUser }}
     </button>
-    <button mat-stroked-button color="warn" (click)="changeUserPass()"
-            [disabled]="!areEditButtonsEnabled">
-      {{ 'config.users.buttons.changeUserPass' | translate }}
+    <button mat-stroked-button color="warn" (click)="changeUserPass()" [disabled]="!areEditButtonsEnabled">
+      {{ titles.config.users.buttons.changeUserPass }}
     </button>
   </div>
 
@@ -26,7 +23,7 @@
         <!-- User Id -->
         <ng-container matColumnDef="user_id">
           <mat-header-cell *matHeaderCellDef>
-            {{ 'config.users.usersTable.headers.id' | translate }}
+            {{ titles.config.users.usersTable.headers.id }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element">
             {{ element.id }}
@@ -37,7 +34,7 @@
         <!-- Role -->
         <ng-container matColumnDef="role">
           <mat-header-cell *matHeaderCellDef class="td-center-content">
-            {{ 'config.users.usersTable.headers.role' | translate }}
+            {{ titles.config.users.usersTable.headers.role }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element" class="td-center-content">
             {{ element.role }}
@@ -47,7 +44,7 @@
         <!-- creation date -->
         <ng-container matColumnDef="creation_date">
           <mat-header-cell *matHeaderCellDef class="td-center-content">
-            {{ 'config.users.usersTable.headers.creationDate' | translate }}
+            {{ titles.config.users.usersTable.headers.creationDate }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element" class="td-center-content">
             <div class="date-cell-container">
@@ -59,7 +56,7 @@
         <!-- update date -->
         <ng-container matColumnDef="update_date">
           <mat-header-cell *matHeaderCellDef class="td-center-content">
-            {{ 'config.users.usersTable.headers.updateDate' | translate }}
+            {{ titles.config.users.usersTable.headers.updateDate }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element" class="td-center-content">
             <div class="date-cell-container">
@@ -70,8 +67,7 @@
 
         <mat-header-row *matHeaderRowDef="usersDisplayedColumns; sticky: true"></mat-header-row>
         <mat-row *matRowDef="let row; columns: usersDisplayedColumns;"
-                 [ngClass]="{'highlight': selectedUser && selectedUser.id == row.id}"
-                 (click)="selectUser( row )">
+          [ngClass]="{'highlight': selectedUser && selectedUser.id == row.id}" (click)="selectUser( row )">
         </mat-row>
       </mat-table>
     </div>

@@ -7,21 +7,21 @@
 
   <mat-tab *ngIf="viewAutomaticPermissions">
     <ng-template mat-tab-label>
-      {{ 'main.tabs.automatic' | translate }}
+      {{ titles.main.tabs.automatic }}
     </ng-template>
     <app-automatic-activation></app-automatic-activation>
   </mat-tab>
 
   <mat-tab *ngIf="viewManualPermissions">
     <ng-template mat-tab-label>
-      {{ 'main.tabs.manual' | translate }}
+      {{ titles.main.tabs.manual }}
     </ng-template>
     <app-manual-activation></app-manual-activation>
   </mat-tab>
 
   <mat-tab *ngIf="viewConfigPermissions">
     <ng-template mat-tab-label>
-      {{ 'main.tabs.config' | translate }}
+      {{ titles.main.tabs.config }}
     </ng-template>
     <app-configuration></app-configuration>
   </mat-tab>

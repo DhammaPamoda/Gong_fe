@@ -1,15 +1,15 @@
-import {Action} from 'redux';
-import {Area} from '../../model/area';
-import {Course} from '../../model/course';
-import {CourseSchedule} from '../../model/courseSchedule';
-import {GongType} from '../../model/gongType';
-import {ScheduledGong} from '../../model/ScheduledGong';
-import {BasicServerData} from '../../model/basicServerData';
-import {ScheduledCourseGong} from '../../model/ScheduledCourseGong';
-import {Gong} from '../../model/gong';
-import {DateFormat} from '../../model/dateFormat';
-import {User} from '../../model/user';
-import {Permission} from '../../model/permission';
+import { Action } from 'redux';
+import { Area } from '../../model/area';
+import { Course } from '../../model/course';
+import { CourseSchedule } from '../../model/courseSchedule';
+import { GongType } from '../../model/gongType';
+import { ScheduledGong } from '../../model/ScheduledGong';
+import { BasicServerData } from '../../model/basicServerData';
+import { ScheduledCourseGong } from '../../model/ScheduledCourseGong';
+import { Gong } from '../../model/gong';
+import { DateFormat } from '../../model/dateFormat';
+import { User } from '../../model/user';
+import { Permission } from '../../model/permission';
 
 export enum ActionFeaturesEnum {
   BASIC_DATA_FEATURE = '[BASIC_DATA]',
@@ -29,7 +29,6 @@ export enum ActionFeaturesEnum {
   DATE_FORMAT_FEATURE = '[DATE_FORMAT_FEATURE]',
   UPLOAD_COURSES_FILE_FEATURE = '[UPLOAD_COURSES_FILE]',
   UPLOAD_GONG_FILE_FEATURE = '[UPLOAD_GONG_FILE]',
-  UPDATE_LANGUAGES_FEATURE = '[UPDATE_LANGUAGES]',
   DELETE_COURSE_FEATURE = '[DELETE_COURSE]',
   DELETE_GONG_FEATURE = '[DELETE_GONG]',
   GET_USERS_FEATURE = '[GET_USERS]',
@@ -70,7 +69,6 @@ export enum ActionTypesEnum {
   UPLOAD_GONG_FILE_WAS_COMPLETED = 'UPLOAD_GONG_FILE_WAS_COMPLETED',
   DELETE_COURSE = 'DELETE_COURSE',
   DELETE_GONG = 'DELETE_GONG',
-  UPDATE_LANGUAGES = 'UPDATE_LANGUAGES',
   GET_USERS_ARRAY = 'GET_USERS_ARRAY',
   SET_USERS_ARRAY = 'SET_USERS_ARRAY',
   ADD_USER = 'ADD_USER',
@@ -105,103 +103,103 @@ export class ActionGenerator {
   static setBasicServerData = (basicServerData: BasicServerData) => ({
     type: ActionTypesEnum.SET_BASIC_DATA,
     payload: basicServerData,
-    meta: {feature: ActionFeaturesEnum.BASIC_DATA_FEATURE}
+    meta: { feature: ActionFeaturesEnum.BASIC_DATA_FEATURE }
   });
 
   static setGongTypes = (gongTypes: GongType[]) => ({
     type: ActionTypesEnum.SET_GONG_TYPES,
     payload: gongTypes,
-    meta: {feature: ActionFeaturesEnum.GONG_TYPES_FEATURE}
+    meta: { feature: ActionFeaturesEnum.GONG_TYPES_FEATURE }
   });
 
   static setAreas = (areas: Area[]) => ({
     type: ActionTypesEnum.SET_AREAS,
     payload: areas,
-    meta: {feature: ActionFeaturesEnum.AREA_FEATURE}
+    meta: { feature: ActionFeaturesEnum.AREA_FEATURE }
   });
 
   static setPermissions = (aPermissions: Permission[]) => ({
     type: ActionTypesEnum.SET_PERMISSIONS,
     payload: aPermissions,
-    meta: {feature: ActionFeaturesEnum.PERMISSIONS_FEATURE}
+    meta: { feature: ActionFeaturesEnum.PERMISSIONS_FEATURE }
   });
 
   static setCourses = (courses: Course[]) => ({
     type: ActionTypesEnum.SET_COURSES,
     payload: courses,
-    meta: {feature: ActionFeaturesEnum.COURSES_FEATURE}
+    meta: { feature: ActionFeaturesEnum.COURSES_FEATURE }
   });
 
   static setCoursesRawData = (aCoursesRawData: String) => ({
     type: ActionTypesEnum.SET_COURSES_RAW_DATA,
     payload: aCoursesRawData,
-    meta: {feature: ActionFeaturesEnum.COURSES_FEATURE}
+    meta: { feature: ActionFeaturesEnum.COURSES_FEATURE }
   });
 
   static setCoursesSchedule = (coursesSchedule: CourseSchedule[]) => ({
     type: ActionTypesEnum.SET_COURSES_SCHEDULE,
     payload: coursesSchedule,
-    meta: {feature: ActionFeaturesEnum.COURSES_SCHEDULE_FEATURE}
+    meta: { feature: ActionFeaturesEnum.COURSES_SCHEDULE_FEATURE }
   });
 
   static setManualGongsList = (scheduledGongsArray: ScheduledGong[]) => ({
     type: ActionTypesEnum.SET_MANUAL_GONGS_LIST,
     payload: scheduledGongsArray,
-    meta: {feature: ActionFeaturesEnum.MANUAL_GONGS_LIST_FEATURE}
+    meta: { feature: ActionFeaturesEnum.MANUAL_GONGS_LIST_FEATURE }
   });
 
   static addManualGong = (manualGong: ScheduledGong) => ({
     type: ActionTypesEnum.ADD_MANUAL_GONG,
     payload: manualGong,
-    meta: {feature: ActionFeaturesEnum.MANUAL_GONG_ADD_FEATURE}
+    meta: { feature: ActionFeaturesEnum.MANUAL_GONG_ADD_FEATURE }
   });
 
   static updateManualGong = (manualGong: ScheduledGong) => ({
     type: ActionTypesEnum.UPDATE_MANUAL_GONG,
     payload: manualGong,
-    meta: {feature: ActionFeaturesEnum.MANUAL_GONG_ADD_FEATURE}
+    meta: { feature: ActionFeaturesEnum.MANUAL_GONG_ADD_FEATURE }
   });
 
   static scheduleCourse = (aCourseSchedule: CourseSchedule) => ({
     type: ActionTypesEnum.SCHEDULE_COURSE_ADD,
     payload: aCourseSchedule,
-    meta: {feature: ActionFeaturesEnum.SCHEDULE_COURSE_FEATURE}
+    meta: { feature: ActionFeaturesEnum.SCHEDULE_COURSE_FEATURE }
   });
 
   static updateCourseSchedule = (aCourseSchedule: CourseSchedule) => ({
     type: ActionTypesEnum.SCHEDULED_COURSE_UPDATE,
     payload: aCourseSchedule,
-    meta: {feature: ActionFeaturesEnum.SCHEDULE_COURSE_FEATURE}
+    meta: { feature: ActionFeaturesEnum.SCHEDULE_COURSE_FEATURE }
   });
 
   static removeScheduleCourse = (aCourseScheduledToRemove: CourseSchedule) => ({
     type: ActionTypesEnum.SCHEDULED_COURSE_REMOVE,
     payload: aCourseScheduledToRemove,
-    meta: {feature: ActionFeaturesEnum.SCHEDULED_COURSE_REMOVE_FEATURE}
+    meta: { feature: ActionFeaturesEnum.SCHEDULED_COURSE_REMOVE_FEATURE }
   });
 
   static toggleScheduledGong = (aToggledScheduledCourseGong: ScheduledCourseGong) => ({
     type: ActionTypesEnum.TOGGLE_SCHEDULED_GONG,
     payload: aToggledScheduledCourseGong,
-    meta: {feature: ActionFeaturesEnum.TOGGLE_SCHEDULED_GONG_FEATURE}
+    meta: { feature: ActionFeaturesEnum.TOGGLE_SCHEDULED_GONG_FEATURE }
   });
 
   static removeScheduledGong = (aRemovedScheduledGong: ScheduledGong) => ({
     type: ActionTypesEnum.REMOVE_MANUAL_GONG,
     payload: aRemovedScheduledGong,
-    meta: {feature: ActionFeaturesEnum.REMOVE_MANUAL_GONG_FEATURE}
+    meta: { feature: ActionFeaturesEnum.REMOVE_MANUAL_GONG_FEATURE }
   });
 
   static playGong = (aGong: Gong) => ({
     type: ActionTypesEnum.PLAY_GONG,
     payload: aGong,
-    meta: {feature: ActionFeaturesEnum.PLAY_GONG_FEATURE}
+    meta: { feature: ActionFeaturesEnum.PLAY_GONG_FEATURE }
   });
 
   static setDateFormat = (aDateFormat: DateFormat) => ({
     type: ActionTypesEnum.SET_DATE_FORMAT,
     payload: aDateFormat,
-    meta: {feature: ActionFeaturesEnum.DATE_FORMAT_FEATURE}
+    meta: { feature: ActionFeaturesEnum.DATE_FORMAT_FEATURE }
   });
 
   static setPlayGongEnabled = (aIsPlayGongEnabled: boolean) => ({
@@ -220,7 +218,7 @@ export class ActionGenerator {
 
   static uploadGongFile = (aGongFile: File, aGongId4Update: string) => ({
     type: ActionTypesEnum.UPLOAD_GONG_FILE,
-    payload: {file: aGongFile, gongId: aGongId4Update},
+    payload: { file: aGongFile, gongId: aGongId4Update },
   });
 
   static uploadGongFileHasComplete = () => ({
@@ -243,13 +241,6 @@ export class ActionGenerator {
     type: ActionTypesEnum.SET_LOGGED_IN,
     payload: aIsLoggedIn,
   });
-
-
-  static updateLanguages = (aLanguagesMap: any) => ({
-    type: ActionTypesEnum.UPDATE_LANGUAGES,
-    payload: aLanguagesMap,
-  });
-
 
   static getUsersArray = () => ({
     type: ActionTypesEnum.GET_USERS_ARRAY,

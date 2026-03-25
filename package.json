@@ -35,8 +35,6 @@
     "@angular/router": "^9.1.13",
     "@angular/service-worker": "^9.1.13",
     "@auth0/angular-jwt": "^4.2.0",
-    "@ngx-translate/core": "^11.0.1",
-    "@ngx-translate/http-loader": "^4.0.0",
     "acorn": "^7.4.1",
     "angular-json-class-converter": "^3.0.1",
     "angular-md2": "^6.2.0",

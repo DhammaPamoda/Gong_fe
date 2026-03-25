@@ -1,8 +1,6 @@
 <div class="dialog-container">
   <div class="message-title">
-    <div class="header">
-      {{ 'dialogs.scheduleCourse.header.' + (isNew ? 'new' :'update')| translate}}
-    </div>
+    {{ titles.dialogs.scheduleCourse.header[isNew ? 'new' : 'update'] }}
     <mat-icon (click)="closeDialog()" svgIcon="window-close" class="close-dialog"></mat-icon>
   </div>
   <hr class="line">
@@ -12,15 +10,15 @@
 
       <div class="field-container">
         <h4>
-          {{ 'dialogs.scheduleCourse.labels.courseName' | translate}}
+          {{ titles.dialogs.scheduleCourse.labels.courseName }}
         </h4>
         <mat-form-field>
           <mat-select [(value)]="selectedCourse" (selectionChange)="onCourseSelectedChange()"
-                      placeholder="{{ 'dialogs.scheduleCourse.placeHolders.courseName' | translate}}">
+            placeholder="{{ titles.dialogs.scheduleCourse.placeHolders.courseName }}">
             <mat-option *ngFor="let course of courses" [value]="course">
-              {{ 'general.typesValues.courses.' + course.name| translate}}
+              {{ titles.general.typesValues.courses[course.name] }}
               <div *ngIf="course.isTest" class="test-course-label">
-                ({{ 'dialogs.scheduleCourse.labels.isTest' | translate}})
+                ({{ titles.dialogs.scheduleCourse.labels.isTest }})
               </div>
             </mat-option>
           </mat-select>
@@ -29,11 +27,11 @@
 
       <div class="field-container">
         <h4>
-          {{ 'dialogs.scheduleCourse.labels.dayStart' | translate}}
+          {{ titles.dialogs.scheduleCourse.labels.dayStart }}
         </h4>
         <mat-form-field>
           <mat-select [(value)]="selectedStartFromDay" (selectionChange)="onStartFromDaySelectedChange()"
-                      placeholder="{{ 'dialogs.scheduleCourse.placeHolders.dayStart' | translate}}">
+            placeholder="{{ titles.dialogs.scheduleCourse.placeHolders.dayStart }}">
             <mat-option *ngFor="let startDay of startDayArray" [value]="startDay">
               {{ startDay }}
             </mat-option>
@@ -46,21 +44,13 @@
     <div class="two-fields-container">
       <div class="field-container">
         <h4>
-          {{ 'dialogs.scheduleCourse.labels.date' | translate}}
+          {{ titles.dialogs.scheduleCourse.labels.date }}
         </h4>
         <div class="date-picker">
 
-          <md2-datepicker
-            [isOpen]="datePickerIsOpened"
-            (onClose)="datePickerIsOpened = false"
-            (change)="changed()"
-            [startAt]="selectedStartDate"
-            [(ngModel)]="selectedDateInPopup"
-            [disabled]="!selectedCourse"
-            [touchUi]="true"
-            [dateFilter]="dateFilter"
-            [min]="minStartDate"
-            type="date">
+          <md2-datepicker [isOpen]="datePickerIsOpened" (onClose)="datePickerIsOpened = false" (change)="changed()"
+            [startAt]="selectedStartDate" [(ngModel)]="selectedDateInPopup" [disabled]="!selectedCourse"
+            [touchUi]="true" [dateFilter]="dateFilter" [min]="minStartDate" type="date">
 
           </md2-datepicker>
         </div>
@@ -69,32 +59,30 @@
             <mat-icon svgIcon="calendar-today"></mat-icon>
           </button>
           <span class="start-date-display" (click)="selectedCourse && openDatePicker()"
-                [ngClass]="{'start-date-display-disabled': !selectedCourse}">
-        {{selectedStartDate | date:'yyyy-MM-dd'}}
-      </span>
+            [ngClass]="{'start-date-display-disabled': !selectedCourse}">
+            {{selectedStartDate | date:'yyyy-MM-dd'}}
+          </span>
         </div>
       </div>
 
 
       <div class="field-container" [ngStyle]="{ 'visibility' : (selectedCourse && selectedCourse.isTest)?'':'hidden'}">
         <h4>
-          {{ 'dialogs.scheduleCourse.labels.testHoursRange' | translate}}
+          {{ titles.dialogs.scheduleCourse.labels.testHoursRange }}
         </h4>
         <div class="hours-range-container">
 
           <input matInput type="number" #hoursRangeStart="ngModel" class="hour-range" required min="0" max="23"
-                 [(ngModel)]="testHoursRangeStart"
-                 (ngModelChange)="testHoursRangeEnd<testHoursRangeStart ? testHoursRangeEnd=testHoursRangeStart : ''"
-                 placeholder="{{ 'dialogs.scheduleCourse.labels.testHoursRangeStart' | translate}}">
+            [(ngModel)]="testHoursRangeStart"
+            (ngModelChange)="testHoursRangeEnd<testHoursRangeStart ? testHoursRangeEnd=testHoursRangeStart : ''"
+            placeholder="{{ titles.dialogs.scheduleCourse.labels.testHoursRangeStart }}">
 
           <div class="hours-range-seperation">-</div>
 
           <input matInput type="number" #hoursRangeEnd="ngModel" class="hour-range" required
-                 [min]="testHoursRangeStart ? testHoursRangeStart : 0"
-                 min="0"
-                 max="23" [(ngModel)]="testHoursRangeEnd"
-                 [disabled]="testHoursRangeStart === undefined"
-                 placeholder="{{ 'dialogs.scheduleCourse.labels.testHoursRangeEnd' | translate}}">
+            [min]="testHoursRangeStart ? testHoursRangeStart : 0" min="0" max="23" [(ngModel)]="testHoursRangeEnd"
+            [disabled]="testHoursRangeStart === undefined"
+            placeholder="{{ titles.dialogs.scheduleCourse.labels.testHoursRangeEnd }}">
         </div>
       </div>
     </div>
@@ -103,13 +91,12 @@
 
   <div class="buttons-container">
     <button mat-raised-button color="basic" (click)="closeDialog()">
-      {{ 'dialogs.scheduleCourse.buttons.cancel' | translate }}
+      {{ titles.dialogs.scheduleCourse.buttons.cancel }}
     </button>
-    <button mat-raised-button color="primary" (click)="scheduleCourse()"
-            [disabled]="!selectedCourse ||
+    <button mat-raised-button color="primary" (click)="scheduleCourse()" [disabled]="!selectedCourse ||
             ( selectedCourse.isTest ? ( hoursRangeStart.invalid || hoursRangeEnd.invalid):false)"
-            class="schedule-course-button">
-      {{ 'dialogs.scheduleCourse.buttons.scheduleCourse' | translate }}
+      class="schedule-course-button">
+      {{ titles.dialogs.scheduleCourse.buttons.scheduleCourse }}
     </button>
   </div>
 

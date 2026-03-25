@@ -1,12 +1,11 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import * as idb from 'idb';
-import {IDBPDatabase, IDBPObjectStore} from 'idb/lib/entry';
+import { IDBPDatabase, IDBPObjectStore } from 'idb/lib/entry';
 
-import {EnumUtils} from '../utils/enumUtils';
+import { EnumUtils } from '../utils/enumUtils';
 
 export enum DbObjectTypeEnum {
-  LANGUAGES = 'LANGUAGES',
   COURSES = 'COURSES',
   AREAS = 'AREAS',
   GONGS = 'GONGS',
@@ -27,16 +26,15 @@ export class IndexedDbService {
   private dbObjectParametersMap: { [key: string]: { dbName: string, objectStoreName: string } } = {};
 
   constructor() {
-    this.dbObjectParametersMap[DbObjectTypeEnum.LANGUAGES] = {dbName: 'gong-db', objectStoreName: DbObjectTypeEnum.LANGUAGES};
-    this.dbObjectParametersMap[DbObjectTypeEnum.COURSES] = {dbName: 'gong-db', objectStoreName: DbObjectTypeEnum.COURSES};
-    this.dbObjectParametersMap[DbObjectTypeEnum.AREAS] = {dbName: 'gong-db', objectStoreName: DbObjectTypeEnum.AREAS};
-    this.dbObjectParametersMap[DbObjectTypeEnum.GONGS] = {dbName: 'gong-db', objectStoreName: DbObjectTypeEnum.GONGS};
-    this.dbObjectParametersMap[DbObjectTypeEnum.PERMISSIONS] = {dbName: 'gong-db', objectStoreName: DbObjectTypeEnum.PERMISSIONS};
+    this.dbObjectParametersMap[DbObjectTypeEnum.COURSES] = { dbName: 'gong-db', objectStoreName: DbObjectTypeEnum.COURSES };
+    this.dbObjectParametersMap[DbObjectTypeEnum.AREAS] = { dbName: 'gong-db', objectStoreName: DbObjectTypeEnum.AREAS };
+    this.dbObjectParametersMap[DbObjectTypeEnum.GONGS] = { dbName: 'gong-db', objectStoreName: DbObjectTypeEnum.GONGS };
+    this.dbObjectParametersMap[DbObjectTypeEnum.PERMISSIONS] = { dbName: 'gong-db', objectStoreName: DbObjectTypeEnum.PERMISSIONS };
   }
 
   saveDataArray2DB(dbObjectType: DbObjectTypeEnum, dataArray: Array<any>,
-                   dataExtractorFunc = (val) => val,
-                   idExtractorFunc = (val) => val.id
+    dataExtractorFunc = (val) => val,
+    idExtractorFunc = (val) => val.id
   ): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       this.openDb(dbObjectType)
@@ -131,7 +129,6 @@ export class IndexedDbService {
         console.log(dbName + ' oldVersion :' + oldVersion, db);
         switch (oldVersion) {
           case 0:
-            db.createObjectStore(DbObjectTypeEnum.LANGUAGES);
             db.createObjectStore(DbObjectTypeEnum.AREAS);
             db.createObjectStore(DbObjectTypeEnum.COURSES);
             db.createObjectStore(DbObjectTypeEnum.GONGS);

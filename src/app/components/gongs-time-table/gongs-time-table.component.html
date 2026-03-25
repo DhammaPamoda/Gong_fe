@@ -3,12 +3,11 @@
   <!-- Day -->
   <ng-container matColumnDef="day" *ngIf="displayDay">
     <th mat-header-cell *matHeaderCellDef [ngClass]="{'dayTd': displayDate}">
-      {{ 'general.tableHeaders.gongsTimeTable.day' | translate }}
+      {{ titles.general.tableHeaders.gongsTimeTable.day }}
     </th>
     <td mat-cell *matCellDef="let element" [ngClass]="{'dayTd': displayDate}"
-        id="{{ element.isTheNextGong ? 'NEXT_GONG' :'' }}"
-        [attr.rowspan]="element.span"
-        [style.display]="element.span > 0 ? '' : 'none'">
+      id="{{ element.isTheNextGong ? 'NEXT_GONG' :'' }}" [attr.rowspan]="element.span"
+      [style.display]="element.span > 0 ? '' : 'none'">
       <span class="dayClass">
         {{ element.dayNumber }}
       </span>
@@ -18,11 +17,10 @@
   <!-- Date -->
   <ng-container matColumnDef="date" *ngIf="displayDate">
     <th mat-header-cell *matHeaderCellDef>
-      {{ 'general.tableHeaders.gongsTimeTable.date' | translate }}
+      {{ titles.general.tableHeaders.gongsTimeTable.date }}
     </th>
-    <td mat-cell *matCellDef="let element"
-        [attr.rowspan]="element.span"
-        [style.display]="element.span > 0 ? '' : 'none'">
+    <td mat-cell *matCellDef="let element" [attr.rowspan]="element.span"
+      [style.display]="element.span > 0 ? '' : 'none'">
       <span [ngClass]="{'nextGong' : element.isTheNextGong}">
         {{ element.date | date: dateFormat.delimited }}
       </span>
@@ -32,11 +30,10 @@
   <!-- Time -->
   <ng-container matColumnDef="time">
     <th mat-header-cell *matHeaderCellDef>
-      {{ 'general.tableHeaders.gongsTimeTable.time' | translate }}
+      {{ titles.general.tableHeaders.gongsTimeTable.time }}
     </th>
-    <td mat-cell *matCellDef="let element; let rowIndex = index;"
-        id="{{ rowIndex === 0 ? 'FIRST_GONG' : ''}}"
-        [ngClass]="{'nextGong' : element.isTheNextGong}">
+    <td mat-cell *matCellDef="let element; let rowIndex = index;" id="{{ rowIndex === 0 ? 'FIRST_GONG' : ''}}"
+      [ngClass]="{'nextGong' : element.isTheNextGong}">
       {{ element.time | date :'HH:mm' : 'UTC' }}
     </td>
   </ng-container>
@@ -44,12 +41,11 @@
   <!-- Gong Type -->
   <ng-container matColumnDef="gongType">
     <th mat-header-cell *matHeaderCellDef>
-      {{ 'general.tableHeaders.gongsTimeTable.gongType' | translate }}
+      {{ titles.general.tableHeaders.gongsTimeTable.gongType }}
     </th>
-    <td mat-cell *matCellDef="let element" class="gongTypeTd"
-        [ngClass]="{'nextGong' : element.isTheNextGong}">
+    <td mat-cell *matCellDef="let element" class="gongTypeTd" [ngClass]="{'nextGong' : element.isTheNextGong}">
       <span *ngIf="element.gongTypeName">
-        {{'general.typesValues.gongType.' + element.gongTypeName | translate }}
+        {{ titles.general.typesValues.gongType[element.gongTypeName] }}
       </span>
     </td>
   </ng-container>
@@ -57,10 +53,9 @@
   <!-- Area -->
   <ng-container matColumnDef="area">
     <th mat-header-cell *matHeaderCellDef>
-      {{ 'general.tableHeaders.gongsTimeTable.area' | translate }}
+      {{ titles.general.tableHeaders.gongsTimeTable.area }}
     </th>
-    <td mat-cell *matCellDef="let element" class="areaTd"
-        [ngClass]="{'nextGong' : element.isTheNextGong}">
+    <td mat-cell *matCellDef="let element" class="areaTd" [ngClass]="{'nextGong' : element.isTheNextGong}">
       <app-selected-areas [selectedAreas]="element.areas">
       </app-selected-areas>
     </td>
@@ -69,16 +64,14 @@
   <!-- Volume -->
   <ng-container matColumnDef="volume">
     <th mat-header-cell *matHeaderCellDef class="volumeTd">
-      {{ 'general.tableHeaders.gongsTimeTable.volume' | translate }}
+      {{ titles.general.tableHeaders.gongsTimeTable.volume }}
       <BR>
-      ({{ 'general.tableHeaders.gongsTimeTable.repeat' | translate }})
+      ({{ titles.general.tableHeaders.gongsTimeTable.repeat }})
     </th>
-    <td mat-cell *matCellDef="let element" class="volumeTd"
-        [ngClass]="{'nextGong' : element.isTheNextGong}">
-      <div matTooltip="{{element.volume}} %" matTooltipClass="volumeTooltipClass"
-           class="volumeContainer">
+    <td mat-cell *matCellDef="let element" class="volumeTd" [ngClass]="{'nextGong' : element.isTheNextGong}">
+      <div matTooltip="{{element.volume}} %" matTooltipClass="volumeTooltipClass" class="volumeContainer">
         <div class="repeat-volume_container">
-          <div class="repeat-container" >
+          <div class="repeat-container">
             {{element.repeat}}
           </div>
           <mat-progress-spinner [value]="element.volume" [diameter]="25" [strokeWidth]="3">
@@ -91,21 +84,20 @@
   <!-- Is ON -->
   <ng-container matColumnDef="isOn">
     <th mat-header-cell *matHeaderCellDef>
-      {{ 'general.tableHeaders.gongsTimeTable.' + (isDeleteButton ? 'delete' : 'isOn')| translate }}
+      {{ titles.general.tableHeaders.gongsTimeTable[isDeleteButton ? 'delete' : 'isOn'] }}
     </th>
     <td mat-cell *matCellDef="let element" [ngClass]="{'nextGong' : element.isTheNextGong}" class="delete-cell">
       <ng-container *ngIf="isDeleteButton">
         <button mat-icon-button (click)="gongRemove(element.exactMoment.valueOf())" color="accent"
-                [disabled]="isDisableToggle"
-                class="delete-button ">
+          [disabled]="isDisableToggle" class="delete-button ">
           <mat-icon svgIcon="close-box"></mat-icon>
         </button>
       </ng-container>
       <ng-container *ngIf="!isDeleteButton">
         <mat-checkbox #cmd id="{{element.exactMoment.valueOf()}}"
-                      (click)=" element.isAfterNextGong && !isDisableToggle && gongToggle($event,element.exactMoment.valueOf())"
-                      [class.toggle-gong-check]="isDisableToggle && element.isAfterNextGong"
-                      [disabled]="!element.isAfterNextGong || isDisableToggle" [checked]="element.isActive">
+          (click)=" element.isAfterNextGong && !isDisableToggle && gongToggle($event,element.exactMoment.valueOf())"
+          [class.toggle-gong-check]="isDisableToggle && element.isAfterNextGong"
+          [disabled]="!element.isAfterNextGong || isDisableToggle" [checked]="element.isActive">
         </mat-checkbox>
 
       </ng-container>

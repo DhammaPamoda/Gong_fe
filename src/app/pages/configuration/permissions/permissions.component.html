@@ -2,7 +2,7 @@
 
   <div class="btn-group top-controls-container">
     <button mat-raised-button color="primary" (click)="save()" [disabled]="!wasChanged">
-      {{ 'config.permissions.buttons.save' | translate }}
+      {{ titles.config.permissions.buttons.save }}
     </button>
   </div>
 
@@ -13,7 +13,7 @@
         <!-- Actions -->
         <ng-container matColumnDef="action">
           <mat-header-cell *matHeaderCellDef>
-            {{ 'config.permissions.permissionsTable.headers.action' | translate }}
+            {{ titles.config.permissions.permissionsTable.headers.action }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element">
             {{ element.action }}
@@ -24,7 +24,7 @@
         <!-- dw -->
         <ng-container matColumnDef="user">
           <mat-header-cell *matHeaderCellDef class="td-center-content">
-            {{ 'config.permissions.permissionsTable.headers.user' | translate }}
+            {{ titles.config.permissions.permissionsTable.headers.user }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element" class="td-center-content">
             <mat-checkbox [(ngModel)]="element.isDw" (change)="roleChanged(element)">
@@ -35,7 +35,7 @@
         <!-- teacher -->
         <ng-container matColumnDef="super-user">
           <mat-header-cell *matHeaderCellDef class="td-center-content">
-            {{ 'config.permissions.permissionsTable.headers.super-user' | translate }}
+            {{ titles.config.permissions.permissionsTable.headers['super-user'] }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element" class="td-center-content">
             <mat-checkbox [(ngModel)]="element.isTeacher" (change)="roleChanged(element)">
@@ -46,7 +46,7 @@
         <!-- admin -->
         <ng-container matColumnDef="admin">
           <mat-header-cell *matHeaderCellDef class="td-center-content">
-            {{ 'config.permissions.permissionsTable.headers.admin' | translate }}
+            {{ titles.config.permissions.permissionsTable.headers.admin }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element" class="td-center-content">
             <mat-checkbox [(ngModel)]="element.isAdmin" (change)="roleChanged(element)">
@@ -57,7 +57,7 @@
         <!-- all -->
         <ng-container matColumnDef="all">
           <mat-header-cell *matHeaderCellDef class="td-center-content">
-            {{ 'config.permissions.permissionsTable.headers.all' | translate }}
+            {{ titles.config.permissions.permissionsTable.headers.all }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element" class="td-center-content">
             <mat-checkbox [(ngModel)]="element.isAll" (change)="roleChanged(element,true)">

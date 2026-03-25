@@ -1,28 +1,28 @@
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import * as _ from 'lodash';
 import moment from 'moment';
 
-import {AngularJsonClassConverterService} from 'angular-json-class-converter';
-import {API_ERROR, API_SUCCESS, apiMockSuccess, apiRequest} from '../../actions/api.actions';
+import { AngularJsonClassConverterService } from 'angular-json-class-converter';
+import { API_ERROR, API_SUCCESS, apiMockSuccess, apiRequest } from '../../actions/api.actions';
 
-import {ActionFeaturesEnum, ActionGenerator, ActionTypesEnum} from '../../actions/action';
-import {Area} from '../../../model/area';
-import {CourseSchedule} from '../../../model/courseSchedule';
-import {Course} from '../../../model/course';
-import {GongType} from '../../../model/gongType';
-import {UpdateStatusEnum} from '../../../model/updateStatusEnum';
-import {ScheduledGong} from '../../../model/ScheduledGong';
-import {BasicServerData} from '../../../model/basicServerData';
-import {ScheduledCourseGong} from '../../../model/ScheduledCourseGong';
-import {MessagesService} from '../../../services/messages.service';
-import {DateFormat} from '../../../model/dateFormat';
-import {AuthService} from '../../../services/auth.service';
-import {DbObjectTypeEnum, IndexedDbService} from '../../../shared/indexed-db.service';
-import {StoreService} from '../../../services/store.service';
-import {User} from '../../../model/user';
-import {Permission} from '../../../model/permission';
+import { ActionFeaturesEnum, ActionGenerator, ActionTypesEnum } from '../../actions/action';
+import { Area } from '../../../model/area';
+import { CourseSchedule } from '../../../model/courseSchedule';
+import { Course } from '../../../model/course';
+import { GongType } from '../../../model/gongType';
+import { UpdateStatusEnum } from '../../../model/updateStatusEnum';
+import { ScheduledGong } from '../../../model/ScheduledGong';
+import { BasicServerData } from '../../../model/basicServerData';
+import { ScheduledCourseGong } from '../../../model/ScheduledCourseGong';
+import { MessagesService } from '../../../services/messages.service';
+import { DateFormat } from '../../../model/dateFormat';
+import { AuthService } from '../../../services/auth.service';
+import { DbObjectTypeEnum, IndexedDbService } from '../../../shared/indexed-db.service';
+import { StoreService } from '../../../services/store.service';
+import { User } from '../../../model/user';
+import { Permission } from '../../../model/permission';
 
 
 const BASIC_URL = 'api/';
@@ -43,7 +43,6 @@ const UPLOAD_COURSES_URL = `${BASIC_URL}data/course/uploadCourses`;
 const UPLOAD_GONG_URL = `${BASIC_URL}data/gong/upload`;
 const DELETE_GONG_URL = `${BASIC_URL}data/gong/deleteFile`;
 const DELETE_COURSE_URL = `${BASIC_URL}data/course/remove`;
-const UPDATE_LANGUAGES_URL = `${BASIC_URL}data/languagesUpdate`;
 const GET_USERS_URL = `${BASIC_URL}data/users/list`;
 const ADD_USER_URL = `${BASIC_URL}data/user/add`;
 const DELETE_USER_URL = `${BASIC_URL}data/user/remove`;
@@ -54,14 +53,14 @@ const UPDATE_PERMISSIONS_URL = `${BASIC_URL}data/permissions/update`;
 @Injectable()
 export class GeneralMiddlewareService {
   constructor(private jsonConverterService: AngularJsonClassConverterService,
-              private authService: AuthService,
-              private storeService: StoreService,
-              private router: Router,
-              private indexedDbService: IndexedDbService,
-              private messagesService: MessagesService) {
+    private authService: AuthService,
+    private storeService: StoreService,
+    private router: Router,
+    private indexedDbService: IndexedDbService,
+    private messagesService: MessagesService) {
   }
 
-  generalMiddleware = ({getState, dispatch}) => (next) => (action) => {
+  generalMiddleware = ({ getState, dispatch }) => (next) => (action) => {
     next(action);
 
     switch (action.type) {
@@ -191,11 +190,6 @@ export class GeneralMiddlewareService {
           promiseArray = [];
           const staticData = _.get(action, ['payload', 'data']);
 
-          const languagesJson = _.get(staticData, 'languages');
-          promise = this.indexedDbService.saveDataArray2DB(DbObjectTypeEnum.LANGUAGES, languagesJson
-            , (val) => val.translation, (val) => val.language);
-          promiseArray.push(promise);
-
           const areasJson = _.get(staticData, 'areas');
           promise = this.indexedDbService.saveDataArray2DB(DbObjectTypeEnum.AREAS, areasJson);
           promiseArray.push(promise);
@@ -221,18 +215,6 @@ export class GeneralMiddlewareService {
                 'Error in  processing API middleware : ', error));
         });
         break;
-      case ActionTypesEnum.UPDATE_LANGUAGES:
-        const stringedifiedLanguagesJson = JSON.stringify(action.payload);
-        next(
-          apiRequest(stringedifiedLanguagesJson, 'POST', UPDATE_LANGUAGES_URL,
-            ActionFeaturesEnum.UPDATE_LANGUAGES_FEATURE, null)
-        );
-        break;
-      case `${ActionFeaturesEnum.UPDATE_LANGUAGES_FEATURE} ${API_SUCCESS}`:
-        next(
-          apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
-            , {bypassRefreshDateFormat: true}));
-        break;
       case ActionTypesEnum.ADD_MANUAL_GONG:
         const manualGongJson = this.jsonConverterService.convertToJson(action.payload);
         const stringedifiedManualGongJson = JSON.stringify(manualGongJson);
@@ -249,7 +231,7 @@ export class GeneralMiddlewareService {
         );
         dispatch(
           apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
-            , {bypassRefreshDateFormat: true})
+            , { bypassRefreshDateFormat: true })
         );
         break;
       case `${ActionFeaturesEnum.MANUAL_GONG_ADD_FEATURE} ${API_ERROR}`:
@@ -278,7 +260,7 @@ export class GeneralMiddlewareService {
         // Refresh basic data to update next gong after course scheduling
         next(
           apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
-            , {bypassRefreshDateFormat: true}));
+            , { bypassRefreshDateFormat: true }));
         break;
       case `${ActionFeaturesEnum.SCHEDULE_COURSE_FEATURE} ${API_ERROR}`:
         const newCourseSchedule = (action.data as CourseSchedule).clone();
@@ -302,7 +284,7 @@ export class GeneralMiddlewareService {
         setTimeout(() => {
           dispatch(
             apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
-              , {bypassRefreshDateFormat: true})
+              , { bypassRefreshDateFormat: true })
           );
         }, 500);
         break;
@@ -382,7 +364,7 @@ export class GeneralMiddlewareService {
       case `${ActionFeaturesEnum.UPLOAD_COURSES_FILE_FEATURE} ${API_SUCCESS}`:
         next(
           apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
-            , {bypassRefreshDateFormat: true}));
+            , { bypassRefreshDateFormat: true }));
       // tslint:disable-next-line:no-switch-case-fall-through
       case `${ActionFeaturesEnum.UPLOAD_COURSES_FILE_FEATURE} ${API_ERROR}`:
         this.messagesService.coursesUploaded(action.payload.error && action.payload.error.additional_message);
@@ -404,7 +386,7 @@ export class GeneralMiddlewareService {
       case `${ActionFeaturesEnum.UPLOAD_GONG_FILE_FEATURE} ${API_SUCCESS}`:
         next(
           apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
-            , {bypassRefreshDateFormat: true}));
+            , { bypassRefreshDateFormat: true }));
       // tslint:disable-next-line:no-switch-case-fall-through
       case `${ActionFeaturesEnum.UPLOAD_GONG_FILE_FEATURE} ${API_ERROR}`:
         let additionalErrorInfo = action.payload.error && action.payload.error.additional_message;
@@ -423,7 +405,7 @@ export class GeneralMiddlewareService {
       case ActionTypesEnum.DELETE_COURSE:
         console.log('🔍 DELETE_COURSE action triggered with payload:', action.payload);
         next(
-          apiRequest(JSON.stringify({courseName: action.payload}),
+          apiRequest(JSON.stringify({ courseName: action.payload }),
             'POST', DELETE_COURSE_URL, ActionFeaturesEnum.DELETE_COURSE_FEATURE, null)
         );
         break;
@@ -432,12 +414,12 @@ export class GeneralMiddlewareService {
         this.messagesService.courseDeletedSuccessfully();
         next(
           apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
-            , {bypassRefreshDateFormat: true}));
+            , { bypassRefreshDateFormat: true }));
 
         break;
       case ActionTypesEnum.DELETE_GONG:
         next(
-          apiRequest(JSON.stringify({gongId: action.payload}),
+          apiRequest(JSON.stringify({ gongId: action.payload }),
             'POST', DELETE_GONG_URL, ActionFeaturesEnum.DELETE_GONG_FEATURE, null)
         );
         break;
@@ -445,7 +427,7 @@ export class GeneralMiddlewareService {
         this.messagesService.gongDeletedSuccessfully();
         next(
           apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
-            , {bypassRefreshDateFormat: true}));
+            , { bypassRefreshDateFormat: true }));
 
         break;
       case ActionTypesEnum.GET_USERS_ARRAY:
@@ -473,7 +455,7 @@ export class GeneralMiddlewareService {
         break;
       case ActionTypesEnum.DELETE_USER:
         next(
-          apiRequest(JSON.stringify({userId: action.payload.id}), 'POST',
+          apiRequest(JSON.stringify({ userId: action.payload.id }), 'POST',
             DELETE_USER_URL, ActionFeaturesEnum.DELETE_USER_FEATURE, null)
         );
         break;
@@ -485,7 +467,7 @@ export class GeneralMiddlewareService {
       case ActionTypesEnum.UPDATE_USER:
         let user: User = action.payload;
         next(
-          apiRequest(JSON.stringify({userId: user.id, role: user.role}), 'POST',
+          apiRequest(JSON.stringify({ userId: user.id, role: user.role }), 'POST',
             UPDATE_USER_URL, ActionFeaturesEnum.UPDATE_USER_FEATURE, null)
         );
         break;
@@ -497,7 +479,7 @@ export class GeneralMiddlewareService {
       case ActionTypesEnum.RESET_USER_PASSWORD:
         user = action.payload;
         next(
-          apiRequest(JSON.stringify({userId: user.id, password: user.password}), 'POST',
+          apiRequest(JSON.stringify({ userId: user.id, password: user.password }), 'POST',
             RESET_USER_PASSWORD_URL, ActionFeaturesEnum.RESET_USER_PASSWORD_FEATURE, null)
         );
         break;
@@ -514,7 +496,7 @@ export class GeneralMiddlewareService {
       case `${ActionFeaturesEnum.UPDATE_PERMISSIONS_FEATURE} ${API_SUCCESS}`:
         next(
           apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
-            , {bypassRefreshDateFormat: true}));
+            , { bypassRefreshDateFormat: true }));
         break;
     }
 

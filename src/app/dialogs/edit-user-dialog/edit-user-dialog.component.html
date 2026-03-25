@@ -1,8 +1,6 @@
 <div class="dialog-container">
   <div class="message-title">
-    <div class="header">
-      {{ 'dialogs.editUser.header.' + data.action | translate}}
-    </div>
+    {{ titles.dialogs.editUser.header[data.action] }}
     <mat-icon (click)="closeDialog()" svgIcon="window-close" class="close-dialog"></mat-icon>
   </div>
   <hr class="line">
@@ -12,29 +10,27 @@
     <!-- ID-->
     <div class="field-container">
       <h4>
-        {{ 'dialogs.editUser.labels.id' | translate}}
+        {{ titles.dialogs.editUser.labels.id }}
       </h4>
       <mat-form-field>
         <input #idInput="ngModel" matInput type="text" required [(ngModel)]="data.user.id"
-               [disabled]="data.action !== actionEnum.NEW"
-               (ngModelChange)="onInputChanged(idInput.dirty,passInput.dirty)"
-               placeholder="{{ 'dialogs.editUser.placeholders.id' | translate}}">
+          [disabled]="data.action !== actionEnum.NEW" (ngModelChange)="onInputChanged(idInput.dirty,passInput.dirty)"
+          placeholder="{{ titles.dialogs.editUser.placeholders.id }}">
       </mat-form-field>
       <div *ngIf="errorMessages['id']">
-        {{ 'dialogs.editUser.errorMessages.' + errorMessages['id'] | translate}}
+        {{ titles.dialogs.editUser.errorMessages[errorMessages['id']] }}
       </div>
     </div>
 
     <!-- ROLE -->
     <div class="field-container">
       <h4>
-        {{ 'dialogs.editUser.labels.role' | translate}}
+        {{ titles.dialogs.editUser.labels.role }}
       </h4>
       <mat-form-field>
-        <mat-select [(value)]="data.user.role"
-                    [disabled]="data.action === actionEnum.PASSWORD"
-                    (selectionChange)="onInputChanged(idInput.dirty,passInput.dirty)"
-                    placeholder="{{ 'dialogs.editUser.placeholders.role' | translate}}">
+        <mat-select [(value)]="data.user.role" [disabled]="data.action === actionEnum.PASSWORD"
+          (selectionChange)="onInputChanged(idInput.dirty,passInput.dirty)"
+          placeholder="{{ titles.dialogs.editUser.placeholders.role }}">
           <mat-option *ngFor="let role of data.rolesArray" [value]="role">
             {{ role }}
           </mat-option>
@@ -45,15 +41,15 @@
     <!-- Password-->
     <div class="field-container" [style.visibility]="data.action !== actionEnum.UPDATE?'visible':'hidden'">
       <h4>
-        {{ 'dialogs.editUser.labels.pass' | translate}}
+        {{ titles.dialogs.editUser.labels.pass }}
       </h4>
       <mat-form-field>
         <input #passInput="ngModel" matInput type="text" required [(ngModel)]="data.user.password"
-               (ngModelChange)="onInputChanged(idInput.dirty,passInput.dirty)"
-               placeholder="{{ 'dialogs.editUser.placeholders.pass' | translate}}">
+          (ngModelChange)="onInputChanged(idInput.dirty,passInput.dirty)"
+          placeholder="{{ titles.dialogs.editUser.placeholders.pass }}">
       </mat-form-field>
       <div *ngIf="errorMessages['pass']">
-        {{ 'dialogs.editUser.errorMessages.' + errorMessages['pass'] | translate}}
+        {{ titles.dialogs.editUser.errorMessages[errorMessages['pass']] }}
       </div>
     </div>
 
@@ -61,12 +57,11 @@
 
   <div class="buttons-container">
     <button mat-raised-button color="basic" (click)="closeDialog()">
-      {{ 'dialogs.editUser.buttons.cancel' | translate }}
+      {{ titles.dialogs.editUser.buttons.cancel }}
     </button>
-    <button mat-raised-button color="primary" (click)="submitContent()"
-            [disabled]="!isFormValid"
-            class="edit-user-submit-button">
-      {{ 'dialogs.editUser.buttons.' + data.action + 'Submit' | translate }}
+    <button mat-raised-button color="primary" (click)="submitContent()" [disabled]="!isFormValid"
+      class="edit-user-submit-button">
+      {{ titles.dialogs.editUser.buttons[data.action + 'Submit'] }}
     </button>
   </div>
 

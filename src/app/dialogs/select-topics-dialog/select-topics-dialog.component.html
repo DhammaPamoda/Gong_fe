@@ -1,8 +1,6 @@
 <div class="dialog-container">
   <div class="message-title">
-    <div class="header">
-      {{ 'dialogs.selectTopics.header.' + data.forAction| translate : {topic:topic} }}
-    </div>
+    {{ getTopicReplacedHeader() }}
     <mat-icon (click)="closeDialog()" svgIcon="window-close" class="close-dialog"></mat-icon>
   </div>
   <hr class="line">
@@ -11,8 +9,8 @@
     <div class="topics-container">
 
       <div class="row-container" *ngFor="let topic of data.availableTopics"
-        [matTooltip]="topic.inUse ? disabledTopicToolTip : ''"
-           matTooltipPosition="right" matTooltipClass="disabledTopicTooltipClass">
+        [matTooltip]="topic.inUse ? disabledTopicToolTip : ''" matTooltipPosition="right"
+        matTooltipClass="disabledTopicTooltipClass">
 
         <mat-checkbox (click)="!topic.inUse && toggleSelection(topic)" [disabled]="topic.inUse" *ngIf="data.many">
         </mat-checkbox>
@@ -31,12 +29,11 @@
 
   <div class="buttons-container">
     <button mat-raised-button color="basic" (click)="closeDialog()">
-      {{ 'dialogs.selectTopics.buttons.cancel' | translate }}
+      {{ titles.dialogs.selectTopics.buttons.cancel }}
     </button>
-    <button mat-raised-button color="primary" (click)="submit()"
-            [disabled]="selectedTopics.length <= 0"
-            class="submit-button">
-      {{ 'dialogs.selectTopics.buttons.' + data.forAction | translate }}
+    <button mat-raised-button color="primary" (click)="submit()" [disabled]="selectedTopics.length <= 0"
+      class="submit-button">
+      {{ titles.dialogs.selectTopics.buttons[data.forAction] }}
     </button>
   </div>
 

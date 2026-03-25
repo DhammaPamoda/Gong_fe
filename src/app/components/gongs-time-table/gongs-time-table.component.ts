@@ -11,25 +11,18 @@ import {
   SimpleChanges,
   ViewChildren
 } from '@angular/core';
-import {MatCheckbox} from '@angular/material/checkbox';
-import {MatTableDataSource} from '@angular/material/table';
-import {Observable, Subscription, timer} from 'rxjs';
-import {TranslateService} from '@ngx-translate/core';
-import Swal, {SweetAlertResult} from 'sweetalert2';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatTableDataSource } from '@angular/material/table';
+import { Observable, Subscription, timer } from 'rxjs';
+import Swal, { SweetAlertResult } from 'sweetalert2';
 import moment from 'moment';
 
-import {ScheduledGong} from '../../model/ScheduledGong';
-import {StoreService} from '../../services/store.service';
-import {DateFormat} from '../../model/dateFormat';
+import { ScheduledGong } from '../../model/ScheduledGong';
+import { StoreService } from '../../services/store.service';
+import { DateFormat } from '../../model/dateFormat';
+import { Titles } from '../../shared/titles';
 
-enum Translation_Enum {
-  CONFIRM_DEGONG_TITLE_DISABLE,
-  CONFIRM_DEGONG_TITLE_DELETE,
-  CONFIRM_DEGONG_TEXT,
-  CONFIRM_DEGONG_CANCEL,
-  CONFIRM_DEGONG_CONFIRM_DISABLE,
-  CONFIRM_DEGONG_CONFIRM_DELETE,
-}
+
 
 @Component({
   selector: 'app-gongs-time-table',
@@ -95,7 +88,7 @@ export class GongsTimeTableComponent implements OnInit, OnChanges, OnDestroy, Af
 
   @ViewChildren('cmd') customComponentChildren: QueryList<MatCheckbox>;
 
-  translationMap = new Map<Translation_Enum, string>();
+  public titles = Titles;
 
   displayedColumnsOptions = ['day', 'date', 'time', 'gongType', 'area', 'volume', 'isOn'];
   displayedColumns = [];
@@ -111,16 +104,11 @@ export class GongsTimeTableComponent implements OnInit, OnChanges, OnDestroy, Af
 
   lastToggledCB: MatCheckbox;
 
-  constructor(private storeService: StoreService,
-              private translate: TranslateService) {
+  constructor(private storeService: StoreService) {
   }
 
   ngOnInit() {
-    this.translateNeededText();
-
     this.resetDisplayedColumns();
-
-    this.translate.onLangChange.subscribe(() => this.translateNeededText());
 
     this.storeService.getDateFormat().subscribe(dateFormat => this.dateFormat = dateFormat.convertToDateFormatter());
   }
@@ -145,23 +133,7 @@ export class GongsTimeTableComponent implements OnInit, OnChanges, OnDestroy, Af
     });
   }
 
-  private translateNeededText() {
-    const transKeysConfirmDeGongMap = new Map<string, Translation_Enum>();
 
-    const transKeyBase = 'gongsTimeTable.confirmations.disableDeleteGong.';
-    transKeysConfirmDeGongMap.set(transKeyBase + 'title.disable', Translation_Enum.CONFIRM_DEGONG_TITLE_DISABLE);
-    transKeysConfirmDeGongMap.set(transKeyBase + 'title.delete', Translation_Enum.CONFIRM_DEGONG_TITLE_DELETE);
-    transKeysConfirmDeGongMap.set(transKeyBase + 'text', Translation_Enum.CONFIRM_DEGONG_TEXT);
-    transKeysConfirmDeGongMap.set(transKeyBase + 'buttons.cancel', Translation_Enum.CONFIRM_DEGONG_CANCEL);
-    transKeysConfirmDeGongMap.set(
-      transKeyBase + 'buttons.confirm.disable', Translation_Enum.CONFIRM_DEGONG_CONFIRM_DISABLE);
-    transKeysConfirmDeGongMap.set(transKeyBase + 'buttons.confirm.delete', Translation_Enum.CONFIRM_DEGONG_CONFIRM_DELETE);
-
-    this.translate.get(Array.from(transKeysConfirmDeGongMap.keys())).subscribe(transResult => {
-      transKeysConfirmDeGongMap.forEach(((value, key) =>
-        this.translationMap.set(transKeysConfirmDeGongMap.get(key), transResult[key])));
-    });
-  }
 
   private gongActivationToggle(aId: number, aIsOnAction: boolean, aChkBxCtrl: MatCheckbox) {
     this.lastToggledCB = aChkBxCtrl;
@@ -206,21 +178,19 @@ export class GongsTimeTableComponent implements OnInit, OnChanges, OnDestroy, Af
   }
 
   private async confirmGongDisablingOrDeletion(aIsDelete: boolean = false): Promise<boolean> {
-    const title = this.translationMap.get(
-      aIsDelete ? Translation_Enum.CONFIRM_DEGONG_TITLE_DELETE : Translation_Enum.CONFIRM_DEGONG_TITLE_DISABLE);
+    const title = aIsDelete ? this.titles.gongsTimeTable.confirmations.disableDeleteGong.title.delete : this.titles.gongsTimeTable.confirmations.disableDeleteGong.title.disable;
 
-    const confirm = this.translationMap.get(
-      aIsDelete ? Translation_Enum.CONFIRM_DEGONG_CONFIRM_DELETE : Translation_Enum.CONFIRM_DEGONG_CONFIRM_DISABLE);
+    const confirm = aIsDelete ? this.titles.gongsTimeTable.confirmations.disableDeleteGong.buttons.confirm.delete : this.titles.gongsTimeTable.confirmations.disableDeleteGong.buttons.confirm.disable;
 
 
     const result: SweetAlertResult = await Swal.fire({
       title,
-      text: this.translationMap.get(Translation_Enum.CONFIRM_DEGONG_TEXT),
+      text: this.titles.gongsTimeTable.confirmations.disableDeleteGong.text,
       imageUrl: '/assets/icons/alerts/icons8-error-48.png',
       customClass: { popup: 'confirmClass' },
       confirmButtonText: confirm,
       showCancelButton: true,
-      cancelButtonText: this.translationMap.get(Translation_Enum.CONFIRM_DEGONG_CANCEL),
+      cancelButtonText: this.titles.gongsTimeTable.confirmations.disableDeleteGong.buttons.cancel,
     });
 
     return Promise.resolve(result.value === true);

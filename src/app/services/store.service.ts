@@ -1,28 +1,27 @@
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {NgRedux} from '@angular-redux/store';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { NgRedux } from '@angular-redux/store';
 
-import {filter, first} from 'rxjs/operators';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {TranslateService} from '@ngx-translate/core';
+import { filter, first } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
-import {ActionGenerator} from '../store/actions/action';
+import { ActionGenerator } from '../store/actions/action';
 
-import {Area} from '../model/area';
-import {StoreDataTypeEnum} from '../store/storeDataTypeEnum';
-import {GongType} from '../model/gongType';
-import {Course} from '../model/course';
-import {ScheduledGong} from '../model/ScheduledGong';
-import {CourseSchedule} from '../model/courseSchedule';
-import {ScheduledCourseGong} from '../model/ScheduledCourseGong';
-import {Gong} from '../model/gong';
-import {DateFormat} from '../model/dateFormat';
-import {BasicServerData} from '../model/basicServerData';
-import {IObjectMap} from '../model/store-model';
-import {ETopic, ITopicData} from '../model/topics-model';
-import {User} from '../model/user';
-import {Permission} from '../model/permission';
+import { Area } from '../model/area';
+import { StoreDataTypeEnum } from '../store/storeDataTypeEnum';
+import { GongType } from '../model/gongType';
+import { Course } from '../model/course';
+import { ScheduledGong } from '../model/ScheduledGong';
+import { CourseSchedule } from '../model/courseSchedule';
+import { ScheduledCourseGong } from '../model/ScheduledCourseGong';
+import { Gong } from '../model/gong';
+import { DateFormat } from '../model/dateFormat';
+import { BasicServerData } from '../model/basicServerData';
+import { IObjectMap } from '../model/store-model';
+import { ETopic, ITopicData } from '../model/topics-model';
+import { User } from '../model/user';
+import { Permission } from '../model/permission';
 
 @Injectable({
   providedIn: 'root'
@@ -45,8 +44,7 @@ export class StoreService implements OnInit, OnDestroy {
   isCourseScheduleArrayEnhanced: boolean;
 
   constructor(private ngRedux: NgRedux<any>,
-              private translateService: TranslateService,
-              private http: HttpClient) {
+    private http: HttpClient) {
     this.populateAreasMap();
     this.populateGongTypesMap();
     this.populateGongTypeCoursesMap();
@@ -60,17 +58,10 @@ export class StoreService implements OnInit, OnDestroy {
     const areaSubscription =
       this.ngRedux.select<Area[]>([StoreDataTypeEnum.STATIC_DATA, 'areas']).subscribe((areaArray: Area[]) => {
         if (areaArray && areaArray.length > 0) {
-          const transKeyObjMap = {};
-          this.areasMap = [];
           areaArray.forEach((area: Area) => {
-            transKeyObjMap[`general.typesValues.areas.${area.name}`] = area.id;
             this.areasMap[area.id] = area;
           });
-          this.translateService.get(Object.keys(transKeyObjMap)).pipe(first()).subscribe(transResult => {
-            Object.keys(transResult).forEach((key) => this.areasMap[transKeyObjMap[key]].translation = transResult[key]);
-
-            this.areasMapObservable.next(this.areasMap);
-          });
+          this.areasMapObservable.next(this.areasMap);
         }
       });
 
@@ -243,7 +234,7 @@ export class StoreService implements OnInit, OnDestroy {
     const coursesRawData = _.get(this.ngRedux.getState(), [StoreDataTypeEnum.STATIC_DATA, 'coursesRawData']);
     const courses = Array.from(JSON.parse(coursesRawData));
     const filteredCurses = courses.filter((course) => aCoursesNamesArray.includes(_.get(course, 'course_name')));
-    const blob = new Blob([JSON.stringify(filteredCurses)], {type: 'text/json'});
+    const blob = new Blob([JSON.stringify(filteredCurses)], { type: 'text/json' });
     const url = window.URL.createObjectURL(blob);
     // window.open(url);
 
@@ -251,7 +242,7 @@ export class StoreService implements OnInit, OnDestroy {
     link.href = url;
     link.download = 'courses.json';
     // this is necessary as link.click() does not work on the latest firefox
-    link.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+    link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
 
     setTimeout(function () {
       // For Firefox it is necessary to delay revoking the ObjectURL
@@ -331,7 +322,7 @@ export class StoreService implements OnInit, OnDestroy {
       const lastGong = _.sortBy(gongTypesArray, ['id'])[gongTypesArray.length - 1]; // Assuming that the gongs created
       // by order and id respectively
       const inUse = Array.from(this.coursesMap.values()).some(course => !course.isTest && course.isGongTypeInCourse(lastGong));
-      return {id: lastGong.id.toString(10), name: lastGong.name, inUse};
+      return { id: lastGong.id.toString(10), name: lastGong.name, inUse };
     } else {
       return undefined;
     }

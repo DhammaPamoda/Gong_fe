@@ -1,23 +1,22 @@
 <div class="automaticActivationContainer">
   <div class="btn-group top-controls-container">
     <div class="btn-group-left-side">
-      <button mat-raised-button color="primary" (click)="scheduleCourse()"
-              [disabled]="!scheduleCoursePermissions">
-        {{ 'automaticActivation.buttons.scheduleCourse' | translate }}
+      <button mat-raised-button color="primary" (click)="scheduleCourse()" [disabled]="!scheduleCoursePermissions">
+        {{ titles.automaticActivation.buttons.scheduleCourse }}
       </button>
       <button mat-raised-button color="accent" (click)="removeScheduledCourse()"
-              [disabled]="!selectedCourseScheduled || !removeScheduledCoursePermissions ">
-        {{ 'automaticActivation.buttons.removeCourse' | translate }}
+        [disabled]="!selectedCourseScheduled || !removeScheduledCoursePermissions ">
+        {{ titles.automaticActivation.buttons.removeCourse }}
       </button>
     </div>
     <div class="btn-group-right-side">
       <mat-checkbox [(ngModel)]="displayDate" *ngIf="selectedCourseScheduled">
-        {{ 'automaticActivation.labels.displayDate' | translate }}
+        {{ titles.automaticActivation.labels.displayDate }}
       </mat-checkbox>
 
-      <button mat-raised-button color="basic" class="scroll-next-gong-button"
-              (click)="scrollToNextGong()" *ngIf="coursesData.length > 0">
-        {{ 'automaticActivation.buttons.nextAutoGong' | translate }}
+      <button mat-raised-button color="basic" class="scroll-next-gong-button" (click)="scrollToNextGong()"
+        *ngIf="coursesData.length > 0">
+        {{ titles.automaticActivation.buttons.nextAutoGong }}
       </button>
     </div>
   </div>
@@ -31,11 +30,10 @@
         <!-- course Name -->
         <ng-container matColumnDef="course_name">
           <mat-header-cell *matHeaderCellDef>
-            {{ 'automaticActivation.scheduleTable.headers.name' | translate }}
+            {{ titles.automaticActivation.scheduleTable.headers.name }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            {{ 'general.typesValues.courses.' +
-          element.name | translate }}
+            {{ titles.general.typesValues.courses[element.name] }}
           </mat-cell>
         </ng-container>
 
@@ -43,8 +41,8 @@
         <!-- no. Of Days -->
         <ng-container matColumnDef="daysCount">
           <mat-header-cell *matHeaderCellDef class="td-center-content">
-            [{{ 'automaticActivation.scheduleTable.headers.startFromDay' | translate }}/]<BR/>
-            {{ 'automaticActivation.scheduleTable.headers.daysCount' | translate }}
+            [{{ titles.automaticActivation.scheduleTable.headers.startFromDay }}/]<BR />
+            {{ titles.automaticActivation.scheduleTable.headers.daysCount }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element" class="td-center-content">
             <ng-container *ngIf="element.startFromDay > 0">
@@ -57,7 +55,7 @@
         <!-- date -->
         <ng-container matColumnDef="date">
           <mat-header-cell *matHeaderCellDef class="td-center-content">
-            {{ 'automaticActivation.scheduleTable.headers.date' | translate }}
+            {{ titles.automaticActivation.scheduleTable.headers.date }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element" class="td-center-content">
             <div class="date-cell-container">
@@ -68,19 +66,17 @@
 
         <mat-header-row *matHeaderRowDef="coursesDisplayedColumns; sticky: true"></mat-header-row>
         <mat-row *matRowDef="let row; columns: coursesDisplayedColumns;"
-                 [ngClass]="{'highlight': selectedCourseScheduled && selectedCourseScheduled.id == row.id}"
-                 (click)="onRowClick(row)">
+          [ngClass]="{'highlight': selectedCourseScheduled && selectedCourseScheduled.id == row.id}"
+          (click)="onRowClick(row)">
         </mat-row>
       </mat-table>
     </div>
 
     <div class="selected-course-display-container mat-elevation-z8">
       <app-gongs-time-table #timeTable [scheduledGongs]="selectedCourseRoutineArray" [displayDate]="displayDate"
-                            (gongActiveToggleEvent)="onGongActiveToggle($event)"
-                            [isDisableToggle]="!toggleGongPermissions"
-                            [computeNextGong]="true"
-                            [isFindNext]="selectedCourseScheduled === coursesData[0]"
-                            (gongsTableDataChangedEvent)="onGongsTableDataChangedEvent()">
+        (gongActiveToggleEvent)="onGongActiveToggle($event)" [isDisableToggle]="!toggleGongPermissions"
+        [computeNextGong]="true" [isFindNext]="selectedCourseScheduled === coursesData[0]"
+        (gongsTableDataChangedEvent)="onGongsTableDataChangedEvent()">
       </app-gongs-time-table>
 
     </div><!--End of selected-course-display-container-->

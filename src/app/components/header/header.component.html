@@ -6,16 +6,11 @@
     </button>
 
     <mat-menu #mainOptionsMenu="matMenu">
-      <button mat-menu-item [matMenuTriggerFor]="languagesMenu">
-        <mat-icon svgIcon="web"></mat-icon>
-        <span>
-          {{'main.menu.language.main' | translate}}
-        </span>
-      </button>
+
       <button mat-menu-item [matMenuTriggerFor]="dateFormatMenu" *ngIf="isLoggedIn">
         <mat-icon svgIcon="calendar-question"></mat-icon>
         <span>
-          {{'main.menu.dateFormat.main' | translate}}
+          {{titles.main.menu.dateFormat.main}}
         </span>
       </button>
 
@@ -24,7 +19,7 @@
       <button mat-menu-item [matMenuTriggerFor]="exportImportMenu" *ngIf="viewExportImportPermissions">
         <mat-icon svgIcon="swap-vertical-bold"></mat-icon>
         <span>
-          {{'main.menu.exportImport.main' | translate}}
+          {{titles.main.menu.exportImport.main}}
         </span>
       </button>
 
@@ -33,30 +28,21 @@
       <button mat-menu-item (click)="logout()" *ngIf="getIsLoggedIn()">
         <mat-icon svgIcon="logout"></mat-icon>
         <span>
-          {{'main.menu.logout' | translate}}
+          {{titles.main.menu.logout}}
         </span>
       </button>
     </mat-menu>
 
-    <mat-menu #languagesMenu="matMenu">
-      <button mat-menu-item *ngFor="let lang of supportedLanguagesArray"
-              (click)="setLanguage(lang)" [ngClass]="{selectedLangClass: lang === currentLanguage}">
-        <span>
-          {{ knownLangsObjectMap[lang].name}} ( {{ knownLangsObjectMap[lang].nativeName}} )
-        </span>
-      </button>
 
-    </mat-menu>
 
     <mat-menu #dateFormatMenu="matMenu">
       <button mat-menu-item [matMenuTriggerFor]="delimiterMenu">
         <span>
-          {{'main.menu.dateFormat.delimiter' | translate}}
+          {{titles.main.menu.dateFormat.delimiter}}
         </span>
       </button>
-      <button mat-menu-item *ngFor="let dateFormat of dateFormatOptions"
-              (click)="setDateFormat(dateFormat)"
-              [ngClass]="{'selected-date-format': dateFormat.template === currentDateFormat.template}">
+      <button mat-menu-item *ngFor="let dateFormat of dateFormatOptions" (click)="setDateFormat(dateFormat)"
+        [ngClass]="{'selected-date-format': dateFormat.template === currentDateFormat.template}">
         <mat-icon svgIcon="square-small"></mat-icon>
         <span>
           {{ dateFormat.delimited }}
@@ -66,9 +52,8 @@
     </mat-menu>
 
     <mat-menu #delimiterMenu="matMenu">
-      <button mat-menu-item *ngFor="let delimiter of delimitersOptions"
-              (click)="setDelimiter(delimiter)"
-              [ngClass]="{'selected-delimiter': delimiter === currentDateFormat.delimiter}">
+      <button mat-menu-item *ngFor="let delimiter of delimitersOptions" (click)="setDelimiter(delimiter)"
+        [ngClass]="{'selected-delimiter': delimiter === currentDateFormat.delimiter}">
         <mat-icon svgIcon="square-small"></mat-icon>
         <span>
           {{ delimiter }}
@@ -81,28 +66,28 @@
       <button mat-menu-item [matMenuTriggerFor]="importMenu">
         <mat-icon svgIcon="cloud-upload"></mat-icon>
         <span>
-          {{'main.menu.exportImport.subMenu.import.main' | translate}}
+          {{titles.main.menu.exportImport.subMenu.import.main}}
         </span>
       </button>
 
       <button mat-menu-item [matMenuTriggerFor]="exportMenu">
         <mat-icon svgIcon="cloud-download"></mat-icon>
         <span>
-          {{'main.menu.exportImport.subMenu.export.main' | translate}}
+          {{titles.main.menu.exportImport.subMenu.export.main}}
         </span>
       </button>
 
       <button mat-menu-item [matMenuTriggerFor]="updateMenu">
         <mat-icon svgIcon="refresh"></mat-icon>
         <span>
-          {{'main.menu.exportImport.subMenu.update.main' | translate}}
+          {{titles.main.menu.exportImport.subMenu.update.main}}
         </span>
       </button>
 
       <button mat-menu-item [matMenuTriggerFor]="deletetMenu">
         <mat-icon svgIcon="delete"></mat-icon>
         <span>
-          {{'main.menu.exportImport.subMenu.delete.main' | translate}}
+          {{titles.main.menu.exportImport.subMenu.delete.main}}
         </span>
       </button>
 
@@ -112,14 +97,14 @@
       <button mat-menu-item (click)="uploadCoursesFile()">
         <mat-icon svgIcon="calendar-text-outline"></mat-icon>
         <span>
-          {{'main.menu.exportImport.subMenu.import.course' | translate}}
+          {{titles.main.menu.exportImport.subMenu.import.course}}
         </span>
       </button>
 
       <button mat-menu-item (click)="uploadGongFile()">
         <mat-icon svgIcon="music-note"></mat-icon>
         <span>
-          {{'main.menu.exportImport.subMenu.import.gong' | translate}}
+          {{titles.main.menu.exportImport.subMenu.import.gong}}
         </span>
       </button>
 
@@ -129,7 +114,7 @@
       <button mat-menu-item (click)="openUpdateDeleteDialog(topic.COURSE,topicAction.DOWNLOAD)">
         <mat-icon svgIcon="calendar-text-outline"></mat-icon>
         <span>
-          {{'main.menu.exportImport.subMenu.export.course' | translate}}
+          {{titles.main.menu.exportImport.subMenu.export.course}}
         </span>
       </button>
     </mat-menu>
@@ -138,7 +123,7 @@
       <button mat-menu-item (click)="openUpdateDeleteDialog(topic.GONG,topicAction.UPDATE)">
         <mat-icon svgIcon="music-note"></mat-icon>
         <span>
-          {{'main.menu.exportImport.subMenu.update.gong' | translate}}
+          {{titles.main.menu.exportImport.subMenu.update.gong}}
         </span>
       </button>
     </mat-menu>
@@ -147,14 +132,14 @@
       <button mat-menu-item (click)="openUpdateDeleteDialog(topic.COURSE, topicAction.DELETE)">
         <mat-icon svgIcon="calendar-text-outline"></mat-icon>
         <span>
-          {{'main.menu.exportImport.subMenu.delete.course' | translate}}
+          {{titles.main.menu.exportImport.subMenu.delete.course}}
         </span>
       </button>
 
       <button mat-menu-item (click)="deleteLastGong()">
         <mat-icon svgIcon="music-note"></mat-icon>
         <span>
-          {{'main.menu.exportImport.subMenu.delete.lastGong' | translate}}
+          {{titles.main.menu.exportImport.subMenu.delete.lastGong}}
         </span>
       </button>
 
@@ -163,20 +148,21 @@
   </section>
 
   <section class="">
-    {{'main.labels.currentTime' | translate}} : {{ now | amDateFormat: 'HH:mm'}}
+    {{titles.main.labels.currentTime}} : {{ now | amDateFormat: 'HH:mm'}}
   </section>
 
-  <section class="nextGongTimeContainer" [ngClass]="{langRtl: currentLanguage === 'he'}" *ngIf="getIsLoggedIn()">
-    {{'main.labels.nextGong' | translate}} :
+  <section class="nextGongTimeContainer" *ngIf="getIsLoggedIn()">
+    {{titles.main.labels.nextGong}} :
     <div *ngIf="nextGongTime" (click)="getBasicData()" style="cursor: pointer;" matTooltip="Click to refresh next gong">
       {{ nextGongTime | amDateFormat: currentDateFormat.delimited + ' HH:mm'}}
-      <span matTooltip="{{ 'main.tooltips.manual.' + !!isManual | translate}}"
-            matTooltipClass="manualTooltipClass" class="isManualSymbol mat-elevation-z8">
+      <span [matTooltip]="titles.main.tooltips.manual['' + !!isManual]" matTooltipClass="manualTooltipClass"
+        class="isManualSymbol mat-elevation-z8">
         {{isManual ? 'M' : 'A'}}
       </span>
     </div>
-    <div *ngIf="!nextGongTime" (click)="getBasicData()" style="cursor: pointer;" matTooltip="Click to refresh next gong">
-      {{'main.labels.nextGongNotAvailable' | translate}}
+    <div *ngIf="!nextGongTime" (click)="getBasicData()" style="cursor: pointer;"
+      matTooltip="Click to refresh next gong">
+      {{titles.main.labels.nextGongNotAvailable}}
     </div>
   </section>
 
@@ -188,7 +174,6 @@
 </mat-toolbar>
 
 <form>
-  <input type="file" #courseFile style="display: none" (change)="onCoursesFileChange()" accept=".json"/>
-  <input type="file" #gongFile style="display: none" (change)="onGongFileChange()" accept="audio/*"/>
+  <input type="file" #courseFile style="display: none" (change)="onCoursesFileChange()" accept=".json" />
+  <input type="file" #gongFile style="display: none" (change)="onGongFileChange()" accept="audio/*" />
 </form>
-
