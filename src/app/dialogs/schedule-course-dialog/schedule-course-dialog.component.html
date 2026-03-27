@@ -13,7 +13,7 @@
           {{ titles.dialogs.scheduleCourse.labels.courseName }}
         </h4>
         <mat-form-field>
-          <mat-select [(value)]="selectedCourse" (selectionChange)="onCourseSelectedChange()"
+          <mat-select id="selectedCourse" [(value)]="selectedCourse" (selectionChange)="onCourseSelectedChange()"
             placeholder="{{ titles.dialogs.scheduleCourse.placeHolders.courseName }}">
             <mat-option *ngFor="let course of courses" [value]="course">
               {{ titles.general.typesValues.courses[course.name] }}
@@ -30,7 +30,8 @@
           {{ titles.dialogs.scheduleCourse.labels.dayStart }}
         </h4>
         <mat-form-field>
-          <mat-select [(value)]="selectedStartFromDay" (selectionChange)="onStartFromDaySelectedChange()"
+          <mat-select id="selectedStartFromDay" [(value)]="selectedStartFromDay"
+            (selectionChange)="onStartFromDaySelectedChange()"
             placeholder="{{ titles.dialogs.scheduleCourse.placeHolders.dayStart }}">
             <mat-option *ngFor="let startDay of startDayArray" [value]="startDay">
               {{ startDay }}
@@ -48,9 +49,9 @@
         </h4>
         <div class="date-picker">
 
-          <md2-datepicker [isOpen]="datePickerIsOpened" (onClose)="datePickerIsOpened = false" (change)="changed()"
-            [startAt]="selectedStartDate" [(ngModel)]="selectedDateInPopup" [disabled]="!selectedCourse"
-            [touchUi]="true" [dateFilter]="dateFilter" [min]="minStartDate" type="date">
+          <md2-datepicker id="selectedStartDate" [isOpen]="datePickerIsOpened" (onClose)="datePickerIsOpened = false"
+            (change)="changed()" [startAt]="selectedStartDate" [(ngModel)]="selectedDateInPopup"
+            [disabled]="!selectedCourse" [touchUi]="true" [dateFilter]="dateFilter" [min]="minStartDate" type="date">
 
           </md2-datepicker>
         </div>
@@ -72,14 +73,14 @@
         </h4>
         <div class="hours-range-container">
 
-          <input matInput type="number" #hoursRangeStart="ngModel" class="hour-range" required min="0" max="23"
-            [(ngModel)]="testHoursRangeStart"
+          <input matInput id="testHoursRangeStart" type="number" #hoursRangeStart="ngModel" class="hour-range" required
+            min="0" max="23" [(ngModel)]="testHoursRangeStart"
             (ngModelChange)="testHoursRangeEnd<testHoursRangeStart ? testHoursRangeEnd=testHoursRangeStart : ''"
             placeholder="{{ titles.dialogs.scheduleCourse.labels.testHoursRangeStart }}">
 
           <div class="hours-range-seperation">-</div>
 
-          <input matInput type="number" #hoursRangeEnd="ngModel" class="hour-range" required
+          <input matInput id="testHoursRangeEnd" type="number" #hoursRangeEnd="ngModel" class="hour-range" required
             [min]="testHoursRangeStart ? testHoursRangeStart : 0" min="0" max="23" [(ngModel)]="testHoursRangeEnd"
             [disabled]="testHoursRangeStart === undefined"
             placeholder="{{ titles.dialogs.scheduleCourse.labels.testHoursRangeEnd }}">
