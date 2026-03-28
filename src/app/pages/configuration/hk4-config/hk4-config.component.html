@@ -25,7 +25,8 @@
                             <small class="text-muted">
                                 Gong Type: {{ settings.sequences[key].gongType }} |
                                 Areas: {{ settings.sequences[key].areas?.join(',') }} |
-                                Vol: {{ settings.sequences[key].volume }}
+                                Vol: {{ settings.sequences[key].volume }} |
+                                Repeat: {{ settings.sequences[key].repeat || 1 }}
                             </small>
                         </div>
                         <div>
