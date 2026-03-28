@@ -46,7 +46,7 @@
 
                 <div class="form-actions">
                     <button mat-raised-button color="primary" type="submit"
-                        [disabled]="!settingsForm.valid || isLoading">
+                        [disabled]="!settingsForm.valid || isLoading || settingsForm.pristine">
                         Save Settings
                     </button>
                 </div>

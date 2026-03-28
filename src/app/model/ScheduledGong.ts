@@ -1,6 +1,6 @@
 import moment from 'moment';
-import {UpdateStatusEnum} from './updateStatusEnum';
-import {HoursRange} from './hoursRange';
+import { UpdateStatusEnum } from './updateStatusEnum';
+import { HoursRange } from './hoursRange';
 
 const dateFormat = 'YY/MM/DD.HH:mm';
 
@@ -50,8 +50,11 @@ export class ScheduledGong {
 
     if (!clonedObject.date) { // Setting the exact date - used mostly for courses
       // Time already includes the day offset from conversion, so just add it to course start
-      clonedObject.exactMoment = moment(courseStartDate).add(clonedObject.time, 'ms');
-      clonedObject.date = clonedObject.exactMoment.startOf('day').toDate();
+      // Note: We add days first, then the remaining milliseconds to handle DST correctly
+      const days = Math.floor(clonedObject.time / (24 * 3600 * 1000));
+      const msInDay = clonedObject.time % (24 * 3600 * 1000);
+      clonedObject.exactMoment = moment(courseStartDate).add(days, 'd').add(msInDay, 'ms');
+      clonedObject.date = clonedObject.exactMoment.clone().startOf('day').toDate();
     } else if (!clonedObject.time) {  // If there is a date and no time -
       // probably a manual gong that needs time of the day calculation
       clonedObject.exactMoment = moment(clonedObject.date);

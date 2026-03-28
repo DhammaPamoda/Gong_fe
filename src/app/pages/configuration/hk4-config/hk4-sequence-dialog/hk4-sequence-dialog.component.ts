@@ -1,9 +1,18 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { Hk4Service } from '../../../../services/hk4.service';
+import { StoreService } from '../../../../services/store.service';
+import { GongType } from '../../../../model/gongType';
+
+const areasValidator = (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (!value) return null;
+    const regex = /^([0-8](\s*,\s*[0-8])*)$/;
+    return regex.test(value) ? null : { invalidAreas: true };
+};
 
 @Component({
     selector: 'app-hk4-sequence-dialog',
@@ -15,14 +24,17 @@ export class Hk4SequenceDialogComponent implements OnInit, OnDestroy {
     isListening = false;
     originalSequenceKey: string;
     isEditMode: boolean;
+    gongTypes: GongType[] = [];
 
     private keyPressSubscription: Subscription;
+    private preRecordingSequence: string;
 
     constructor(
         public dialogRef: MatDialogRef<Hk4SequenceDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private fb: FormBuilder,
         private hk4Service: Hk4Service,
+        private storeService: StoreService,
         private snackBar: MatSnackBar
     ) {
         this.originalSequenceKey = data.sequenceKey || '';
@@ -31,10 +43,12 @@ export class Hk4SequenceDialogComponent implements OnInit, OnDestroy {
         this.form = this.fb.group({
             sequenceKey: [this.originalSequenceKey, Validators.required],
             gongType: [data.gongConfig?.gongType || null, Validators.required],
-            areas: [data.gongConfig?.areas?.join(',') || '0', Validators.required],
+            areas: [data.gongConfig?.areas?.join(',') || '0', [Validators.required, areasValidator]],
             volume: [data.gongConfig?.volume || 100, [Validators.required, Validators.min(0), Validators.max(100)]],
             repeat: [data.gongConfig?.repeat || 1, [Validators.required, Validators.min(1)]]
         });
+
+        this.gongTypes = this.storeService.getGongs();
     }
 
     ngOnInit(): void {
@@ -62,11 +76,14 @@ export class Hk4SequenceDialogComponent implements OnInit, OnDestroy {
     toggleListening() {
         this.isListening = !this.isListening;
         if (this.isListening) {
-            if (!this.form.get('sequenceKey').value) {
-                this.form.patchValue({ sequenceKey: '' });
-            }
+            this.preRecordingSequence = this.form.get('sequenceKey').value;
+            this.form.patchValue({ sequenceKey: '' });
             this.keyPressSubscription = this.listenToGlobalKeydown();
         } else {
+            const currentSeq = this.form.get('sequenceKey').value;
+            if (currentSeq.length < 4) {
+                this.form.patchValue({ sequenceKey: this.preRecordingSequence });
+            }
             this.stopListening();
         }
     }

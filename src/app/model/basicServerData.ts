@@ -3,4 +3,5 @@ export class BasicServerData {
   nextScheduledJobTime: Date | null;
   staticDataLastUpdateTime: Date;
   isManual: boolean;
+  optionalAreas: number[];
 }

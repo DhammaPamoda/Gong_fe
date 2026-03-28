@@ -143,7 +143,9 @@ export class AutomaticActivationComponent extends BaseComponent {
             scheduledGongItem.volume = 100;
           }
           // Dealing with Active/InActive
-          scheduledGongItem.isActive = true;
+          const currentMoment = moment();
+          scheduledGongItem.isActive = scheduledGongItem.exactMoment.isSameOrAfter(currentMoment);
+
           if (aSelectedCourseScheduled.exceptions &&
             aSelectedCourseScheduled.exceptions.some(
               (scheduledCourseGong: ScheduledCourseGong) =>
