@@ -6,6 +6,7 @@ import { BehaviorSubject, Subscription, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NgRedux } from '@angular-redux/store';
 import moment from 'moment';
+import Swal from 'sweetalert2';
 
 import { GongType } from '../../model/gongType';
 import { Area } from '../../model/area';
@@ -153,6 +154,29 @@ export class ManualActivationComponent extends BaseComponent {
 
   playGong() {
     console.log('▶️ Play button clicked');
+
+    const selectedGongType = this.gongTypes.find(g => g.id === this.gongToPlay.gongTypeId);
+    const isSensitive = selectedGongType && ['siren', 'prepare', 'end'].includes(selectedGongType.name);
+
+    if (isSensitive) {
+      Swal.fire({
+        title: 'Warning',
+        text: 'Are you sure you want to activate this emergency wartime alert?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.value) {
+          this.executePlayGong();
+        }
+      });
+    } else {
+      this.executePlayGong();
+    }
+  }
+
+  private executePlayGong() {
     const createdGong = Gong.createOutOfScheduledGong(this.gongToPlay);
     this.storeService.playGong(createdGong);
 
