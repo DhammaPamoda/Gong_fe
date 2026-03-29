@@ -23,8 +23,8 @@
                         <div>
                             <strong>Key: </strong> {{ key }} <br>
                             <small class="text-muted">
-                                Gong Type: {{ settings.sequences[key].gongType }} |
-                                Areas: {{ settings.sequences[key].areas?.join(',') }} |
+                                Gong Name: {{ getGongName(settings.sequences[key].gongType) }} |
+                                Areas: {{ getAreasDisplay(settings.sequences[key].areas) }} |
                                 Vol: {{ settings.sequences[key].volume }} |
                                 Repeat: {{ settings.sequences[key].repeat || 1 }}
                             </small>

@@ -20,7 +20,7 @@
         </div>
 
         <mat-form-field appearance="outline" class="full-width mt-3">
-            <mat-label>Gong Type</mat-label>
+            <mat-label>Gong Name</mat-label>
             <mat-select formControlName="gongType">
                 <mat-option *ngFor="let gong of gongTypes" [value]="gong.id">
                     {{gong.name}}

@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Hk4Service } from '../../../services/hk4.service';
 import { Hk4SequenceDialogComponent } from './hk4-sequence-dialog/hk4-sequence-dialog.component';
+import { StoreService } from '../../../services/store.service';
+import { GongType } from '../../../model/gongType';
 
 @Component({
     selector: 'app-hk4-config',
@@ -13,14 +15,17 @@ export class Hk4ConfigComponent implements OnInit {
     isLoading = true;
     settings: any = null;
     sequencesKeys: string[] = [];
+    gongTypes: GongType[] = [];
 
     constructor(
         private hk4Service: Hk4Service,
         private dialog: MatDialog,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private storeService: StoreService
     ) { }
 
     ngOnInit(): void {
+        this.gongTypes = this.storeService.getGongs();
         this.loadSettings();
     }
 
@@ -46,6 +51,20 @@ export class Hk4ConfigComponent implements OnInit {
         } else {
             this.sequencesKeys = [];
         }
+    }
+
+    getGongName(gongTypeId: any): string {
+        const gong = this.gongTypes.find(g => g.id == gongTypeId);
+        return gong ? gong.name : String(gongTypeId);
+    }
+
+    getAreasDisplay(areas: number[]): string {
+        if (!areas || areas.length === 0) return '';
+        const joined = areas.join(',');
+        if (joined === '0') {
+            return '0 (All Areas)';
+        }
+        return joined;
     }
 
     addSequence() {
