@@ -17,7 +17,7 @@
 
                 <div class="form-row">
                     <mat-checkbox formControlName="testing" color="primary">
-                        Enable Testing Mode (Simulate Siren & Output Logs)
+                        Enable Testing Mode (Output Logs - no sound)
                     </mat-checkbox>
                 </div>
 
@@ -48,6 +48,11 @@
                     <button mat-raised-button color="primary" type="submit"
                         [disabled]="!settingsForm.valid || isLoading || settingsForm.pristine">
                         Save Settings
+                    </button>
+                    &nbsp;
+                    <button mat-flat-button color="warn" type="button" (click)="triggerTestAlert()"
+                        [disabled]="isLoading || !settingsForm.get('runSecurityCheck').value">
+                        Test Oref Alert
                     </button>
                 </div>
 

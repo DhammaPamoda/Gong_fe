@@ -150,6 +150,11 @@
   <section class="">
     {{titles.main.labels.currentTime}} : {{ now | amDateFormat: 'HH:mm'}}
   </section>
+  <section class="emergencyContainer" *ngIf="isLoggedIn && isEmergency">
+    <button mat-raised-button color="warn" (click)="clearEmergency()">
+      Emergency Active - Cancel
+    </button>
+  </section>
 
   <section class="nextGongTimeContainer" *ngIf="getIsLoggedIn()">
     {{titles.main.labels.nextGong}} :

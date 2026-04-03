@@ -2,8 +2,8 @@ import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NgRedux } from '@angular-redux/store';
 
-import { filter, first } from 'rxjs/operators';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, first, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, of, Subscription, timer } from 'rxjs';
 import * as _ from 'lodash';
 
 import { ActionGenerator } from '../store/actions/action';
@@ -32,6 +32,7 @@ export class StoreService implements OnInit, OnDestroy {
   private gongTypesMapObservable: BehaviorSubject<IObjectMap<GongType>> = new BehaviorSubject<IObjectMap<GongType>>({});
   private coursesMapObservableObsolete: BehaviorSubject<IObjectMap<Course>> = new BehaviorSubject<IObjectMap<Course>>({});
   private coursesMapObservable: BehaviorSubject<Map<string, Course>> = new BehaviorSubject<Map<string, Course>>(null);
+  private emergencyStateObservable: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   areasMap: Area[] = [];
   gongTypesMap: IObjectMap<GongType> = {};
@@ -49,6 +50,7 @@ export class StoreService implements OnInit, OnDestroy {
     this.populateGongTypesMap();
     this.populateGongTypeCoursesMap();
     this.populateScheduledCoursesArray();
+    this.populateEmergencyState();
   }
 
   ngOnInit(): void {
@@ -112,6 +114,57 @@ export class StoreService implements OnInit, OnDestroy {
         });
 
     this.subscriptionsArray.push(coursesSubscription);
+  }
+
+  private populateEmergencyState() {
+    // 1. Maintain a dedicated basic data poll (every minute) to monitor settings changes
+    const basicDataPollSubscription = timer(0, 60000).pipe(
+      tap(() => this.getBasicData()),
+      catchError(err => {
+        console.error('Error in basicData cycle', err);
+        return EMPTY;
+      })
+    ).subscribe();
+    this.subscriptionsArray.push(basicDataPollSubscription);
+
+    // 2. High-frequency emergency poll, active ONLY when logged in AND runSecurityCheck is enabled
+    const runSecurityCheck$ = this.ngRedux.select<boolean>([StoreDataTypeEnum.DYNAMIC_DATA, 'basicServerData', 'runSecurityCheck']);
+    const isLoggedIn$ = this.ngRedux.select<boolean>([StoreDataTypeEnum.INNER_DATA, 'isLoggedIn']);
+
+    const emergencyPollingSubscription = combineLatest([runSecurityCheck$, isLoggedIn$])
+      .pipe(
+        tap(([run, log]) => console.log('🔔 Emergency Polling check:', { run, log })),
+        map(([run, log]) => !!run && !!log),
+        distinctUntilChanged(),
+        tap(enabled => console.log('🔔 Emergency Polling enabled:', enabled)),
+        switchMap(isEnabled => isEnabled ? timer(0, 5000) : EMPTY),
+        switchMap(() => this.http.get<any>('api/data/emergencyState').pipe(
+          map(res => !!res.data),
+          tap(res => console.log('🔔 Emergency State received:', res)),
+          catchError(err => {
+            console.error('Error polling emergency state', err);
+            return of(false);
+          })
+        ))
+      ).subscribe((isEmergency: boolean) => {
+        if (this.emergencyStateObservable.value !== isEmergency) {
+          this.emergencyStateObservable.next(isEmergency);
+        }
+      });
+
+    this.subscriptionsArray.push(emergencyPollingSubscription);
+  }
+
+  getEmergencyState(): Observable<boolean> {
+    return this.emergencyStateObservable;
+  }
+
+  clearEmergencyState(): Observable<any> {
+    return this.http.delete('api/data/emergencyState');
+  }
+
+  triggerTestEmergency(): Observable<any> {
+    return this.http.post('api/data/testEmergency', {});
   }
 
   readToStore() {
@@ -215,11 +268,6 @@ export class StoreService implements OnInit, OnDestroy {
   isGongPlaying(): Observable<any> {
     const url = 'api/relay/isGongPlaying';
     return this.http.get(url);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptionsArray.forEach(subscription => subscription.unsubscribe());
-    console.log('c1');
   }
 
   uploadCourseFile(aCourseFile: File) {
@@ -367,5 +415,9 @@ export class StoreService implements OnInit, OnDestroy {
 
   getPermissions(): Observable<Permission[]> {
     return this.ngRedux.select<Permission[]>([StoreDataTypeEnum.STATIC_DATA, 'permissions']);
+  }
+
+  ngOnDestroy() {
+    this.subscriptionsArray.forEach(subscription => subscription.unsubscribe());
   }
 }

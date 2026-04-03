@@ -24,4 +24,8 @@ export class SystemSettingsService {
     saveSettings(settings: SystemSettings): Observable<SystemSettings> {
         return this.http.post<SystemSettings>(this.apiUrl, settings);
     }
+
+    triggerTestEmergency(): Observable<any> {
+        return this.http.post('/api/data/testEmergency', {});
+    }
 }

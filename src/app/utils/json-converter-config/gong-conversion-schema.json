@@ -20,6 +20,12 @@
         "propertyName": "isManual",
         "propertyNameInJson": "nextScheduledJob",
         "conversionFunctionName": "isManualConversion"
+      },
+      {
+        "propertyName": "optionalAreas"
+      },
+      {
+        "propertyName": "runSecurityCheck"
       }
     ]
   },

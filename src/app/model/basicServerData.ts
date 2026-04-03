@@ -2,6 +2,7 @@ export class BasicServerData {
   currentServerTime: Date;
   nextScheduledJobTime: Date | null;
   staticDataLastUpdateTime: Date;
-  isManual: boolean;
-  optionalAreas: number[];
+  isManual: boolean = false;
+  optionalAreas: number[] = [];
+  runSecurityCheck: boolean = false;
 }

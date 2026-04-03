@@ -67,4 +67,15 @@ export class SystemSettingsComponent implements OnInit {
             );
         }
     }
+
+    triggerTestAlert() {
+        this.systemSettingsService.triggerTestEmergency().subscribe(
+            () => {
+                this.snackBar.open('Test Oref Alert triggered!', 'Close', { duration: 3000 });
+            },
+            (error) => {
+                this.snackBar.open('Error triggering test alert', 'Close', { duration: 3000 });
+            }
+        );
+    }
 }

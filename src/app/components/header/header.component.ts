@@ -53,6 +53,7 @@ export class HeaderComponent extends BaseComponent {
 
   viewExportImportPermissions: boolean;
   private gongId4Update: string;
+  isEmergency: boolean;
 
   constructor(ngRedux: NgRedux<any>,
     private storeService: StoreService,
@@ -183,6 +184,9 @@ export class HeaderComponent extends BaseComponent {
         }
       });
 
+    this.storeService.getEmergencyState()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((isEmergency: boolean) => this.isEmergency = isEmergency);
   }
 
   initDateFormatOptions(): void {
@@ -229,6 +233,10 @@ export class HeaderComponent extends BaseComponent {
 
   uploadCoursesFile() {
     this.courseFile.nativeElement.click();
+  }
+
+  clearEmergency() {
+    this.storeService.clearEmergencyState().subscribe();
   }
 
   uploadGongFile() {
