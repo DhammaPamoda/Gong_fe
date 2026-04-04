@@ -7,6 +7,8 @@ export interface SystemSettings {
     testing?: boolean;
     alertLocation: string;
     pollingInterval: number;
+    overrideOrefUrl?: boolean;
+    orefUrl?: string;
 }
 
 @Injectable({

@@ -29,7 +29,19 @@ export class SystemSettingsComponent implements OnInit {
             runSecurityCheck: [false],
             testing: [false],
             alertLocation: ['', Validators.required],
-            pollingInterval: [10, [Validators.required, Validators.min(1)]]
+            pollingInterval: [10, [Validators.required, Validators.min(1)]],
+            overrideOrefUrl: [false],
+            orefUrl: ['']
+        });
+
+        this.settingsForm.get('overrideOrefUrl').valueChanges.subscribe((checked) => {
+            const orefUrlControl = this.settingsForm.get('orefUrl');
+            if (checked) {
+                orefUrlControl.setValidators([Validators.required]);
+            } else {
+                orefUrlControl.clearValidators();
+            }
+            orefUrlControl.updateValueAndValidity();
         });
     }
 
@@ -50,7 +62,9 @@ export class SystemSettingsComponent implements OnInit {
                         runSecurityCheck: settings.runSecurityCheck || false,
                         testing: settings.testing || false,
                         alertLocation: settings.alertLocation || 'דגניה',
-                        pollingInterval: settings.pollingInterval || 10
+                        pollingInterval: settings.pollingInterval || 10,
+                        overrideOrefUrl: settings.overrideOrefUrl || false,
+                        orefUrl: settings.orefUrl || ''
                     });
                 }
                 this.isLoading = false;
