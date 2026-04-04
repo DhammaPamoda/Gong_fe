@@ -1,0 +1,7 @@
+nohup: ignoring input
+
+> gong@0.0.0 start
+> NODE_OPTIONS=--openssl-legacy-provider ng serve --host 0.0.0.0 --proxy-config proxy.conf.json
+
+An unhandled exception occurred: Port 4200 is already in use. Use '--port' to specify a different port.
+See "/tmp/ng-J3FGmf/angular-errors.log" for further details.
