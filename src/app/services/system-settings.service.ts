@@ -25,7 +25,7 @@ export class SystemSettingsService {
         return this.http.post<SystemSettings>(this.apiUrl, settings);
     }
 
-    triggerTestEmergency(): Observable<any> {
-        return this.http.post('/api/data/testEmergency', {});
+    triggerTestEmergency(category: string): Observable<any> {
+        return this.http.post('/api/data/testEmergency', { category });
     }
 }

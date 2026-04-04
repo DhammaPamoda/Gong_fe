@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SystemSettingsService, SystemSettings } from '../../../services/system-settings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { timer, Subscription } from 'rxjs';
+import { StoreService } from '../../../services/store.service';
 
 @Component({
     selector: 'app-system-settings',
@@ -11,11 +13,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class SystemSettingsComponent implements OnInit {
     settingsForm: FormGroup;
     isLoading = true;
+    isTestActive: boolean = false;
+    isGongCurrentlyPlaying: boolean = false;
+    private gongPlayingCheckSubscription: Subscription;
+
 
     constructor(
         private fb: FormBuilder,
         private systemSettingsService: SystemSettingsService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private storeService: StoreService,
+        private cdr: ChangeDetectorRef
     ) {
         this.settingsForm = this.fb.group({
             runSecurityCheck: [false],
@@ -27,6 +35,10 @@ export class SystemSettingsComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadSettings();
+    }
+
+    ngOnDestroy(): void {
+        this.stopPollingGongStatus();
     }
 
     loadSettings() {
@@ -68,13 +80,69 @@ export class SystemSettingsComponent implements OnInit {
         }
     }
 
-    triggerTestAlert() {
-        this.systemSettingsService.triggerTestEmergency().subscribe(
+    triggerTestAlert(category: string, label: string) {
+        this.systemSettingsService.triggerTestEmergency(category).subscribe(
             () => {
-                this.snackBar.open('Test Oref Alert triggered!', 'Close', { duration: 3000 });
+                this.snackBar.open(`Test Alert (${label}) triggered!`, 'Close', { duration: 3000 });
+                this.isTestActive = true;
+                this.cdr.detectChanges();
+                this.startPollingGongStatus();
             },
             (error) => {
-                this.snackBar.open('Error triggering test alert', 'Close', { duration: 3000 });
+                this.snackBar.open(`Error triggering test alert (${label})`, 'Close', { duration: 3000 });
+            }
+        );
+    }
+
+    private startPollingGongStatus() {
+        this.stopPollingGongStatus();
+        this.gongPlayingCheckSubscription = timer(0, 1000).subscribe(() => {
+            this.storeService.isGongPlaying().subscribe({
+                next: (result: any) => {
+                    const wasPlaying = this.isGongCurrentlyPlaying;
+                    this.isGongCurrentlyPlaying = result.data && result.data.isPlaying;
+
+                    if (wasPlaying !== this.isGongCurrentlyPlaying) {
+                        if (!this.isGongCurrentlyPlaying) {
+                            this.isTestActive = false;
+                            this.cdr.detectChanges();
+                            this.stopPollingGongStatus();
+                        } else {
+                            this.isTestActive = true;
+                            this.cdr.detectChanges();
+                        }
+                    }
+                },
+                error: (error) => console.error('Error checking gong status:', error)
+            });
+        });
+    }
+
+    private stopPollingGongStatus() {
+        if (this.gongPlayingCheckSubscription) {
+            this.gongPlayingCheckSubscription.unsubscribe();
+            this.gongPlayingCheckSubscription = undefined;
+        }
+    }
+
+    cancelTestSound() {
+        this.stopPollingGongStatus();
+        this.storeService.cancelGong().subscribe(
+            (result: any) => {
+                const message = (result.data && result.data.gongCanceled) ? 'Test sound canceled successfully' : 'Gong canceled successfully';
+                this.snackBar.open(message, 'Close', { duration: 3000 });
+                setTimeout(() => {
+                    this.isGongCurrentlyPlaying = false;
+                    this.isTestActive = false;
+                    this.cdr.detectChanges();
+                }, 500);
+            },
+            (error) => {
+                this.snackBar.open('Failed to cancel test sound', 'Close', { duration: 3000 });
+                setTimeout(() => {
+                    this.isTestActive = false;
+                    this.cdr.detectChanges();
+                }, 500);
             }
         );
     }

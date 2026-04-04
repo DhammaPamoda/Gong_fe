@@ -44,16 +44,48 @@
                     </mat-form-field>
                 </div>
 
-                <div class="form-actions">
-                    <button mat-raised-button color="primary" type="submit"
-                        [disabled]="!settingsForm.valid || isLoading || settingsForm.pristine">
-                        Save Settings
-                    </button>
-                    &nbsp;
-                    <button mat-flat-button color="warn" type="button" (click)="triggerTestAlert()"
-                        [disabled]="isLoading || !settingsForm.get('runSecurityCheck').value">
-                        Test Oref Alert
-                    </button>
+                <div class="form-actions" style="display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <button mat-raised-button color="primary" type="submit"
+                            [disabled]="!settingsForm.valid || isLoading || settingsForm.pristine">
+                            Save Settings
+                        </button>
+                    </div>
+
+                    <mat-accordion>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Test Oref Alerts
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <button mat-flat-button color="primary" type="button"
+                                    (click)="triggerTestAlert('prepare', 'Prepare')"
+                                    [disabled]="isLoading || !settingsForm.get('runSecurityCheck').value">
+                                    Test 1 - Prepare
+                                </button>
+                                <button mat-flat-button color="warn" type="button"
+                                    (click)="triggerTestAlert('siren', 'Siren')"
+                                    [disabled]="isLoading || !settingsForm.get('runSecurityCheck').value">
+                                    Test 2 - Siren
+                                </button>
+                                <button mat-flat-button color="accent" type="button"
+                                    (click)="triggerTestAlert('end', 'Event end')"
+                                    [disabled]="isLoading || !settingsForm.get('runSecurityCheck').value">
+                                    Test 3 - Event end
+                                </button>
+
+                                <!-- Stop Audio Button -->
+                                <button mat-flat-button color="warn" type="button" *ngIf="isTestActive"
+                                    (click)="cancelTestSound()" style="margin-left: auto;"
+                                    matTooltip="Stop the currently playing test audio">
+                                    <mat-icon>stop</mat-icon> Cancel Audio
+                                </button>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
                 </div>
 
             </form>

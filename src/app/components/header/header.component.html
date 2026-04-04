@@ -150,10 +150,13 @@
   <section class="">
     {{titles.main.labels.currentTime}} : {{ now | amDateFormat: 'HH:mm'}}
   </section>
-  <section class="emergencyContainer" *ngIf="isLoggedIn && isEmergency">
+  <section class="emergencyContainer" *ngIf="isLoggedIn && isEmergency"
+    style="display: flex; align-items: center; gap: 8px;">
     <button mat-raised-button color="warn" (click)="clearEmergency()">
       Emergency Active - Cancel
     </button>
+    <mat-icon style="color: #f44336; cursor: help;"
+      matTooltip="Scheduled gongs will not play during emergency">info</mat-icon>
   </section>
 
   <section class="nextGongTimeContainer" *ngIf="getIsLoggedIn()">
