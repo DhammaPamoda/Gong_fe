@@ -33,22 +33,6 @@ export const Titles = {
                 "area15": "area 15",
                 "area16": "area 16"
             },
-            "courses": {
-                "10_day_course": "10 Days",
-                "satipattana": "Satipattana",
-                "10 days course": "10 days course®®®",
-                "10 days special": "10 days special®®®",
-                "1DC - ": "1DC - ®®®",
-                "1DC - 9AM": "1DC - 9AM®®®",
-                "1DC - Yom Kippur": "1DC - Yom Kippur®®®",
-                "20 days course": "20 days course®®®",
-                "3 day course long 0-4": "3 day course long 0-4®®®",
-                "3 day course short 0-3": "3 day course short 0-3®®®",
-                "ChildTeen": "ChildTeen®®®",
-                "Gardening Summer (2 Days)": "Gardening Summer (2 Days)®®®",
-                "Service (2 Days)": "Service (2 Days)®®®",
-                "Service (7 Days)": "Service (7 Days)®®®"
-            }
         },
         "tableHeaders": {
             "gongsTimeTable": {
@@ -75,8 +59,8 @@ export const Titles = {
             "lastGongIsInUse": "gong is in use by one of the courses templates and cannot be deleted",
             "lastGongNotFound": "Last Gong was not found",
             "resetUserPasswordSuccessful": "Reseting User Password was Successful",
-            "gongDeletedSuccessful": "Gong was Deleted Successfully",
-            "courseDeletedSuccessful": "Course was Deleted Successful"
+            "gongDeletedSuccessfully": "Gong was Deleted Successfully",
+            "courseDeletedSuccessfully": "Course was Deleted Successful"
         }
     },
     "main": {
