@@ -45,7 +45,7 @@
     </th>
     <td mat-cell *matCellDef="let element" class="gongTypeTd" [ngClass]="{'nextGong' : element.isTheNextGong}">
       <span *ngIf="element.gongTypeName">
-        {{ titles.general.typesValues.gongType[element.gongTypeName] }}
+        {{ titles.general.typesValues.gongType[element.gongTypeName] || element.gongTypeName }}
       </span>
     </td>
   </ng-container>
