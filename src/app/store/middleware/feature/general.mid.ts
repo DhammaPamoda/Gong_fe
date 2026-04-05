@@ -274,7 +274,7 @@ export class GeneralMiddlewareService {
         const courseScheduleForRemoval = this.jsonConverterService.convertToJson(action.payload);
         const stringedifiedCourseScheduleForRemovalJson = JSON.stringify(courseScheduleForRemoval);
         next(
-          apiRequest(stringedifiedCourseScheduleForRemovalJson, 'DELETE', REMOVE_COURSE_SCHEDULE_URL,
+          apiRequest(stringedifiedCourseScheduleForRemovalJson, 'POST', REMOVE_COURSE_SCHEDULE_URL,
             ActionFeaturesEnum.SCHEDULED_COURSE_REMOVE_FEATURE, action.payload)
         );
         break;
