@@ -16,7 +16,7 @@
           <mat-select id="selectedCourse" [(value)]="selectedCourse" (selectionChange)="onCourseSelectedChange()"
             placeholder="{{ titles.dialogs.scheduleCourse.placeHolders.courseName }}">
             <mat-option *ngFor="let course of courses" [value]="course">
-              {{ titles.general.typesValues.courses[course.name] }}
+              {{ course.name }}
               <div *ngIf="course.isTest" class="test-course-label">
                 ({{ titles.dialogs.scheduleCourse.labels.isTest }})
               </div>
