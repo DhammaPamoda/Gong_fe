@@ -60,11 +60,10 @@ export class Hk4ConfigComponent implements OnInit {
 
     getAreasDisplay(areas: number[]): string {
         if (!areas || areas.length === 0) return '';
-        const joined = areas.join(',');
-        if (joined === '0') {
-            return '0 (All Areas)';
-        }
-        return joined;
+        return areas.map(id => {
+            const area = this.storeService.areasMap[id];
+            return area ? area.name : id;
+        }).join(', ');
     }
 
     addSequence() {

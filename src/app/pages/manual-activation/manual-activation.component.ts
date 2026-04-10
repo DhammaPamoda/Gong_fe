@@ -63,7 +63,8 @@ export class ManualActivationComponent extends BaseComponent {
   }
 
   protected hookOnInit() {
-    this.gongToPlay.areas = [];
+    this.gongToPlay.areas = [0];
+    this.gongToPlay.gongTypeId = 1; // Default to Long Gong
     this.gongToPlay.volume = 100;
     this.gongToPlay.repeat = 1;
     this.gongToPlay.isActive = true;
@@ -143,10 +144,8 @@ export class ManualActivationComponent extends BaseComponent {
       .subscribe(areasMap => {
         if (areasMap && areasMap.length > 0) {
           this.areas = areasMap.filter((value: Area) => value.id !== 0);
-          this.gongToPlay.areas.push(0);
           this.areas.forEach((area: Area) => {
             this.areasMap[area.id] = area;
-            this.gongToPlay.areas.push(area.id);
           });
         }
       });

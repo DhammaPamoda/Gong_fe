@@ -79,14 +79,14 @@
           <mat-selection-list #areasSelectionCtrl [(ngModel)]="gongToPlay.areas">
             <div class="first-area-option-all">
               <mat-list-option [value]="0" #allAreasSelectionCtrl class="listItemClass">
-                {{titles.general.typesValues.areas.all }}
+                {{ areasMap[0]?.name || 'all' }}
               </mat-list-option>
               <mat-divider></mat-divider>
 
             </div>
             <div class="others-area-options">
               <mat-list-option *ngFor="let area of areas" [value]="area.id" class="listItemClass">
-                {{titles.general.typesValues.areas[area.name] }}
+                {{ area.name }}
               </mat-list-option>
             </div>
           </mat-selection-list>

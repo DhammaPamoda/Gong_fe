@@ -10,7 +10,7 @@ import { GongType } from '../../../../model/gongType';
 const areasValidator = (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;
     if (!value) return null;
-    const regex = /^([0-8](\s*,\s*[0-8])*)$/;
+    const regex = /^(\d+(\s*,\s*\d+)*)$/;
     return regex.test(value) ? null : { invalidAreas: true };
 };
 
@@ -43,7 +43,7 @@ export class Hk4SequenceDialogComponent implements OnInit, OnDestroy {
         this.form = this.fb.group({
             sequenceKey: [this.originalSequenceKey, Validators.required],
             gongType: [data.gongConfig?.gongType || null, Validators.required],
-            areas: [data.gongConfig?.areas?.join(',') || '0', [Validators.required, areasValidator]],
+            areas: [data.gongConfig?.areas?.join(',') || '', [Validators.required, areasValidator]],
             volume: [data.gongConfig?.volume || 100, [Validators.required, Validators.min(0), Validators.max(100)]],
             repeat: [data.gongConfig?.repeat || 1, [Validators.required, Validators.min(1)]]
         });

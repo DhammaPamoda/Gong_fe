@@ -9,6 +9,7 @@ export interface SystemSettings {
     pollingInterval: number;
     overrideOrefUrl?: boolean;
     orefUrl?: string;
+    areas?: { [key: string]: string };
 }
 
 @Injectable({

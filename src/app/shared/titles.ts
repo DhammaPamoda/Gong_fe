@@ -14,25 +14,7 @@ export const Titles = {
                 "prepare": "Security Alert",
                 "end": "Event End"
             },
-            "areas": {
-                "all": "All",
-                "area1": "Workers",
-                "area2": "Hall",
-                "area3": "Dining",
-                "area4": "Outside",
-                "area5": "area 5",
-                "area6": "area 6",
-                "area7": "area 7",
-                "area8": "area 8",
-                "area9": "area 9",
-                "area10": "area 10",
-                "area11": "area 11",
-                "area12": "area 12",
-                "area13": "area 13",
-                "area14": "area 14",
-                "area15": "area 15",
-                "area16": "area 16"
-            },
+
         },
         "tableHeaders": {
             "gongsTimeTable": {
@@ -147,17 +129,7 @@ export const Titles = {
             },
             "areas": {
                 "label": "Areas",
-                "values": {
-                    "all": "All",
-                    "area1": "Workers",
-                    "area2": "Hall",
-                    "area3": "Dining",
-                    "area4": "Outside",
-                    "area5": "area 5",
-                    "area6": "area 6",
-                    "area7": "area 7",
-                    "area8": "area 8"
-                }
+                "values": {}
             }
         },
         "labels": {

@@ -22,7 +22,7 @@
         "conversionFunctionName": "isManualConversion"
       },
       {
-        "propertyName": "optionalAreas"
+        "propertyName": "areas"
       },
       {
         "propertyName": "runSecurityCheck"

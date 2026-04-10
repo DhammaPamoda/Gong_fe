@@ -57,15 +57,21 @@ export class StoreService implements OnInit, OnDestroy {
   }
 
   private populateAreasMap() {
-    const areaSubscription =
-      this.ngRedux.select<Area[]>([StoreDataTypeEnum.STATIC_DATA, 'areas']).subscribe((areaArray: Area[]) => {
-        if (areaArray && areaArray.length > 0) {
-          areaArray.forEach((area: Area) => {
-            this.areasMap[area.id] = area;
-          });
-          this.areasMapObservable.next(this.areasMap);
-        }
-      });
+    const areas$ = this.ngRedux.select<{ [key: string]: string }>([StoreDataTypeEnum.DYNAMIC_DATA, 'basicServerData', 'areas']);
+
+    const areaSubscription = areas$.subscribe((areasDict) => {
+      if (areasDict) {
+        this.areasMap = [];
+        Object.keys(areasDict).forEach((idStr) => {
+          const id = Number(idStr);
+          const area = new Area();
+          area.id = id;
+          area.name = areasDict[idStr];
+          this.areasMap[id] = area;
+        });
+        this.areasMapObservable.next(this.areasMap);
+      }
+    });
 
     this.subscriptionsArray.push(areaSubscription);
   }

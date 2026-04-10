@@ -29,13 +29,14 @@ export class SelectedAreasComponent implements OnInit, OnChanges {
       this.areasDisplayResult = '';
 
       if (areasMap && areasMap.length > 0 && this.selectedAreas && this.selectedAreas.length > 0) {
-        const areasCount = areasMap.length;
-        if (this.selectedAreas.includes(0) ||
-          this.selectedAreas.length >= areasMap.length - 1) {
-          this.areasDisplayResult = this.titles.general.typesValues.areas.all;
+        if (this.selectedAreas.includes(0)) {
+          this.areasDisplayResult = areasMap[0].name;
         } else {
           this.selectedAreas.forEach((value, index) => {
-            this.areasDisplayResult += ((index > 0) ? ',' : '') + this.titles.general.typesValues.areas[areasMap[value].name];
+            const area = areasMap[value];
+            if (area) {
+              this.areasDisplayResult += ((index > 0) ? ', ' : '') + area.name;
+            }
           });
         }
       }

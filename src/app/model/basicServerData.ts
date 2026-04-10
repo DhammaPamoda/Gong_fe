@@ -3,6 +3,6 @@ export class BasicServerData {
   nextScheduledJobTime: Date | null;
   staticDataLastUpdateTime: Date;
   isManual: boolean = false;
-  optionalAreas: number[] = [];
+  areas: { [key: string]: string } = {};
   runSecurityCheck: boolean = false;
 }
