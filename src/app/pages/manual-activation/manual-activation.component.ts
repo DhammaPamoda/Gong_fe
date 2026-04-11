@@ -100,18 +100,25 @@ export class ManualActivationComponent extends BaseComponent {
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((s: MatSelectionListChange) => {
         if (s.option.value === 0) {
-          if (this.gongToPlay.areas.includes(0)) {
+          if (s.option.selected) {
             this.areasSelectionCtrl.selectAll();
           } else {
             this.areasSelectionCtrl.deselectAll();
           }
         } else {
-          if (this.gongToPlay.areas.includes(s.option.value)) {
-            if (this.gongToPlay.areas.filter(value => value > 0).length >= this.areas.length) {
+          const selectedAreaIds = this.gongToPlay.areas.filter(value => value > 0);
+          const areAllAreasSelected = selectedAreaIds.length >= this.areas.length;
+
+          if (s.option.selected) {
+            if (areAllAreasSelected && !this.gongToPlay.areas.includes(0)) {
               this.areasSelectionCtrl.selectAll();
             }
-          } else if (this.gongToPlay.areas.includes(0)) {
-            this.allSelectedOptionCtrl.toggle();
+          } else {
+            if (this.gongToPlay.areas.includes(0)) {
+              this.allSelectedOptionCtrl.selected = false;
+              // Manually removing 0 from the model since toggling the option might not be enough depending on MatSelectionList implementation
+              this.gongToPlay.areas = this.gongToPlay.areas.filter(a => a !== 0);
+            }
           }
         }
       }
@@ -143,10 +150,15 @@ export class ManualActivationComponent extends BaseComponent {
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(areasMap => {
         if (areasMap && areasMap.length > 0) {
-          this.areas = areasMap.filter((value: Area) => value.id !== 0);
+          this.areas = areasMap.filter((area: Area) => area && area.id !== 0);
           this.areas.forEach((area: Area) => {
             this.areasMap[area.id] = area;
           });
+
+          if (this.gongToPlay.areas && this.gongToPlay.areas.includes(0)) {
+            const allAreaIds = [0].concat(this.areas.map(a => a.id));
+            this.gongToPlay.areas = allAreaIds;
+          }
         }
       });
   }
