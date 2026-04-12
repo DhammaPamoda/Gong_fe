@@ -45,16 +45,21 @@
                 </div>
 
                 <div class="form-row">
-                    <mat-checkbox formControlName="overrideOrefUrl" color="primary">
+                    <mat-checkbox formControlName="enableOverrideOrefUrl" color="primary">
                         Override Oref URL for Testing?
                     </mat-checkbox>
                 </div>
 
-                <div class="form-row" *ngIf="settingsForm.get('overrideOrefUrl').value">
+                <div class="form-row" *ngIf="settingsForm.get('enableOverrideOrefUrl').value">
                     <mat-form-field appearance="outline" class="full-width">
                         <mat-label>Alternative Oref URL</mat-label>
-                        <input matInput formControlName="orefUrl" placeholder="http://localhost:8080/alerts.json">
-                        <mat-error *ngIf="settingsForm.get('orefUrl').hasError('required')">
+                        <input type="text" matInput formControlName="overrideOrefUrl" placeholder="http://localhost:8080/alerts.json" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let url of presetOrefUrls" [value]="url">
+                                {{url}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="settingsForm.get('overrideOrefUrl').hasError('required')">
                             Alternative URL is required when override is checked
                         </mat-error>
                     </mat-form-field>

@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
@@ -27,6 +28,7 @@ import {Md2DatepickerModule, MdNativeDateModule} from 'angular-md2';
 @NgModule({
   imports: [
     BrowserAnimationsModule,
+    MatAutocompleteModule,
     MatToolbarModule,
     MatFormFieldModule,
     MatInputModule,
@@ -52,6 +54,7 @@ import {Md2DatepickerModule, MdNativeDateModule} from 'angular-md2';
     MatSidenavModule,
   ],
   exports: [
+    MatAutocompleteModule,
     MatToolbarModule,
     MatFormFieldModule,
     MatInputModule,

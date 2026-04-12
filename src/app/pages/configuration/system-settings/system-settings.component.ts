@@ -15,6 +15,7 @@ export class SystemSettingsComponent implements OnInit {
     isLoading = true;
     isTestActive: boolean = false;
     isGongCurrentlyPlaying: boolean = false;
+    presetOrefUrls: string[] = ['http://localhost:8080/alerts.json'];
     private gongPlayingCheckSubscription: Subscription;
 
 
@@ -30,18 +31,19 @@ export class SystemSettingsComponent implements OnInit {
             testing: [false],
             alertLocation: ['', Validators.required],
             pollingInterval: [10, [Validators.required, Validators.min(1)]],
-            overrideOrefUrl: [false],
-            orefUrl: ['']
+            enableOverrideOrefUrl: [false],
+            overrideOrefUrl: ['']
         });
 
-        this.settingsForm.get('overrideOrefUrl').valueChanges.subscribe((checked) => {
-            const orefUrlControl = this.settingsForm.get('orefUrl');
+        this.settingsForm.get('enableOverrideOrefUrl').valueChanges.subscribe((checked) => {
+            const overrideOrefUrlControl = this.settingsForm.get('overrideOrefUrl');
             if (checked) {
-                orefUrlControl.setValidators([Validators.required]);
+                overrideOrefUrlControl.setValidators([Validators.required]);
             } else {
-                orefUrlControl.clearValidators();
+                overrideOrefUrlControl.clearValidators();
+                overrideOrefUrlControl.setValue('');
             }
-            orefUrlControl.updateValueAndValidity();
+            overrideOrefUrlControl.updateValueAndValidity();
         });
     }
 
@@ -63,8 +65,8 @@ export class SystemSettingsComponent implements OnInit {
                         testing: settings.testing || false,
                         alertLocation: settings.alertLocation || 'דגניה',
                         pollingInterval: settings.pollingInterval || 10,
-                        overrideOrefUrl: settings.overrideOrefUrl || false,
-                        orefUrl: settings.orefUrl || ''
+                        enableOverrideOrefUrl: !!settings.overrideOrefUrl,
+                        overrideOrefUrl: settings.overrideOrefUrl || ''
                     });
                 }
                 this.isLoading = false;
@@ -80,7 +82,11 @@ export class SystemSettingsComponent implements OnInit {
     saveSettings() {
         if (this.settingsForm.valid) {
             this.isLoading = true;
-            this.systemSettingsService.saveSettings(this.settingsForm.value).subscribe(
+            
+            const payload = { ...this.settingsForm.value };
+            delete payload.enableOverrideOrefUrl;
+            
+            this.systemSettingsService.saveSettings(payload).subscribe(
                 (updatedSettings) => {
                     this.snackBar.open('Settings saved successfully', 'Close', { duration: 3000 });
                     this.isLoading = false;
