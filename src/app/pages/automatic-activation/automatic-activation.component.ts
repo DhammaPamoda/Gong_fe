@@ -146,10 +146,13 @@ export class AutomaticActivationComponent extends BaseComponent {
           const currentMoment = moment();
           scheduledGongItem.isActive = scheduledGongItem.exactMoment.isSameOrAfter(currentMoment);
 
+          // exceptions store time-of-day only; scheduledGongItem.time is a total offset
+          const MS_IN_DAY = 24 * 60 * 60 * 1000;
           if (aSelectedCourseScheduled.exceptions &&
             aSelectedCourseScheduled.exceptions.some(
               (scheduledCourseGong: ScheduledCourseGong) =>
-                scheduledCourseGong.dayNumber === scheduledGongItem.dayNumber && scheduledCourseGong.time === scheduledGongItem.time)) {
+                scheduledCourseGong.dayNumber === scheduledGongItem.dayNumber &&
+                scheduledCourseGong.time === (scheduledGongItem.time % MS_IN_DAY))) {
             scheduledGongItem.isActive = false;
           }
           // Adding to the list
@@ -202,13 +205,20 @@ export class AutomaticActivationComponent extends BaseComponent {
 
   onGongActiveToggle(aToggledScheduledGong: ScheduledGong) {
     let toggledScheduledCourseGong: ScheduledCourseGong;
+    // Backend ExceptionGong expects time-of-day only (NOT total course offset).
+    // scheduledGong.time is a total offset (dayOffset + timeOfDay), so strip the day portion.
+    const MS_IN_DAY = 24 * 60 * 60 * 1000;
+    const timeOfDay = aToggledScheduledGong.time % MS_IN_DAY;
+
     if (aToggledScheduledGong.isActive) {
+      // Gong is now active → find the existing exception to remove it
       toggledScheduledCourseGong = this.selectedCourseScheduled.findException(aToggledScheduledGong.dayNumber,
-        aToggledScheduledGong.time);
+        timeOfDay);
     } else {
+      // Gong is now inactive → create a new exception to deactivate it
       toggledScheduledCourseGong = new ScheduledCourseGong();
       toggledScheduledCourseGong.dayNumber = aToggledScheduledGong.dayNumber;
-      toggledScheduledCourseGong.time = aToggledScheduledGong.time;
+      toggledScheduledCourseGong.time = timeOfDay;
     }
 
     if (toggledScheduledCourseGong) {

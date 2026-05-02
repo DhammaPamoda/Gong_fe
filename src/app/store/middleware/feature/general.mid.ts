@@ -317,6 +317,12 @@ export class GeneralMiddlewareService {
 
         }
         break;
+      case `${ActionFeaturesEnum.TOGGLE_SCHEDULED_GONG_FEATURE} ${API_ERROR}`:
+        // Re-fetch the course schedule so the UI rolls back to the actual server state
+        next(
+          apiRequest(null, 'GET', COURSES_SCHEDULE_URL, ActionFeaturesEnum.COURSES_SCHEDULE_FEATURE, null)
+        );
+        break;
       case ActionTypesEnum.REMOVE_MANUAL_GONG:
         const toBRemovedScheduledGongJson = this.jsonConverterService.convertToJson(action.payload);
         const stringedified2BRemovedScheduledGongJson = JSON.stringify(toBRemovedScheduledGongJson);
