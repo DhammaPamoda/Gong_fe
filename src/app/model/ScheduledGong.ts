@@ -53,7 +53,7 @@ export class ScheduledGong {
       // Note: We add days first, then the remaining milliseconds to handle DST correctly
       const days = Math.floor(clonedObject.time / (24 * 3600 * 1000));
       const msInDay = clonedObject.time % (24 * 3600 * 1000);
-      clonedObject.exactMoment = moment(courseStartDate).add(days, 'd').add(msInDay, 'ms');
+      clonedObject.exactMoment = moment(courseStartDate).add(days - aOffsetDaysToReduce, 'd').add(msInDay, 'ms');
       clonedObject.date = clonedObject.exactMoment.clone().startOf('day').toDate();
     } else if (!clonedObject.time) {  // If there is a date and no time -
       // probably a manual gong that needs time of the day calculation
