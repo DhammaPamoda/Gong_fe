@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
 
 import {BehaviorSubject, from, Observable, Subject} from 'rxjs';
 import {first, map} from 'rxjs/operators';
@@ -22,7 +23,7 @@ export class AuthService {
 
   permissionObjectMap: IObjectMap<Subject<Permission>> = {};
 
-  constructor(private http: HttpClient, private storeService: StoreService) {
+  constructor(private http: HttpClient, private storeService: StoreService, private router: Router) {
     this.storeService.getPermissions().subscribe((permissionsArray: Permission[]) => {
       permissionsArray.forEach((permission: Permission) => {
         if (!this.permissionObjectMap[permission.action]) {
@@ -52,6 +53,7 @@ export class AuthService {
   logout() {
     this.storeService.setLoggedIn(false);
     localStorage.removeItem('access_token');
+    localStorage.removeItem('static_update_time');
   }
 
   public get loggedIn(): boolean {
@@ -96,6 +98,46 @@ export class AuthService {
       map(permissionForAction => !!permissionForAction && !!permissionForAction.roles &&
         permissionForAction.roles.includes(this.role))
     );
+  }
+
+  verifyAuthOnFocus() {
+    const token = localStorage.getItem('access_token');
+    if (!token || this.isLoginPage()) {
+      return;
+    }
+    this.checkTokenWithBackend();
+  }
+
+  private isLoginPage(): boolean {
+    const currentUrl = (this.router && this.router.url) ? this.router.url : window.location.href;
+    return currentUrl.includes('loginPage');
+  }
+
+  checkTokenWithBackend() {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      return;
+    }
+
+    this.http.get<{ data: { authenticated: boolean } }>('/api/data/checkAuth')
+      .pipe(first())
+      .subscribe({
+        next: (response) => {
+          if (!response || !response.data || !response.data.authenticated) {
+            this.handleAuthFailure();
+          }
+        },
+        error: (err) => {
+          console.error('Focus auth check failed:', err);
+          this.handleAuthFailure();
+        }
+      });
+  }
+
+  private handleAuthFailure() {
+    localStorage.removeItem('static_update_time');
+    this.logout();
+    window.location.reload();
   }
 
   private setRole(aToken: string) {
