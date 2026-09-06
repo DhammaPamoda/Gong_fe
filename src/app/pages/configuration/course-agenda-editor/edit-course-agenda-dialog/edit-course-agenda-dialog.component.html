@@ -7,8 +7,8 @@
         <!-- Title Input -->
         <mat-form-field appearance="outline" class="w-100 mb-2">
             <mat-label>Title</mat-label>
-            <input matInput [(ngModel)]="title" placeholder="e.g. Morning Gong Day 1-9" required>
-            <mat-error *ngIf="!title.trim()">Title is required</mat-error>
+            <input matInput [(ngModel)]="title" name="title" #titleInput="ngModel" placeholder="e.g. Morning Gong Day 1-9" required>
+            <mat-error *ngIf="titleInput.touched && (!title || !title.trim())">Title is required</mat-error>
         </mat-form-field>
 
         <!-- Gong Type & Areas -->
@@ -49,7 +49,7 @@
                     Day {{ day }}
                 </mat-checkbox>
             </div>
-            <div *ngIf="selectedDays.length === 0" class="validation-warning">
+            <div *ngIf="isDaysTouched && selectedDays.length === 0" class="validation-warning">
                 At least one day must be selected.
             </div>
         </div>
@@ -70,6 +70,7 @@
                 <md2-datepicker [(ngModel)]="tempPickerTime"
                                 [isOpen]="isTimePickerOpen"
                                 (onClose)="onClockPickerClose()"
+                                (change)="onTimePicked($event)"
                                 type="time"
                                 [touchUi]="true">
                 </md2-datepicker>
@@ -94,7 +95,7 @@
                     <mat-icon svgIcon="pencil" class="time-chip-edit"></mat-icon>
                 </div>
             </div>
-            <div *ngIf="times.length === 0" class="validation-warning">
+            <div *ngIf="isTimesTouched && times.length === 0" class="validation-warning">
                 At least one time must be added.
             </div>
         </div>
@@ -113,7 +114,11 @@
         </div>
     </mat-dialog-content>
 
-    <mat-dialog-actions align="end" class="dialog-actions">
+    <mat-dialog-actions class="dialog-actions">
+        <button *ngIf="data.agendaItem" mat-button color="warn" type="button" class="delete-btn" (click)="delete()">
+            <mat-icon svgIcon="trash-can-outline" class="mr-1"></mat-icon> Delete
+        </button>
+        <span class="spacer"></span>
         <button mat-button type="button" (click)="cancel()">Cancel</button>
         <button mat-raised-button color="primary" type="button" [disabled]="!isValid()" (click)="save()">Save</button>
     </mat-dialog-actions>

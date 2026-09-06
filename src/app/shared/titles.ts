@@ -390,7 +390,23 @@ export const Titles = {
             "label": "Numbers Keypad"
         },
         "courseAgendaEditor": {
-            "label": "Course Agenda"
+            "label": "Course Agenda",
+            "buttons": {
+                "addAgendaItem": "Add Agenda Item",
+                "delete": "Delete",
+                "save": "Save",
+                "cancel": "Cancel"
+            },
+            "alerts": {
+                "confirmDeleteAgendaItem": {
+                    "title": "Delete Agenda Item",
+                    "text": "Are you sure you want to delete this agenda item?",
+                    "buttons": {
+                        "confirm": "Delete",
+                        "cancel": "Cancel"
+                    }
+                }
+            }
         }
     }
 };

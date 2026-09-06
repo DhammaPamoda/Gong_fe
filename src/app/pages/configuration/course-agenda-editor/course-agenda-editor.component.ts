@@ -8,7 +8,7 @@ import { Area } from 'src/app/model/area';
 import { GongType } from 'src/app/model/gongType';
 import { IObjectMap } from 'src/app/model/store-model';
 import { ActionGenerator } from 'src/app/store/actions/action';
-import { EditCourseAgendaDialogComponent } from './edit-course-agenda-dialog/edit-course-agenda-dialog.component';
+import { EditCourseAgendaDialogComponent, EditCourseAgendaDialogResult } from './edit-course-agenda-dialog/edit-course-agenda-dialog.component';
 import { CourseSchedule } from 'src/app/model/courseSchedule';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/shared/baseComponent';
@@ -119,29 +119,96 @@ export class CourseAgendaEditorComponent extends BaseComponent {
             groupsMap.get(key)!.push(item);
         });
 
-        this.groupedAgendaItems = Array.from(groupsMap.entries()).map(([groupKey, items]) => ({
-            groupKey,
-            items
+        this.groupedAgendaItems = Array.from(groupsMap.entries()).map(entry => ({
+            groupKey: entry[0],
+            items: entry[1]
         }));
     }
 
-    editAgendaItem(item: CourseAgenda): void {
+    addAgendaItem(): void {
+        if (!this.selectedCourse || this.isSelectedCourseScheduled()) {
+            return;
+        }
+
+        const areasList = Array.isArray(this.areasMap) ? this.areasMap : Object.values(this.areasMap || {});
+        const gongTypesList = (this.gongTypesList && this.gongTypesList.length > 0) ? this.gongTypesList : Object.values(this.gongTypes || {});
+
         const dialogRef = this.dialog.open(EditCourseAgendaDialogComponent, {
-            width: '560px',
+            width: '600px',
+            maxWidth: '92vw',
             data: {
-                agendaItem: item,
-                courseDays: this.selectedCourse?.days ?? 10,
-                areas: Object.values(this.areasMap),
-                gongTypes: this.gongTypesList
+                agendaItem: null,
+                courseDays: (this.selectedCourse && this.selectedCourse.days != null) ? this.selectedCourse.days : 10,
+                areas: areasList,
+                gongTypes: gongTypesList
             }
         });
 
-        dialogRef.afterClosed().subscribe((updatedItem: CourseAgenda | null) => {
-            if (updatedItem && this.selectedCourse) {
-                const index = this.agendaItems.indexOf(item);
+        dialogRef.afterClosed().subscribe((result: EditCourseAgendaDialogResult | null) => {
+            if (result && result.action === 'save' && result.agendaItem && this.selectedCourse) {
+                const currentAgenda = this.selectedCourse.agenda || [];
+                const newAgenda = currentAgenda.slice();
+                newAgenda.push(result.agendaItem);
+                this.selectedCourse.agenda = newAgenda;
+                this.agendaItems = newAgenda;
+                this.updateGrouping();
+                this.storeService.updateCourseAgenda(this.selectedCourse.name, newAgenda);
+            }
+        });
+    }
+
+    editAgendaItem(item: CourseAgenda): void {
+        const areasList = Array.isArray(this.areasMap) ? this.areasMap : Object.values(this.areasMap || {});
+        const gongTypesList = (this.gongTypesList && this.gongTypesList.length > 0) ? this.gongTypesList : Object.values(this.gongTypes || {});
+
+        const dialogRef = this.dialog.open(EditCourseAgendaDialogComponent, {
+            width: '600px',
+            maxWidth: '92vw',
+            data: {
+                agendaItem: item,
+                courseDays: (this.selectedCourse && this.selectedCourse.days != null) ? this.selectedCourse.days : 10,
+                areas: areasList,
+                gongTypes: gongTypesList
+            }
+        });
+
+        dialogRef.afterClosed().subscribe((result: EditCourseAgendaDialogResult | null) => {
+            if (!result || !this.selectedCourse) {
+                return;
+            }
+
+            if (result.action === 'save' && result.agendaItem) {
+                let index = (this.selectedCourse.agenda || []).indexOf(item);
+                if (index < 0) {
+                    index = this.agendaItems.indexOf(item);
+                }
+                if (index < 0 && this.selectedCourse.agenda) {
+                    index = this.selectedCourse.agenda.findIndex(a => a === item || (a.title === item.title && JSON.stringify(a.days) === JSON.stringify(item.days)));
+                }
+
                 if (index >= 0) {
-                    const newAgenda = [...(this.selectedCourse.agenda || this.agendaItems)];
-                    newAgenda[index] = updatedItem;
+                    const newAgenda = (this.selectedCourse.agenda || this.agendaItems).slice();
+                    newAgenda[index] = result.agendaItem;
+                    this.selectedCourse.agenda = newAgenda;
+                    this.agendaItems = newAgenda;
+                    this.updateGrouping();
+                    this.storeService.updateCourseAgenda(this.selectedCourse.name, newAgenda);
+                }
+            } else if (result.action === 'delete') {
+                let index = (this.selectedCourse.agenda || []).indexOf(item);
+                if (index < 0) {
+                    index = this.agendaItems.indexOf(item);
+                }
+                if (index < 0 && this.selectedCourse.agenda) {
+                    index = this.selectedCourse.agenda.findIndex(a => a === item || (a.title === item.title && JSON.stringify(a.days) === JSON.stringify(item.days)));
+                }
+
+                if (index >= 0) {
+                    const newAgenda = (this.selectedCourse.agenda || this.agendaItems).slice();
+                    newAgenda.splice(index, 1);
+                    this.selectedCourse.agenda = newAgenda;
+                    this.agendaItems = newAgenda;
+                    this.updateGrouping();
                     this.storeService.updateCourseAgenda(this.selectedCourse.name, newAgenda);
                 }
             }

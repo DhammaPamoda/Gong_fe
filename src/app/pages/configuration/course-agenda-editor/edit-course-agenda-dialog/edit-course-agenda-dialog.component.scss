@@ -2,18 +2,22 @@
     display: flex;
     flex-direction: column;
     max-height: 85vh;
+    padding: 24px;
+    box-sizing: border-box;
 }
 
 .dialog-title {
-    margin: 0 0 12px 0;
-    font-size: 1.3rem;
+    margin: 0 0 16px 0;
+    font-size: 1.35rem;
     font-weight: 600;
     color: #333;
+    line-height: 1.4;
 }
 
 .dialog-content {
     overflow-y: auto;
-    padding-right: 8px;
+    padding: 8px 4px 8px 4px;
+    margin: 0;
 }
 
 .w-100 {
@@ -149,9 +153,20 @@
 }
 
 .dialog-actions {
+    display: flex;
+    align-items: center;
     margin-top: 16px;
     padding-top: 8px;
     border-top: 1px solid #eee;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.delete-btn {
+    display: inline-flex;
+    align-items: center;
 }
 
 .mr-1 {

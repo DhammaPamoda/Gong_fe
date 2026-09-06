@@ -46,7 +46,7 @@
                                     {{ item.title || 'Untitled Agenda Item' }}
                                 </mat-card-title>
                                 <span class="card-filler" *ngIf="selectedGroupBy === 'title'"></span>
-                                <div *ngIf="!isSelectedCourseScheduled()">
+                                <div *ngIf="!isSelectedCourseScheduled()" class="card-actions">
                                     <button mat-icon-button color="primary" class="edit-item-btn" (click)="editAgendaItem(item)" matTooltip="Edit agenda item">
                                         <mat-icon svgIcon="pencil"></mat-icon>
                                     </button>
@@ -80,6 +80,13 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
+                </div>
+
+                <div class="bottom-actions mt-3 mb-2" *ngIf="!isSelectedCourseScheduled()">
+                    <button mat-raised-button color="primary" class="add-agenda-btn" (click)="addAgendaItem()">
+                        <mat-icon svgIcon="plus" class="btn-icon"></mat-icon>
+                        <span>{{ titles.config.courseAgendaEditor.buttons.addAgendaItem }}</span>
+                    </button>
                 </div>
             </div>
         </mat-card-content>

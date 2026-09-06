@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import moment from 'moment';
+import Swal, { SweetAlertResult } from 'sweetalert2';
 import { CourseAgenda } from 'src/app/model/course';
 import { Area } from 'src/app/model/area';
 import { GongType } from 'src/app/model/gongType';
@@ -12,6 +13,11 @@ export interface EditCourseAgendaDialogData {
     courseDays: number;
     areas: Area[];
     gongTypes: GongType[];
+}
+
+export interface EditCourseAgendaDialogResult {
+    action: 'save' | 'delete';
+    agendaItem?: CourseAgenda;
 }
 
 @Component({
@@ -33,6 +39,10 @@ export class EditCourseAgendaDialogComponent implements OnInit {
     availableDays: number[] = [];
     areas: Area[] = [];
     gongTypes: GongType[] = [];
+
+    // Validation touched tracking
+    isDaysTouched: boolean = false;
+    isTimesTouched: boolean = false;
 
     // Time picker controls
     isTimePickerOpen: boolean = false;
@@ -77,6 +87,7 @@ export class EditCourseAgendaDialogComponent implements OnInit {
     }
 
     toggleDay(day: number): void {
+        this.isDaysTouched = true;
         if (this.isDaySelected(day)) {
             this.selectedDays = this.selectedDays.filter(d => d !== day);
         } else {
@@ -85,10 +96,12 @@ export class EditCourseAgendaDialogComponent implements OnInit {
     }
 
     selectAllDays(): void {
+        this.isDaysTouched = true;
         this.selectedDays = [...this.availableDays];
     }
 
     clearAllDays(): void {
+        this.isDaysTouched = true;
         this.selectedDays = [];
     }
 
@@ -98,12 +111,34 @@ export class EditCourseAgendaDialogComponent implements OnInit {
         this.isTimePickerOpen = true;
     }
 
+    onTimePicked(event: any): void {
+        const val = (event && event.value) ? event.value : this.tempPickerTime;
+        if (val) {
+            this.isTimesTouched = true;
+            const timeFormatted = moment(val).format('HH:mm');
+            this.addTime(timeFormatted);
+        }
+    }
+
     onClockPickerClose(): void {
         this.isTimePickerOpen = false;
         if (this.tempPickerTime) {
+            this.isTimesTouched = true;
             const timeFormatted = moment(this.tempPickerTime).format('HH:mm');
             this.addTime(timeFormatted);
         }
+    }
+
+    isManualTimeValid(): boolean {
+        if (!this.manualTimeInput) {
+            return false;
+        }
+        const trimmed = this.manualTimeInput.trim();
+        if (!/^\d{1,2}:\d{2}$/.test(trimmed)) {
+            return false;
+        }
+        const [h, m] = trimmed.split(':').map(Number);
+        return h >= 0 && h < 24 && m >= 0 && m < 60;
     }
 
     addManualTime(): void {
@@ -113,14 +148,20 @@ export class EditCourseAgendaDialogComponent implements OnInit {
         const trimmed = this.manualTimeInput.trim();
         if (/^\d{1,2}:\d{2}$/.test(trimmed)) {
             const parts = trimmed.split(':');
-            const formatted = `${parts[0].padStart(2, '0')}:${parts[1]}`;
-            this.addTime(formatted);
-            this.manualTimeInput = '';
+            const h = Number(parts[0]);
+            const m = Number(parts[1]);
+            if (h >= 0 && h < 24 && m >= 0 && m < 60) {
+                this.isTimesTouched = true;
+                const formatted = `${parts[0].padStart(2, '0')}:${parts[1]}`;
+                this.addTime(formatted);
+                this.manualTimeInput = '';
+            }
         }
     }
 
     addTime(timeStr: string): void {
         if (timeStr && !this.times.includes(timeStr)) {
+            this.isTimesTouched = true;
             this.times = [...this.times, timeStr].sort();
         }
     }
@@ -133,6 +174,7 @@ export class EditCourseAgendaDialogComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((res: EditTimeDialogResult | null) => {
             if (!res) return;
+            this.isTimesTouched = true;
             if (res.action === 'delete') {
                 this.removeTime(timeStr);
             } else if (res.action === 'save' && res.time) {
@@ -151,6 +193,7 @@ export class EditCourseAgendaDialogComponent implements OnInit {
     }
 
     removeTime(timeStr: string): void {
+        this.isTimesTouched = true;
         this.times = this.times.filter(t => t !== timeStr);
     }
 
@@ -164,33 +207,57 @@ export class EditCourseAgendaDialogComponent implements OnInit {
     }
 
     isValid(): boolean {
-        return (
-            this.title.trim().length > 0 &&
-            this.selectedGongType != null &&
-            this.selectedAreas.length > 0 &&
-            this.selectedDays.length > 0 &&
-            this.times.length > 0
-        );
+        const hasTitle = Boolean(this.title && this.title.trim().length > 0);
+        const hasGongType = this.selectedGongType != null;
+        const hasAreas = Array.isArray(this.selectedAreas) && this.selectedAreas.length > 0;
+        const hasDays = Array.isArray(this.selectedDays) && this.selectedDays.length > 0;
+        const hasTimes = (Array.isArray(this.times) && this.times.length > 0) || this.isManualTimeValid();
+
+        return Boolean(hasTitle && hasGongType && hasAreas && hasDays && hasTimes);
     }
 
     save(): void {
+        if (this.isManualTimeValid()) {
+            this.addManualTime();
+        }
+
         if (!this.isValid()) {
             return;
         }
 
         const updatedAgenda: CourseAgenda = {
-            title: this.title.trim(),
+            title: (this.title || '').trim(),
             days: [...this.selectedDays].sort((a, b) => a - b),
             gongs: {
                 type: this.selectedGongType!,
                 areas: [...this.selectedAreas],
                 times: [...this.times].sort(),
-                volume: this.volume,
-                repeat: this.repeat
+                volume: this.volume != null ? Number(this.volume) : 100,
+                repeat: this.repeat != null ? Number(this.repeat) : 1
             }
         };
 
-        this.dialogRef.close(updatedAgenda);
+        this.dialogRef.close({ action: 'save', agendaItem: updatedAgenda });
+    }
+
+    async delete(): Promise<void> {
+        const itemTitle = this.data.agendaItem?.title || this.title || 'this agenda item';
+        const alertConfig = (this.titles.config as any)?.courseAgendaEditor?.alerts?.confirmDeleteAgendaItem;
+
+        const result: SweetAlertResult = await Swal.fire({
+            title: alertConfig?.title || 'Delete Agenda Item',
+            text: alertConfig?.text || `Are you sure you want to delete "${itemTitle}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: alertConfig?.buttons?.confirm || 'Delete',
+            cancelButtonText: alertConfig?.buttons?.cancel || 'Cancel'
+        });
+
+        if (result.value === true) {
+            this.dialogRef.close({ action: 'delete' });
+        }
     }
 
     cancel(): void {

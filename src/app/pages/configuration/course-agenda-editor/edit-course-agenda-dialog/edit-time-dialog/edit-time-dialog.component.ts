@@ -38,6 +38,13 @@ export class EditTimeDialogComponent implements OnInit {
         this.isTimePickerOpen = true;
     }
 
+    onTimePicked(event: any): void {
+        const val = (event && event.value) ? event.value : this.tempPickerTime;
+        if (val) {
+            this.currentTime = moment(val).format('HH:mm');
+        }
+    }
+
     onClockPickerClose(): void {
         this.isTimePickerOpen = false;
         if (this.tempPickerTime) {
@@ -46,7 +53,15 @@ export class EditTimeDialogComponent implements OnInit {
     }
 
     isValidTime(): boolean {
-        return /^\d{1,2}:\d{2}$/.test(this.currentTime.trim());
+        if (!this.currentTime) {
+            return false;
+        }
+        const trimmed = this.currentTime.trim();
+        if (!/^\d{1,2}:\d{2}$/.test(trimmed)) {
+            return false;
+        }
+        const [h, m] = trimmed.split(':').map(Number);
+        return h >= 0 && h < 24 && m >= 0 && m < 60;
     }
 
     save(): void {

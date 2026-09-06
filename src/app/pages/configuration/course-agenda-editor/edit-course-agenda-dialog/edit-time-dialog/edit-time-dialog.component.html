@@ -17,6 +17,7 @@
                 <md2-datepicker [(ngModel)]="tempPickerTime"
                                 [isOpen]="isTimePickerOpen"
                                 (onClose)="onClockPickerClose()"
+                                (change)="onTimePicked($event)"
                                 type="time"
                                 [touchUi]="true">
                 </md2-datepicker>

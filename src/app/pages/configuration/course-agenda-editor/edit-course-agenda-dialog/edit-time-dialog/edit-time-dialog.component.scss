@@ -1,16 +1,20 @@
 .dialog-container {
     display: flex;
     flex-direction: column;
+    padding: 24px;
+    box-sizing: border-box;
 }
 
 .dialog-title {
-    margin: 0 0 12px 0;
-    font-size: 1.2rem;
+    margin: 0 0 16px 0;
+    font-size: 1.25rem;
     font-weight: 600;
+    line-height: 1.4;
 }
 
 .dialog-content {
-    padding-top: 4px;
+    padding: 8px 4px;
+    margin: 0;
 }
 
 .time-edit-wrapper {
