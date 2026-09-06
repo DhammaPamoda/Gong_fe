@@ -37,6 +37,10 @@ export class IndexedDbService {
     idExtractorFunc = (val) => val.id
   ): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
+      if (!dataArray || !Array.isArray(dataArray)) {
+        resolve(true);
+        return;
+      }
       this.openDb(dbObjectType)
         .then((db) => {
           const store = this.getStore(db, dbObjectType, 'readwrite');
@@ -110,10 +114,11 @@ export class IndexedDbService {
     return new Promise<boolean>((resolve, reject) => {
       const promisesArray: Promise<any>[] = [];
       EnumUtils.getEnumValues(DbObjectTypeEnum).forEach(dbObjectType => {
-        this.openDb(dbObjectType)
+        const p = this.openDb(dbObjectType)
           .then((db) => {
-            promisesArray.push(db.clear(dbObjectType));
+            return db.clear(dbObjectType);
           });
+        promisesArray.push(p);
       });
       Promise.all(promisesArray)
         .then(() => resolve(true))

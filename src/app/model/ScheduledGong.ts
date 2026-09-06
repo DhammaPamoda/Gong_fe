@@ -11,6 +11,7 @@ export class ScheduledGong {
   gongTypeId: number;
   gongTypeName: string;
   areas: number[];
+  areaNames: string[] = [];
   volume: number;
   isActive: boolean;
   repeat: number;
