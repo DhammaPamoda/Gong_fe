@@ -28,13 +28,13 @@ import { Permission } from '../model/permission';
 })
 export class StoreService implements OnInit, OnDestroy {
 
-  private areasMapObservable: BehaviorSubject<Area[]> = new BehaviorSubject<Area[]>([]);
+  private areasMapObservable: BehaviorSubject<Record<string,Area>> = new BehaviorSubject({});
   private gongTypesMapObservable: BehaviorSubject<IObjectMap<GongType>> = new BehaviorSubject<IObjectMap<GongType>>({});
   private coursesMapObservableObsolete: BehaviorSubject<IObjectMap<Course>> = new BehaviorSubject<IObjectMap<Course>>({});
   private coursesMapObservable: BehaviorSubject<Map<string, Course>> = new BehaviorSubject<Map<string, Course>>(null);
   private emergencyStateObservable: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  areasMap: Area[] = [];
+  areasMap: Record<string,Area> = {};
   gongTypesMap: IObjectMap<GongType> = {};
   coursesMapObsolete: IObjectMap<Course> = {};
   coursesMap: Map<string, Course>;
@@ -61,7 +61,7 @@ export class StoreService implements OnInit, OnDestroy {
 
     const areaSubscription = areas$.subscribe((areasDict) => {
       if (areasDict) {
-        this.areasMap = [];
+        this.areasMap = {};
         Object.keys(areasDict).forEach((idStr) => {
           const id = Number(idStr);
           const area = new Area();

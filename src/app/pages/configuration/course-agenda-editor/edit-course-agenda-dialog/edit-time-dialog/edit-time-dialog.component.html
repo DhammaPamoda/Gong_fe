@@ -1,0 +1,35 @@
+<div class="dialog-container">
+    <h2 mat-dialog-title class="dialog-title">Edit Time</h2>
+
+    <mat-dialog-content class="dialog-content">
+        <div class="time-edit-wrapper">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Time (HH:mm)</mat-label>
+                <input matInput [(ngModel)]="currentTime" placeholder="04:00" (keyup.enter)="save()">
+            </mat-form-field>
+
+            <button mat-stroked-button color="primary" type="button" class="pick-clock-btn" (click)="openClockPicker()">
+                <mat-icon svgIcon="clock" class="mr-1"></mat-icon> Pick with Clock
+            </button>
+
+            <!-- Hidden Clock Picker Trigger -->
+            <div class="clock-picker-hidden">
+                <md2-datepicker [(ngModel)]="tempPickerTime"
+                                [isOpen]="isTimePickerOpen"
+                                (onClose)="onClockPickerClose()"
+                                type="time"
+                                [touchUi]="true">
+                </md2-datepicker>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="dialog-actions">
+        <button mat-button color="warn" type="button" (click)="delete()">
+            <mat-icon svgIcon="close" class="mr-1"></mat-icon> Delete
+        </button>
+        <span class="spacer"></span>
+        <button mat-button type="button" (click)="cancel()">Cancel</button>
+        <button mat-raised-button color="primary" type="button" [disabled]="!isValidTime()" (click)="save()">Save</button>
+    </mat-dialog-actions>
+</div>

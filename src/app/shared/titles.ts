@@ -387,6 +387,9 @@ export const Titles = {
         },
         "hk4": {
             "label": "Numbers Keypad"
+        },
+        "courseAgendaEditor": {
+            "label": "Course Agenda"
         }
     }
 };

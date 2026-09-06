@@ -1,0 +1,167 @@
+.dialog-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+}
+
+.dialog-title {
+    margin: 0 0 12px 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.dialog-content {
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.row-2-fields {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+.field-half {
+    flex: 1;
+}
+
+.section-box {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 12px;
+    background-color: #fafafa;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.section-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.section-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.mini-btn {
+    line-height: 28px;
+    height: 28px;
+    padding: 0 8px;
+    font-size: 0.85rem;
+}
+
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.day-checkbox {
+    font-size: 0.85rem;
+}
+
+.clock-picker-hidden {
+    position: absolute;
+    visibility: hidden;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.manual-time-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 6px;
+}
+
+.time-input-field {
+    flex: 1;
+    margin-bottom: -1.25em;
+}
+
+.add-time-btn {
+    height: 48px;
+    align-self: flex-start;
+}
+
+.times-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.time-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #e8eaf6;
+    color: #3f51b5;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: 1px solid #c5cae9;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        background-color: #d1d9f5;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+    }
+}
+
+.time-chip-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.time-text {
+    user-select: none;
+}
+
+.time-chip-edit {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: #5c6bc0;
+}
+
+.validation-warning {
+    font-size: 0.8rem;
+    color: #f44336;
+    margin-top: 6px;
+}
+
+.dialog-actions {
+    margin-top: 16px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+}
+
+.mr-1 {
+    margin-right: 4px;
+}
+
+.mb-2 {
+    margin-bottom: 8px;
+}
+
+.mb-3 {
+    margin-bottom: 12px;
+}

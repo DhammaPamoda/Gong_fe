@@ -49,6 +49,7 @@ const DELETE_USER_URL = `${BASIC_URL}data/user/remove`;
 const UPDATE_USER_URL = `${BASIC_URL}data/user/update`;
 const RESET_USER_PASSWORD_URL = `${BASIC_URL}data/user/resetPassword`;
 const UPDATE_PERMISSIONS_URL = `${BASIC_URL}data/permissions/update`;
+const UPDATE_COURSE_AGENDA_URL = `${BASIC_URL}data/courseAgenda`;
 
 @Injectable()
 export class GeneralMiddlewareService {
@@ -504,6 +505,24 @@ export class GeneralMiddlewareService {
           apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
             , { bypassRefreshDateFormat: true }));
         break;
+      case ActionTypesEnum.UPDATE_COURSE_AGENDA:
+        const courseAgendaPayloadAsJson = JSON.stringify(action.payload);
+        next(
+          apiRequest(courseAgendaPayloadAsJson, 'POST',
+            UPDATE_COURSE_AGENDA_URL, ActionFeaturesEnum.UPDATE_COURSE_AGENDA_FEATURE, null)
+        );
+        break;
+      case `${ActionFeaturesEnum.UPDATE_COURSE_AGENDA_FEATURE} ${API_SUCCESS}`:
+        console.log('🔍 UPDATE_COURSE_AGENDA SUCCESS. Forcing static update reload...');
+        this.messagesService.coursesUploaded(); // or success message
+        localStorage.removeItem('static_update_time');
+        next(
+          apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
+            , { bypassRefreshDateFormat: true }));
+        break;
+      case `${ActionFeaturesEnum.UPDATE_COURSE_AGENDA_FEATURE} ${API_ERROR}`:
+        console.error('❌ UPDATE_COURSE_AGENDA ERROR:', action.payload);
+        break;
     }
 
     if (action.type.includes(API_ERROR)) {
@@ -522,10 +541,12 @@ export class GeneralMiddlewareService {
   private needToUpdateStaticData(aNewlyRecievedBasicServerData: BasicServerData): number {
     const staticUpdateTime = Number(localStorage.getItem('static_update_time'));
     const serverStaticDataLastUpdateTime = aNewlyRecievedBasicServerData.staticDataLastUpdateTime.getTime();
+    console.log('🔍 needToUpdateStaticData check: staticUpdateTime=', staticUpdateTime, 'serverStaticDataLastUpdateTime=', serverStaticDataLastUpdateTime);
     let newlyLastUpdateTime = Number.isNaN(staticUpdateTime) ? serverStaticDataLastUpdateTime : undefined;
     if (!newlyLastUpdateTime) {
       newlyLastUpdateTime = serverStaticDataLastUpdateTime > staticUpdateTime ? serverStaticDataLastUpdateTime : undefined;
     }
+    console.log('🔍 needToUpdateStaticData result (newlyLastUpdateTime):', newlyLastUpdateTime);
     return newlyLastUpdateTime;
   }
 }
