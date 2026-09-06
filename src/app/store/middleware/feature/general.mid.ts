@@ -23,6 +23,7 @@ import { DbObjectTypeEnum, IndexedDbService } from '../../../shared/indexed-db.s
 import { StoreService } from '../../../services/store.service';
 import { User } from '../../../model/user';
 import { Permission } from '../../../model/permission';
+import Swal from 'sweetalert2';
 
 
 const BASIC_URL = 'api/';
@@ -514,7 +515,7 @@ export class GeneralMiddlewareService {
         break;
       case `${ActionFeaturesEnum.UPDATE_COURSE_AGENDA_FEATURE} ${API_SUCCESS}`:
         console.log('🔍 UPDATE_COURSE_AGENDA SUCCESS. Forcing static update reload...');
-        this.messagesService.coursesUploaded(); // or success message
+        this.messagesService.courseAgendaUpdatedSuccessfully();
         localStorage.removeItem('static_update_time');
         next(
           apiRequest(null, 'GET', GET_BASIC_DATA_URL, ActionFeaturesEnum.BASIC_DATA_FEATURE
@@ -522,6 +523,24 @@ export class GeneralMiddlewareService {
         break;
       case `${ActionFeaturesEnum.UPDATE_COURSE_AGENDA_FEATURE} ${API_ERROR}`:
         console.error('❌ UPDATE_COURSE_AGENDA ERROR:', action.payload);
+        const errPayload = action.payload && action.payload.error;
+        let errorMessage = 'Failed to update course agenda.';
+        if (errPayload) {
+          if (errPayload.additional_message) {
+            errorMessage = `${errPayload.message || 'Error'}: ${errPayload.additional_message}`;
+          } else if (errPayload.message) {
+            errorMessage = errPayload.message;
+          }
+        } else if (action.payload && action.payload.message) {
+          errorMessage = action.payload.message;
+        }
+
+        Swal.fire({
+          title: 'Update Failed',
+          text: errorMessage,
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
         break;
     }
 

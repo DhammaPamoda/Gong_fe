@@ -47,21 +47,40 @@ export class CourseAgendaEditorComponent extends BaseComponent {
     ) { super(); }
 
     async ngOnInit(): Promise<void> {
-        const coursesMap = await this.storeService.getCoursesMapPromise();
-        coursesMap.forEach(course => {
-            if (!course.isTest && !course.name.toLowerCase().includes('test')) {
-                this.courses.push(course);
-            }
-        });
+        this.storeService.getCoursesMap()
+            .pipe(takeUntil(this.onDestroy$))
+            .subscribe((coursesMap: Map<string, Course>) => {
+                if (coursesMap) {
+                    this.courses = [];
+                    coursesMap.forEach(course => {
+                        if (!course.isTest && !course.name.toLowerCase().includes('test')) {
+                            this.courses.push(course);
+                        }
+                    });
 
-        this.storeService.getGongTypesMap().subscribe(gongTypesMap => {
-            this.gongTypes = gongTypesMap;
-            this.gongTypesList = this.storeService.getGongs();
-        });
+                    if (this.selectedCourse) {
+                        const updatedSelected = this.courses.find(c => c.name === this.selectedCourse!.name);
+                        if (updatedSelected) {
+                            this.selectedCourse = updatedSelected;
+                            this.agendaItems = updatedSelected.agenda || [];
+                            this.updateGrouping();
+                        }
+                    }
+                }
+            });
 
-        this.storeService.getAreasMap().subscribe(areasMap => {
-            this.areasMap = areasMap;
-        });
+        this.storeService.getGongTypesMap()
+            .pipe(takeUntil(this.onDestroy$))
+            .subscribe(gongTypesMap => {
+                this.gongTypes = gongTypesMap;
+                this.gongTypesList = this.storeService.getGongs();
+            });
+
+        this.storeService.getAreasMap()
+            .pipe(takeUntil(this.onDestroy$))
+            .subscribe(areasMap => {
+                this.areasMap = areasMap;
+            });
 
         this.ngRedux.select<CourseSchedule[]>([StoreDataTypeEnum.DYNAMIC_DATA, 'coursesSchedule'])
             .pipe(takeUntil(this.onDestroy$))
@@ -118,19 +137,12 @@ export class CourseAgendaEditorComponent extends BaseComponent {
         });
 
         dialogRef.afterClosed().subscribe((updatedItem: CourseAgenda | null) => {
-            if (updatedItem) {
+            if (updatedItem && this.selectedCourse) {
                 const index = this.agendaItems.indexOf(item);
                 if (index >= 0) {
-                    this.agendaItems[index] = updatedItem;
-                    if (this.selectedCourse) {
-                        this.selectedCourse.agenda = this.agendaItems;
-                        // Dispatch action to update static data via backend
-                        this.ngRedux.dispatch(ActionGenerator.updateCourseAgenda({
-                            course_name: this.selectedCourse.name,
-                            course_agenda: this.selectedCourse.agenda
-                        }));
-                    }
-                    this.updateGrouping();
+                    const newAgenda = [...(this.selectedCourse.agenda || this.agendaItems)];
+                    newAgenda[index] = updatedItem;
+                    this.storeService.updateCourseAgenda(this.selectedCourse.name, newAgenda);
                 }
             }
         });

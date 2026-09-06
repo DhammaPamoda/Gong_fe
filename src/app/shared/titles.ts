@@ -42,7 +42,8 @@ export const Titles = {
             "lastGongNotFound": "Last Gong was not found",
             "resetUserPasswordSuccessful": "Reseting User Password was Successful",
             "gongDeletedSuccessfully": "Gong was Deleted Successfully",
-            "courseDeletedSuccessfully": "Course was Deleted Successful"
+            "courseDeletedSuccessfully": "Course was Deleted Successful",
+            "courseAgendaUpdatedSuccessfully": "Course Agenda was Updated Successfully"
         }
     },
     "main": {
