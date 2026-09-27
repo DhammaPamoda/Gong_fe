@@ -82,34 +82,36 @@ export class AutomaticActivationComponent extends BaseComponent {
       .subscribe(dateFormat => this.dateFormat = dateFormat.convertToDateFormatter());
 
     // Courses
-    this.storeService.getCoursesMapPromise().then(coursesMap => {
-      this.coursesMap = coursesMap;
+    this.storeService.getCoursesMap()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(coursesMap => {
+        this.coursesMap = coursesMap;
 
-      this.ngRedux.select<CourseSchedule[]>([StoreDataTypeEnum.DYNAMIC_DATA, 'coursesSchedule'])
-        .pipe(takeUntil(this.onDestroy$))
-        .subscribe((coursesSchedule: CourseSchedule[]) => {
-          if (coursesSchedule && this.coursesMap) {
-            coursesSchedule.sort(((a, b) => a.date.getTime() - b.date.getTime()));
-            this.coursesData = [];
-            coursesSchedule.forEach((courseSchedule: CourseSchedule) => {
-              const course = this.coursesMap.get(courseSchedule.name);
-              if (course) {
-                const clonedCourseSchedule = courseSchedule.clone();
-                clonedCourseSchedule.daysCount = course.days;
-                this.coursesData.push(clonedCourseSchedule);
-              }
-            });
-            this.coursesDataSource = new MatTableDataSource<CourseSchedule>(this.coursesData);
-            if (this.selectedCourseScheduled) {
-              this.selectedCourseScheduled = this.coursesData.find(
-                (courseSchedule: CourseSchedule) => courseSchedule.id === this.selectedCourseScheduled.id);
+        this.ngRedux.select<CourseSchedule[]>([StoreDataTypeEnum.DYNAMIC_DATA, 'coursesSchedule'])
+          .pipe(takeUntil(this.onDestroy$))
+          .subscribe((coursesSchedule: CourseSchedule[]) => {
+            if (coursesSchedule && this.coursesMap) {
+              coursesSchedule.sort(((a, b) => a.date.getTime() - b.date.getTime()));
+              this.coursesData = [];
+              coursesSchedule.forEach((courseSchedule: CourseSchedule) => {
+                const course = this.coursesMap.get(courseSchedule.name);
+                if (course) {
+                  const clonedCourseSchedule = courseSchedule.clone();
+                  clonedCourseSchedule.daysCount = course.days;
+                  this.coursesData.push(clonedCourseSchedule);
+                }
+              });
+              this.coursesDataSource = new MatTableDataSource<CourseSchedule>(this.coursesData);
               if (this.selectedCourseScheduled) {
-                this.getCourseRoutine(this.selectedCourseScheduled);
+                this.selectedCourseScheduled = this.coursesData.find(
+                  (courseSchedule: CourseSchedule) => courseSchedule.id === this.selectedCourseScheduled.id)!;
+                if (this.selectedCourseScheduled) {
+                  this.getCourseRoutine(this.selectedCourseScheduled);
+                }
               }
             }
-          }
-        });
-    });
+          });
+      });
 
   }
 

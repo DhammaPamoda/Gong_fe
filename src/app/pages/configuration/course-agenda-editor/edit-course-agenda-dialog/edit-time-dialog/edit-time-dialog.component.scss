@@ -1,0 +1,56 @@
+.dialog-container {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.dialog-title {
+    margin: 0 0 16px 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.dialog-content {
+    padding: 8px 4px;
+    margin: 0;
+}
+
+.time-edit-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.pick-clock-btn {
+    align-self: flex-start;
+}
+
+.clock-picker-hidden {
+    position: absolute;
+    visibility: hidden;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.dialog-actions {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.mr-1 {
+    margin-right: 4px;
+}

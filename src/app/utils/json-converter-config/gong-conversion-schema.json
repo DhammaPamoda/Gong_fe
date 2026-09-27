@@ -60,6 +60,10 @@
         "propertyName": "routine",
         "propertyNameInJson": "course_agenda",
         "conversionFunctionName": "agendaConversion"
+      },
+      {
+        "propertyName": "agenda",
+        "propertyNameInJson": "course_agenda"
       }
     ]
   },

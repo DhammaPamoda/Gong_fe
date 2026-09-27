@@ -42,7 +42,8 @@ export const Titles = {
             "lastGongNotFound": "Last Gong was not found",
             "resetUserPasswordSuccessful": "Reseting User Password was Successful",
             "gongDeletedSuccessfully": "Gong was Deleted Successfully",
-            "courseDeletedSuccessfully": "Course was Deleted Successful"
+            "courseDeletedSuccessfully": "Course was Deleted Successful",
+            "courseAgendaUpdatedSuccessfully": "Course Agenda was Updated Successfully"
         }
     },
     "main": {
@@ -387,6 +388,25 @@ export const Titles = {
         },
         "hk4": {
             "label": "Numbers Keypad"
+        },
+        "courseAgendaEditor": {
+            "label": "Course Agenda",
+            "buttons": {
+                "addAgendaItem": "Add Agenda Item",
+                "delete": "Delete",
+                "save": "Save",
+                "cancel": "Cancel"
+            },
+            "alerts": {
+                "confirmDeleteAgendaItem": {
+                    "title": "Delete Agenda Item",
+                    "text": "Are you sure you want to delete this agenda item?",
+                    "buttons": {
+                        "confirm": "Delete",
+                        "cancel": "Cancel"
+                    }
+                }
+            }
         }
     }
 };
