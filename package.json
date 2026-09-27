@@ -1,108 +1,22 @@
 {
-  "name": "gong",
-  "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "NODE_OPTIONS=--openssl-legacy-provider ng serve --host 0.0.0.0 --proxy-config proxy.conf.json",
-    "start-https-server": "NODE_OPTIONS=--openssl-legacy-provider ng serve --host 0.0.0.0 --proxy-config proxy-https.conf.json",
-    "build-to-prod": "NODE_OPTIONS=--openssl-legacy-provider ng build --prod --outputPath='../gong_server/dist'",
-    "build-to-dev-be": "NODE_OPTIONS=--openssl-legacy-provider ng build --prod --outputPath='../Gong-be/dist'",
-    "lint": "ng lint",
-    "e2e": "ng e2e",
-    "postinstall": "browserslist --update-db || true"
-  },
+  "name": "gong-fe",
   "private": true,
-  "overrides": {
-    "@angular-redux/store": {
-      "@angular/core": "$@angular/core"
-    },
-    "angular-json-class-converter": {
-      "@angular/core": "$@angular/core"
-    }
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@angular-redux/store": "^10.0.0",
-    "@angular/animations": "^9.1.13",
-    "@angular/cdk": "^9.2.4",
-    "@angular/common": "^9.1.13",
-    "@angular/compiler": "^9.1.13",
-    "@angular/core": "^9.1.13",
-    "@angular/forms": "^9.1.13",
-    "@angular/material": "^9.2.4",
-    "@angular/platform-browser": "^9.1.13",
-    "@angular/platform-browser-dynamic": "^9.1.13",
-    "@angular/pwa": "^0.901.15",
-    "@angular/router": "^9.1.13",
-    "@angular/service-worker": "^9.1.13",
-    "@auth0/angular-jwt": "^4.2.0",
-    "acorn": "^7.4.1",
-    "angular-json-class-converter": "^3.0.1",
-    "angular-md2": "^6.2.0",
-    "axios": "^0.19.0",
-    "core-js": "^3.4.0",
-    "hammerjs": "^2.0.8",
-    "idb": "^4.0.4",
-    "json-class-converter": "^1.0.8",
-    "lodash": "^4.17.21",
-    "moment": "^2.30.1",
-    "ngx-moment": "^3.5.0",
-    "redux": "^4.0.1",
-    "rxjs": "^6.5.6",
-    "sprintf-js": "^1.1.2",
-    "sweetalert2": "^9.2.0",
-    "tslib": "^1.13.0",
-    "uuid": "^3.3.3",
-    "zone.js": "~0.10.3"
+    "@reduxjs/toolkit": "^2.5.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.1.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.901.15",
-    "@angular/cli": "^9.1.15",
-    "@angular/compiler-cli": "^9.1.13",
-    "@angular/language-service": "^9.1.13",
-    "@types/jasmine": "^3.4.6",
-    "@types/jasminewd2": "^2.0.8",
-    "@types/lodash": "4.14.149",
-    "@types/node": "^12.20.55",
-    "babel-preset-env": "^1.7.0",
-    "codelyzer": "~5.2.0",
-    "protractor": "^5.4.2",
-    "redux-devtools-extension": "^2.13.8",
-    "redux-mock-store": "^1.5.3",
-    "ts-node": "~8.4.1",
-    "tslint": "~5.20.1",
-    "typescript": "~3.7.5"
-  },
-  "jest": {
-    "preset": "jest-preset-angular",
-    "setupTestFrameworkScriptFile": "<rootDir>/src/setup-jest.ts",
-    "testURL": "http://localhost/",
-    "globals": {
-      "ts-jest": {
-        "tsConfigFile": "src/tsconfig.spec.json"
-      },
-      "__TRANSFORM_HTML__": true
-    },
-    "transform": {
-      "^.+\\.(ts|html)$": "<rootDir>/node_modules/jest-preset-angular/preprocessor.js",
-      "^.+\\.js$": "babel-jest"
-    },
-    "testMatch": [
-      "**/__tests__/**/*.+(ts|js)?(x)",
-      "**/+(*.)+(spec|test|jest).+(ts|js)?(x)"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "html"
-    ],
-    "moduleNameMapper": {
-      "app/(.*)": "<rootDir>/src/app/$1",
-      "assets/(.*)": "<rootDir>/src/assets/$1",
-      "environments/(.*)": "<rootDir>/src/environments/$1"
-    },
-    "modulePathIgnorePatterns": [],
-    "transformIgnorePatterns": [
-      "node_modules/(?!ngx-drag-scroll)"
-    ]
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.5"
   }
 }
