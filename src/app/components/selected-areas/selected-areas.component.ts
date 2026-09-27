@@ -25,10 +25,10 @@ export class SelectedAreasComponent implements OnInit, OnChanges {
   }
 
   computeDisplay() {
-    this.storeService.getAreasMap().subscribe((areasMap: Area[]) => {
+    this.storeService.getAreasMap().subscribe((areasMap: Record<string, Area>) => {
       this.areasDisplayResult = '';
 
-      if (areasMap && areasMap.length > 0 && this.selectedAreas && this.selectedAreas.length > 0) {
+      if (areasMap && Object.keys(areasMap).length > 0 && this.selectedAreas && this.selectedAreas.length > 0) {
         if (this.selectedAreas.includes(0)) {
           this.areasDisplayResult = areasMap[0].name;
         } else {

@@ -177,7 +177,7 @@ export class StoreService implements OnInit, OnDestroy {
     this.ngRedux.dispatch(ActionGenerator.readToStoreData());
   }
 
-  getAreasMap(): Observable<Area[]> {
+  getAreasMap(): Observable<Record<string, Area>> {
     return this.areasMapObservable;
   }
 
@@ -193,7 +193,7 @@ export class StoreService implements OnInit, OnDestroy {
     return this.coursesMapObservable;
   }
 
-  async getAreasMapAsync(): Promise<Area[]> {
+  async getAreasMapAsync(): Promise<Record<string, Area>> {
     return await this.areasMapObservable.toPromise();
   }
 

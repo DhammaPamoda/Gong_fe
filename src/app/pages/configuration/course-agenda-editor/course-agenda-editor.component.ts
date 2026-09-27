@@ -36,7 +36,7 @@ export class CourseAgendaEditorComponent extends BaseComponent {
     selectedGroupBy: string = 'title';
     scheduledCourseNames: string[] = []
 
-    areasMap: Area[] = [];
+    areasMap: Record<string, Area> = {};
     gongTypes: IObjectMap<GongType> = {};
     gongTypesList: GongType[] = [];
 
