@@ -143,7 +143,7 @@ export default function DashboardPage() {
   return <main className="app-shell">
     <header className="topbar"><div className="topbar-brand"><span>◉</span> GONG</div><div className="topbar-actions"><span className="user-name">{username}</span><button aria-label="Help" title="Help">?</button>{canViewSettings && <button aria-label="Settings" title="Settings" onClick={() => setSettingsOpen(true)}>⚙</button>}<button className="sign-out" onClick={() => dispatch(logout())}>Sign out</button></div></header>
     <section className="dashboard">
-      <div className="page-heading"><div><p className="eyebrow">TODAY’S RHYTHM</p><h1>Good day, {username}.</h1></div><button className="refresh" onClick={() => dispatch(loadDashboard())}>↻ Refresh</button></div>
+      <div className="page-heading"><div><h1>Good day, {username}.</h1></div><button className="refresh" onClick={() => dispatch(loadDashboard())}>↻ Refresh</button></div>
       {dashboard.error && <p className="form-error">{dashboard.error}</p>}
       <div className="overview-grid">
         <article className="next-card"><p className="card-label">NEXT GONG</p><h2>{formatDateTime(nextGongTime)}</h2>{nextGongTime && <div className="next-gong-details" style={{ color: '#7d7770', fontSize: '13px' }}>{[nextGongType, nextGongAreas, nextGongVolume != null ? `Volume ${nextGongVolume}%` : null].filter(Boolean).join(' · ')}</div>}</article>
