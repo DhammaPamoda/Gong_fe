@@ -7,7 +7,7 @@ const localDateTime = () => {
 };
 
 export default function ScheduleModal({ basic, staticData, token, editingGong, onClose, onSaved }) {
-  const [kind, setKind] = useState(editingGong ? 'manual' : null);
+  const [kind] = useState('manual');
   const [minimumTime] = useState(localDateTime);
   const [initialTime] = useState(() => editingGong?.raw?.time ? new Date(editingGong.raw.time - new Date(editingGong.raw.time).getTimezoneOffset() * 60_000).toISOString().slice(0, 16) : minimumTime);
   const [date, setDate] = useState(initialTime.slice(0, 10));
@@ -58,9 +58,7 @@ export default function ScheduleModal({ basic, staticData, token, editingGong, o
   return <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
     <section className="schedule-modal" role="dialog" aria-modal="true" aria-labelledby="schedule-title" onMouseDown={(event) => event.stopPropagation()}>
       <header><div><p className="eyebrow">SCHEDULE</p><h2 id="schedule-title">{editingGong ? 'Edit gong' : 'Add a gong'}</h2></div><button className="icon-button" onClick={onClose} aria-label="Close">×</button></header>
-      {!kind && <div className="schedule-choice"><p>What would you like to schedule?</p><div className="choice-grid"><button onClick={() => setKind('manual')}><span>◉</span><b>Manual gong</b><small>Set one gong for a specific date and time.</small></button><button className="disabled-choice" disabled><span>▦</span><b>Course</b><small>Course scheduling is coming next.</small></button></div></div>}
       {kind === 'manual' && <form className="manual-form" onSubmit={submit}>
-        <button type="button" className="back-button" onClick={() => setKind(null)}>← Back to choices</button>
         <fieldset className="when-fieldset"><legend>When</legend><div className="form-grid"><label>Date<input type="date" min={minimumTime.slice(0, 10)} value={date} onChange={(event) => updateDate(event.target.value)} required /></label><label>Time<div className="clock-picker"><select aria-label="Hour" value={hour} onChange={(event) => setHour(event.target.value)}>{Array.from({ length: 24 }, (_, value) => String(value).padStart(2, '0')).map((value) => <option key={value} value={value} disabled={date === minimumTime.slice(0, 10) && value < minimumTime.slice(11, 13)}>{value}</option>)}</select><span>:</span><select aria-label="Minute" value={minute} onChange={(event) => setMinute(event.target.value)}>{Array.from({ length: 60 }, (_, value) => String(value).padStart(2, '0')).map((value) => <option key={value} value={value} disabled={date === minimumTime.slice(0, 10) && hour === minimumTime.slice(11, 13) && value < minimumTime.slice(14, 16)}>{value}</option>)}</select></div></label></div></fieldset>
         <fieldset><legend>Where</legend><div className="area-options">{areaList.map((area) => <label key={area.id} className="area-check"><input type="checkbox" checked={areas.includes(area.id)} onChange={() => toggleArea(area.id)} /><span>{area.name || 'All areas'}</span></label>)}</div></fieldset>
         <label>Gong type<select value={gongType} onChange={(event) => setGongType(event.target.value)} required>{gongTypes.map((type) => <option key={type.id} value={type.id}>{type.name}</option>)}</select></label>
