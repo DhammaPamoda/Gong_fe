@@ -60,7 +60,7 @@ export class EditCourseAgendaDialogComponent implements OnInit {
         this.gongTypes = this.data.gongTypes || [];
 
         const totalDays = this.data.courseDays != null ? this.data.courseDays : 10;
-        this.availableDays = Array.from({ length: totalDays + 1 }, (_, i) => i);
+        this.availableDays = Array.from({ length: totalDays }, (_, i) => i);
 
         if (this.data.agendaItem) {
             const item = this.data.agendaItem;
