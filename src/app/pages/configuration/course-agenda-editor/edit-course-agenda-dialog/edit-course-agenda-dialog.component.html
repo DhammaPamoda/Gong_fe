@@ -1,0 +1,125 @@
+<div class="dialog-container">
+    <h2 mat-dialog-title class="dialog-title">
+        {{ data.agendaItem ? 'Edit Course Agenda Item' : 'New Course Agenda Item' }}
+    </h2>
+
+    <mat-dialog-content class="dialog-content">
+        <!-- Title Input -->
+        <mat-form-field appearance="outline" class="w-100 mb-2">
+            <mat-label>Title</mat-label>
+            <input matInput [(ngModel)]="title" name="title" #titleInput="ngModel" placeholder="e.g. Morning Gong Day 1-9" required>
+            <mat-error *ngIf="titleInput.touched && (!title || !title.trim())">Title is required</mat-error>
+        </mat-form-field>
+
+        <!-- Gong Type & Areas -->
+        <div class="row-2-fields mb-2">
+            <mat-form-field appearance="outline" class="field-half">
+                <mat-label>Gong Type</mat-label>
+                <mat-select [(value)]="selectedGongType" required>
+                    <mat-option *ngFor="let gt of gongTypes" [value]="gt.id">
+                        {{ getGongTypeLabel(gt) }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-half">
+                <mat-label>Areas</mat-label>
+                <mat-select [(value)]="selectedAreas" multiple required>
+                    <mat-option *ngFor="let area of areas" [value]="area.id">
+                        {{ area.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Days Selection -->
+        <div class="section-box mb-3">
+            <div class="section-header">
+                <span class="section-title">Days ({{ selectedDays.length }} selected):</span>
+                <div class="section-actions">
+                    <button mat-button type="button" color="primary" class="mini-btn" (click)="selectAllDays()">All</button>
+                    <button mat-button type="button" class="mini-btn" (click)="clearAllDays()">Clear</button>
+                </div>
+            </div>
+            <div class="days-grid">
+                <mat-checkbox *ngFor="let day of availableDays"
+                              [checked]="isDaySelected(day)"
+                              (change)="toggleDay(day)"
+                              class="day-checkbox">
+                    Day {{ day }}
+                </mat-checkbox>
+            </div>
+            <div *ngIf="isDaysTouched && selectedDays.length === 0" class="validation-warning">
+                At least one day must be selected.
+            </div>
+        </div>
+
+        <!-- Times Selection -->
+        <div class="section-box mb-3">
+            <div class="section-header">
+                <span class="section-title">Times ({{ times.length }} set):</span>
+                <div class="section-actions">
+                    <button mat-stroked-button color="primary" type="button" class="mini-btn" (click)="openClockPicker()">
+                        <mat-icon svgIcon="clock" class="mr-1"></mat-icon> Pick Time
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hidden Clock Picker Trigger -->
+            <div class="clock-picker-hidden">
+                <md2-datepicker [(ngModel)]="tempPickerTime"
+                                [isOpen]="isTimePickerOpen"
+                                (onClose)="onClockPickerClose()"
+                                (change)="onTimePicked($event)"
+                                type="time"
+                                [touchUi]="true">
+                </md2-datepicker>
+            </div>
+
+            <!-- Manual Time Input -->
+            <div class="manual-time-row mb-2">
+                <mat-form-field appearance="outline" class="time-input-field">
+                    <mat-label>Or type HH:mm</mat-label>
+                    <input matInput [(ngModel)]="manualTimeInput" placeholder="04:00" (keyup.enter)="addManualTime()">
+                </mat-form-field>
+                <button mat-flat-button color="accent" type="button" class="add-time-btn" (click)="addManualTime()">
+                    Add
+                </button>
+            </div>
+
+            <!-- Times Chips/Badges -->
+            <div class="times-list" *ngIf="times.length > 0">
+                <div *ngFor="let time of times" class="time-chip" (click)="editTime(time)">
+                    <mat-icon svgIcon="clock" class="time-chip-icon"></mat-icon>
+                    <span class="time-text">{{ time }}</span>
+                    <mat-icon svgIcon="pencil" class="time-chip-edit"></mat-icon>
+                </div>
+            </div>
+            <div *ngIf="isTimesTouched && times.length === 0" class="validation-warning">
+                At least one time must be added.
+            </div>
+        </div>
+
+        <!-- Volume & Repeat -->
+        <div class="row-2-fields">
+            <mat-form-field appearance="outline" class="field-half">
+                <mat-label>Volume (0 - 100)</mat-label>
+                <input matInput type="number" min="0" max="100" [(ngModel)]="volume">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-half">
+                <mat-label>Repeat</mat-label>
+                <input matInput type="number" min="1" [(ngModel)]="repeat">
+            </mat-form-field>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="dialog-actions">
+        <button *ngIf="data.agendaItem" mat-button color="warn" type="button" class="delete-btn" (click)="delete()">
+            <mat-icon svgIcon="trash-can-outline" class="mr-1"></mat-icon> Delete
+        </button>
+        <span class="spacer"></span>
+        <button mat-button type="button" (click)="cancel()">Cancel</button>
+        <button mat-raised-button color="primary" type="button" [disabled]="!isValid()" (click)="save()">Save</button>
+    </mat-dialog-actions>
+</div>

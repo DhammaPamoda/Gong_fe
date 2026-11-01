@@ -149,8 +149,8 @@ export class ManualActivationComponent extends BaseComponent {
     this.storeService.getAreasMap()
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(areasMap => {
-        if (areasMap && areasMap.length > 0) {
-          this.areas = areasMap.filter((area: Area) => area && area.id !== 0);
+        if (areasMap && Object.keys(areasMap).length > 0) {
+          this.areas = Object.values(areasMap).filter((area: Area) => area && area.id !== 0);
           this.areas.forEach((area: Area) => {
             this.areasMap[area.id] = area;
           });

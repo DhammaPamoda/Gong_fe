@@ -61,6 +61,9 @@ import { EditUserDialogComponent } from './dialogs/edit-user-dialog/edit-user-di
 import { JwtInterceptor } from './auth/jwt.interceptor';
 import { Hk4ConfigComponent } from './pages/configuration/hk4-config/hk4-config.component';
 import { Hk4SequenceDialogComponent } from './pages/configuration/hk4-config/hk4-sequence-dialog/hk4-sequence-dialog.component';
+import { CourseAgendaEditorComponent } from './pages/configuration/course-agenda-editor/course-agenda-editor.component';
+import { EditCourseAgendaDialogComponent } from './pages/configuration/course-agenda-editor/edit-course-agenda-dialog/edit-course-agenda-dialog.component';
+import { EditTimeDialogComponent } from './pages/configuration/course-agenda-editor/edit-course-agenda-dialog/edit-time-dialog/edit-time-dialog.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -99,6 +102,9 @@ const jsonConverterConfig: IJsonConverterConfigFactory = { getConfig };
     EditUserDialogComponent,
     Hk4ConfigComponent,
     Hk4SequenceDialogComponent,
+    CourseAgendaEditorComponent,
+    EditCourseAgendaDialogComponent,
+    EditTimeDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -127,6 +133,9 @@ const jsonConverterConfig: IJsonConverterConfigFactory = { getConfig };
     SystemSettingsComponent,
     Hk4ConfigComponent,
     Hk4SequenceDialogComponent,
+    CourseAgendaEditorComponent,
+    EditCourseAgendaDialogComponent,
+    EditTimeDialogComponent,
   ],
   bootstrap: [AppComponent]
 })

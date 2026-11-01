@@ -37,6 +37,7 @@ export enum ActionFeaturesEnum {
   UPDATE_USER_FEATURE = '[UPDATE_USER]',
   RESET_USER_PASSWORD_FEATURE = '[RESET_USER_PASSWORD]',
   UPDATE_PERMISSIONS_FEATURE = '[UPDATE_PERMISSIONS]',
+  UPDATE_COURSE_AGENDA_FEATURE = '[UPDATE_COURSE_AGENDA]',
 }
 
 export enum ActionTypesEnum {
@@ -76,6 +77,7 @@ export enum ActionTypesEnum {
   UPDATE_USER = 'UPDATE_USER',
   RESET_USER_PASSWORD = 'RESET_USER_PASSWORD',
   UPDATE_PERMISSIONS = 'UPDATE_PERMISSIONS',
+  UPDATE_COURSE_AGENDA = 'UPDATE_COURSE_AGENDA',
 }
 
 export interface AppAction extends Action {
@@ -275,6 +277,11 @@ export class ActionGenerator {
   static updatePermissions = (aPermissionsArray: Permission[]) => ({
     type: ActionTypesEnum.UPDATE_PERMISSIONS,
     payload: aPermissionsArray,
+  });
+
+  static updateCourseAgenda = (aCourseAgendaPayload: any) => ({
+    type: ActionTypesEnum.UPDATE_COURSE_AGENDA,
+    payload: aCourseAgendaPayload,
   });
 
 }

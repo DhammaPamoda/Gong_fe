@@ -1,0 +1,94 @@
+<div class="course-agenda-editor-container p-3">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Course Agenda Editor</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div *ngIf="!selectedCourse" class="m-3 text-muted">
+                Please select a course to view or edit its agenda.
+            </div>
+            <div class="controls-row mb-3">
+                <mat-form-field>
+                    <mat-label>Select a course</mat-label>
+                    <mat-select [(value)]="selectedCourse" (selectionChange)="selectCourse($event.value)">
+                        <mat-option *ngFor="let course of courses" [value]="course">
+                            {{ course.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field *ngIf="selectedCourse" class="ml-3">
+                    <mat-label>Group by</mat-label>
+                    <mat-select [(value)]="selectedGroupBy" (selectionChange)="onGroupByChange($event.value)">
+                        <mat-option value="title">Title</mat-option>
+                        <mat-option value="days">Days</mat-option>
+                        <mat-option value="area">Area</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="selectedCourse && groupedAgendaItems.length === 0" class="m-3 text-muted">
+                No agenda items found for this course.
+            </div>
+            <div *ngIf="selectedCourse" class="agenda-groups">
+                <div *ngIf="isSelectedCourseScheduled()" class="scheduled-course-warning-callout mb-3">
+                    <mat-icon svgIcon="alert" class="warning-callout-icon"></mat-icon>
+                    <div class="warning-callout-content">
+                        <span class="warning-callout-title">Warning!</span>
+                        <span class="warning-callout-text">This course is scheduled and cannot be edited!</span>
+                    </div>
+                </div>
+                <div *ngFor="let group of groupedAgendaItems" class="agenda-group mb-4">
+                    <h3 class="group-header">{{ group.groupKey }}</h3>
+                    <div class="agenda-list">
+                        <mat-card *ngFor="let item of group.items" class="agenda-item-card mb-3">
+                            <div class="agenda-card-top-bar">
+                                <mat-card-title class="agenda-item-title" *ngIf="selectedGroupBy !== 'title'">
+                                    {{ item.title || 'Untitled Agenda Item' }}
+                                </mat-card-title>
+                                <span class="card-filler" *ngIf="selectedGroupBy === 'title'"></span>
+                                <div *ngIf="!isSelectedCourseScheduled()" class="card-actions">
+                                    <button mat-icon-button color="primary" class="edit-item-btn" (click)="editAgendaItem(item)" matTooltip="Edit agenda item">
+                                        <mat-icon svgIcon="pencil"></mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <mat-card-content class="agenda-item-content">
+                                <div class="field-row">
+                                    <span class="field-label">Area:</span>
+                                    <span class="field-value">{{ getAreaNames(item.gongs?.areas) || '-' }}</span>
+                                </div>
+                                <div class="field-row">
+                                    <span class="field-label">Gong Type:</span>
+                                    <span class="field-value">{{ getGongTypeName(item.gongs?.type) || '-' }}</span>
+                                </div>
+                                <div class="field-row">
+                                    <span class="field-label">Days:</span>
+                                    <span class="field-value">{{ formatDays(item.days) || '-' }}</span>
+                                </div>
+                                <div class="field-row">
+                                    <span class="field-label">Times:</span>
+                                    <span class="field-value">{{ formatTimes(item.gongs?.times) || '-' }}</span>
+                                </div>
+                                <div class="field-row">
+                                    <span class="field-label">Volume:</span>
+                                    <span class="field-value">{{ item.gongs?.volume != null ? item.gongs.volume : 100 }}</span>
+                                </div>
+                                <div class="field-row">
+                                    <span class="field-label">Repeat:</span>
+                                    <span class="field-value">{{ item.gongs?.repeat != null ? item.gongs.repeat : 1 }}</span>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <div class="bottom-actions mt-3 mb-2" *ngIf="!isSelectedCourseScheduled()">
+                    <button mat-raised-button color="primary" class="add-agenda-btn" (click)="addAgendaItem()">
+                        <mat-icon svgIcon="plus" class="btn-icon"></mat-icon>
+                        <span>{{ titles.config.courseAgendaEditor.buttons.addAgendaItem }}</span>
+                    </button>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
